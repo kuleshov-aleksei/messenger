@@ -1,0 +1,1 @@
+INSERT INTO `dcsm`.`user` (`id`, `username`, `name`, `surname`, `password_hash`) VALUES ('2', 'SYSTEM', 'SYSTEM', 'SYSTEM', 'SYSTEM');
