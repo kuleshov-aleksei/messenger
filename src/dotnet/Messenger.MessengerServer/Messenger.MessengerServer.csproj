@@ -4,12 +4,18 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
-    <Platforms>x64;amd64</Platforms>
+    <Platform>x64</Platform>
     <Version>0.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\NLog\NLog.config" Link="NLog.config" />
+    <None Include="..\NLog\NLog.config" Link="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Messenger.Common\Messenger.Common.csproj" />
   </ItemGroup>
 
 </Project>
