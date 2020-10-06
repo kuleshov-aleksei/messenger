@@ -1,6 +1,10 @@
-﻿using Messenger.Common.Http;
+﻿using EmbedIO;
+using Messenger.Common.Http;
+using Messenger.MessengerServer.HttpModules;
+using MySql.Common;
 using NLog;
 using System;
+using System.Collections.Generic;
 
 namespace Messenger.MessengerServer
 {
@@ -12,7 +16,10 @@ namespace Messenger.MessengerServer
         {
             m_logger.Info("Starting");
 
-            HttpServer httpServer = new HttpServer(24165);
+            List<IWebModule> webModules = new List<IWebModule>();
+            webModules.Add(new HttpModules.GetChatList.GetChatListModule());
+
+            HttpServer httpServer = new HttpServer(24165, webModules);
             httpServer.Start();
 
             Console.ReadKey();

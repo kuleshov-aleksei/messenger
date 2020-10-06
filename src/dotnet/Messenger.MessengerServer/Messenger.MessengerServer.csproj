@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Messenger.Common\Messenger.Common.csproj" />
+    <ProjectReference Include="..\MySql.Common\MySql.Common.csproj" />
   </ItemGroup>
 
 </Project>

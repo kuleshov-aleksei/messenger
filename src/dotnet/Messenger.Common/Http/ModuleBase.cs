@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Messenger.Common.Http
 {
-    internal abstract class ModuleBase : WebModuleBase
+    public abstract class ModuleBase : WebModuleBase
     {
         protected ModuleBase(string baseRoute)
             : base(baseRoute)
@@ -34,7 +34,7 @@ namespace Messenger.Common.Http
             return true;
         }
 
-        internal static Task SendResponse(IHttpContext context, HttpStatusCode statusCode)
+        public static Task SendResponse(IHttpContext context, HttpStatusCode statusCode)
         {
             context.Response.StatusCode = (int)statusCode;
             context.Response.StatusDescription = statusCode.ToString();
@@ -42,7 +42,7 @@ namespace Messenger.Common.Http
             return Task.CompletedTask;
         }
 
-        internal static async Task SendResponse(IHttpContext context, HttpStatusCode statusCode, string json)
+        public static async Task SendResponse(IHttpContext context, HttpStatusCode statusCode, string json)
         {
             context.Response.StatusCode = (int)statusCode;
             context.Response.StatusDescription = statusCode.ToString();
@@ -54,14 +54,19 @@ namespace Messenger.Common.Http
             }
         }
 
-        internal static async Task SendResponse(IHttpContext context, HttpStatusCode statusCode, object obj)
+        public static async Task SendResponse(IHttpContext context, HttpStatusCode statusCode, object obj)
         {
             await SendResponse(context, statusCode, JsonConvert.SerializeObject(obj));
         }
 
-        internal static async Task SendResponse(IHttpContext context, HttpStatusCode statusCode, ServerResponse serverResponse)
+        public static async Task SendResponse(IHttpContext context, HttpStatusCode statusCode, ServerResponse serverResponse)
         {
             await SendResponse(context, statusCode, JsonConvert.SerializeObject(serverResponse));
+        }
+
+        public static async Task SendResponse(IHttpContext context, HttpStatusCode statusCode, ServerError serverError)
+        {
+            await SendResponse(context, statusCode, JsonConvert.SerializeObject(serverError));
         }
     }
 }
