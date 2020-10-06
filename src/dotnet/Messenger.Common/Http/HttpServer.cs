@@ -12,7 +12,7 @@ namespace Messenger.Common.Http
         private Logger m_logger = LogManager.GetCurrentClassLogger();
         private WebServer m_webServer;
 
-        public HttpServer(int listenPort)
+        public HttpServer(int listenPort, IEnumerable<IWebModule> customWebModules)
         {
             Swan.Logging.Logger.NoLogging();
             Swan.Logging.Logger.RegisterLogger(new Swan2NLog());
@@ -25,6 +25,11 @@ namespace Messenger.Common.Http
                 .WithLocalSessionManager()
                 .HandleUnhandledException(HandleException)
                 .HandleHttpException(HttpExceptionHandlerFunc);
+
+            foreach (IWebModule webModule in customWebModules)
+            {
+                m_webServer.WithModule(webModule);
+            }
 
             m_webServer.StateChanged += (s, e) => m_logger.Trace($"New WebServer state {e.NewState}");
         }
