@@ -20,6 +20,7 @@ namespace Messenger.MessengerServer
             webModules.Add(new HttpModules.GetChatList.GetChatListModule());
             webModules.Add(new HttpModules.GetChatMembers.GetChatMembersModule());
             webModules.Add(new HttpModules.CreateChat.CreateChatModule());
+            webModules.Add(new HttpModules.InviteToChat.InviteChatModule());
 
             HttpServer httpServer = new HttpServer(24165, webModules);
             httpServer.Start();
