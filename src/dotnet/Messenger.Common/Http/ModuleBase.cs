@@ -1,5 +1,7 @@
 ﻿using EmbedIO;
 using Newtonsoft.Json;
+using NLog;
+using System;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -7,8 +9,10 @@ using System.Threading.Tasks;
 
 namespace Messenger.Common.Http
 {
-    public abstract class ModuleBase : WebModuleBase
+    public abstract class ModuleBase<T> : WebModuleBase where T : class
     {
+        private Logger m_logger = LogManager.GetCurrentClassLogger();
+
         protected ModuleBase(string baseRoute)
             : base(baseRoute)
         {
@@ -33,6 +37,28 @@ namespace Messenger.Common.Http
             stringRequest = Encoding.Default.GetString(memoryStream.ToArray());
             return true;
         }
+
+        protected override async Task OnRequestAsync(IHttpContext context)
+        {
+            if (!TryGetRequestString(context.Request, out string requestString))
+            {
+                return;
+            }
+
+            try
+            {
+                T request = JsonConvert.DeserializeObject<T>(requestString);
+                await OnRequest(context, request);
+            }
+            catch (Exception e)
+            {
+                m_logger.Error(e, "Failed to parse request");
+                await SendResponse(context, HttpStatusCode.OK, new ServerError("Invalid request"));
+                return;
+            }
+        }
+
+        protected abstract Task OnRequest(IHttpContext context, T request);
 
         public static Task SendResponse(IHttpContext context, HttpStatusCode statusCode)
         {

@@ -1,15 +1,14 @@
 ﻿using EmbedIO;
 using Messenger.Common.Http;
+using MySql.Common;
 using Newtonsoft.Json;
 using NLog;
-using System;
 using System.Net;
 using System.Threading.Tasks;
-using MySql.Common;
 
 namespace Messenger.MessengerServer.HttpModules.GetChatMembers
 {
-    internal class GetChatMembersModule : ModuleBase
+    internal class GetChatMembersModule : ModuleBase<GetChatMembersRequest>
     {
         private Logger m_logger = LogManager.GetCurrentClassLogger();
 
@@ -21,25 +20,8 @@ namespace Messenger.MessengerServer.HttpModules.GetChatMembers
 
         }
 
-        protected override async Task OnRequestAsync(IHttpContext context)
+        protected override async Task OnRequest(IHttpContext context, GetChatMembersRequest request)
         {
-            if (!TryGetRequestString(context.Request, out string requestString))
-            {
-                return;
-            }
-
-            GetChatMembersRequest request = null;
-            try
-            {
-                request = JsonConvert.DeserializeObject<GetChatMembersRequest>(requestString);
-            }
-            catch (Exception e)
-            {
-                m_logger.Error(e, "Failed to parse request");
-                await SendResponse(context, HttpStatusCode.OK, new ServerError("Invalid request"));
-                return;
-            }
-
             GetChatMembersResponse response = LoadChatMembers(request.ChatId);
 
             await SendResponse(context, HttpStatusCode.OK, JsonConvert.SerializeObject(response, Formatting.Indented));
