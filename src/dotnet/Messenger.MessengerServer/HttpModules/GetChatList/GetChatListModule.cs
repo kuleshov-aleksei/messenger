@@ -10,7 +10,7 @@ using MySql.Common;
 
 namespace Messenger.MessengerServer.HttpModules.GetChatList
 {
-    internal class GetChatListModule : ModuleBase
+    internal class GetChatListModule : ModuleBase<GetChatListRequest>
     {
         private Logger m_logger = LogManager.GetCurrentClassLogger();
 
@@ -22,25 +22,8 @@ namespace Messenger.MessengerServer.HttpModules.GetChatList
 
         }
 
-        protected override async Task OnRequestAsync(IHttpContext context)
+        protected override async Task OnRequest(IHttpContext context, GetChatListRequest request)
         {
-            if (!TryGetRequestString(context.Request, out string requestString))
-            {
-                return;
-            }
-
-            GetChatListRequest request = null;
-            try
-            {
-                request = JsonConvert.DeserializeObject<GetChatListRequest>(requestString);
-            }
-            catch (Exception e)
-            {
-                m_logger.Error(e, "Failed to parse request");
-                await SendResponse(context, HttpStatusCode.OK, new ServerError("Invalid request"));
-                return;
-            }
-
             ChatList response = LoadChatsOfUser(request.UserId);
 
             await SendResponse(context, HttpStatusCode.OK, JsonConvert.SerializeObject(response, Formatting.Indented));

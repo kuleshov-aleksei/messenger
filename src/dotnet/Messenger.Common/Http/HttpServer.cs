@@ -1,8 +1,8 @@
 ﻿using EmbedIO;
+using Messenger.Common.Http.Ping;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Messenger.Common.Http
@@ -50,7 +50,7 @@ namespace Messenger.Common.Http
         private async Task HandleException(IHttpContext context, Exception exception)
         {
             m_logger.Error($"Got error while processing request: " + exception.Message + Environment.NewLine + exception.StackTrace);
-            await ModuleBase.SendResponse(context, System.Net.HttpStatusCode.InternalServerError);
+            await ModuleBase<PingRequest>.SendResponse(context, System.Net.HttpStatusCode.InternalServerError);
         }
 
         public void Dispose()

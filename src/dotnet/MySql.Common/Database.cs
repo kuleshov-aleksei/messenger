@@ -1,6 +1,8 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 
 namespace MySql.Common
 {
@@ -48,6 +50,25 @@ namespace MySql.Common
                     }
                 }
             }
+        }
+
+        public void ExecuteProcedure(string procedureName, Dictionary<string, object> parameters = null)
+        {
+            ExecuteProcedureAsync(procedureName, parameters).Wait();
+        }
+
+        public async Task ExecuteProcedureAsync(string procedureName, Dictionary<string, object> parameters = null)
+        {
+            MySqlCommand command = m_mySqlConnection.CreateCommand();
+            command.CommandText = procedureName;
+            command.CommandType = CommandType.StoredProcedure;
+
+            foreach (KeyValuePair<string, object> keyValuePair in parameters)
+            {
+                command.Parameters.AddWithValue($"@{keyValuePair.Key}", keyValuePair.Value);
+            }
+
+            await command.ExecuteNonQueryAsync();
         }
     }
 }
