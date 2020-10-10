@@ -1,6 +1,9 @@
 ﻿using EmbedIO;
+using Messenger.Common.Elastic;
 using Messenger.Common.Http;
-using Messenger.MessengerServer.HttpModules.PutMessage;
+using Messenger.Common.Settings;
+using Messenger.Common.Tools;
+using Nest;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -15,11 +18,16 @@ namespace Messenger.MessengerServer
         {
             m_logger.Info("*** Starting ***");
 
-            List<IWebModule> webModules = new List<IWebModule>();
-            //webModules.Add(new HttpModules.GetChatList.GetChatListModule());
+            ElasticClient elasticClient = ESClient.CreateElasticClient();
+            IdGenerator idGenerator = new IdGenerator();
 
-            //HttpServer httpServer = new HttpServer(24165, webModules);
-            //httpServer.Start();
+            int port = int.Parse(DBSettings.ReadSettings("service_messenger_port"));
+
+            List<IWebModule> webModules = new List<IWebModule>();
+            webModules.Add(new HttpModules.PutMessage.PutMessageModule(elasticClient, idGenerator));
+
+            HttpServer httpServer = new HttpServer(port, webModules);
+            httpServer.Start();
 
             Console.ReadKey();
         }

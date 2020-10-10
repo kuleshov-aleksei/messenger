@@ -1,7 +1,7 @@
 ﻿using MySql.Common;
 using System;
 
-namespace Messenger.ChatInfoServer
+namespace Messenger.Common
 {
     public class GlobalSettings
     {
@@ -9,6 +9,7 @@ namespace Messenger.ChatInfoServer
         public static GlobalSettings Instance => m_instance.Value;
 
         public Database Database { get; }
+        public string EsIndexName { get; } = "user_messages";
 
         private GlobalSettings()
         {
