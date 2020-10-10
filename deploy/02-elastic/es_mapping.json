@@ -36,6 +36,7 @@
   "mappings": {
     "dynamic": "strict",
     "properties": {
+	  "message_id": { "type": "keyword" },
       "user_id": { "type": "integer" },
       "chat_id": { "type": "integer" },
       "message_time": { "format": "epoch_second", "type": "date" },
