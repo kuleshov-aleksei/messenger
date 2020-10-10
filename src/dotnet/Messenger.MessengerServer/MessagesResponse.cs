@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Messenger.MessengerServer.HttpModules.GetLastMessages
+namespace Messenger.MessengerServer
 {
-    internal class GetLastMessagesResponse
+    public class MessagesResponse
     {
         [JsonProperty("messages")]
         public List<Message> Messages { get; set; } = new List<Message>();
@@ -12,7 +12,7 @@ namespace Messenger.MessengerServer.HttpModules.GetLastMessages
         public int ChatId { get; set; }
     }
 
-    internal class Message
+    public class Message
     {
         [JsonProperty("unix_time")]
         public long UnixTime { get; set; }

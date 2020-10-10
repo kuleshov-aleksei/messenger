@@ -11,6 +11,7 @@ namespace Messenger.Common
         public Database Database { get; }
         public const string EsIndexName = "user_messages";
         public const int EsInitialMessagesCount = 30;
+        public const int EsMessagesCount = 100;
         public const string EsFieldChatId = "chat_id";
         public const string EsFieldMessageId = "message_id";
         public const string EsFieldText = "text";
