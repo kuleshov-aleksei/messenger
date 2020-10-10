@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Messenger.MessengerServer.HttpModules.GetLastMessages
+namespace Messenger.MessengerServer
 {
     public class ElasticDocument
     {
