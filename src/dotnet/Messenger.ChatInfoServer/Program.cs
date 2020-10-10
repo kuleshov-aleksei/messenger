@@ -1,12 +1,12 @@
 ﻿using EmbedIO;
 using Messenger.Common.Http;
-using Messenger.MessengerServer.HttpModules;
+using Messenger.ChatInfoServer.HttpModules;
 using MySql.Common;
 using NLog;
 using System;
 using System.Collections.Generic;
 
-namespace Messenger.MessengerServer
+namespace Messenger.ChatInfoServer
 {
     class Program
     {
@@ -14,7 +14,7 @@ namespace Messenger.MessengerServer
 
         static void Main(string[] args)
         {
-            m_logger.Info("Starting");
+            m_logger.Info("*** Starting ***");
 
             List<IWebModule> webModules = new List<IWebModule>();
             webModules.Add(new HttpModules.GetChatList.GetChatListModule());

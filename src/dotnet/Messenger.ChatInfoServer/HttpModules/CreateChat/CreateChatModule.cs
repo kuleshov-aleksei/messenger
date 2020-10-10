@@ -1,12 +1,12 @@
 ﻿using EmbedIO;
 using Messenger.Common.Http;
-using Messenger.MessengerServer.HttpModules.GetChatList;
+using Messenger.ChatInfoServer.HttpModules.GetChatList;
 using NLog;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Messenger.MessengerServer.HttpModules.CreateChat
+namespace Messenger.ChatInfoServer.HttpModules.CreateChat
 {
     internal class CreateChatModule : ModuleBase<CreateChatRequest>
     {

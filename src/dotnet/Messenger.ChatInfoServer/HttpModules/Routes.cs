@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Messenger.MessengerServer.HttpModules
+namespace Messenger.ChatInfoServer.HttpModules
 {
     internal static class Routes
     {

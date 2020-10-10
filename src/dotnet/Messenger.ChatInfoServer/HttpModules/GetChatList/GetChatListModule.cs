@@ -8,7 +8,7 @@ using System.Net;
 using System.Threading.Tasks;
 using MySql.Common;
 
-namespace Messenger.MessengerServer.HttpModules.GetChatList
+namespace Messenger.ChatInfoServer.HttpModules.GetChatList
 {
     internal class GetChatListModule : ModuleBase<GetChatListRequest>
     {

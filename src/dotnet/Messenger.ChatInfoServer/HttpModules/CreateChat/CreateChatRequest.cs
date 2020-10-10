@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Messenger.MessengerServer.HttpModules.GetChatList
+namespace Messenger.ChatInfoServer.HttpModules.GetChatList
 {
     public class CreateChatRequest
     {

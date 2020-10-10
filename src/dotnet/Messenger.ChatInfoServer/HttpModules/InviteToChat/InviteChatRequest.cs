@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Messenger.MessengerServer.HttpModules.InviteToChat
+namespace Messenger.ChatInfoServer.HttpModules.InviteToChat
 {
     public class InviteChatRequest
     {

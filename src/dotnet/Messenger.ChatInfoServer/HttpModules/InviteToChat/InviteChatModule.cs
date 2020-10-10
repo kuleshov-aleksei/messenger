@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Messenger.MessengerServer.HttpModules.InviteToChat
+namespace Messenger.ChatInfoServer.HttpModules.InviteToChat
 {
     public class InviteChatModule : ModuleBase<InviteChatRequest>
     {

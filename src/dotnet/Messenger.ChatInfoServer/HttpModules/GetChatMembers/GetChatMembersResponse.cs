@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Messenger.MessengerServer.HttpModules.GetChatMembers
+namespace Messenger.ChatInfoServer.HttpModules.GetChatMembers
 {
     public class GetChatMembersResponse
     {
