@@ -1,7 +1,5 @@
 ﻿using EmbedIO;
 using Messenger.Common.Http;
-using Messenger.ChatInfoServer.HttpModules;
-using MySql.Common;
 using NLog;
 using System;
 using System.Collections.Generic;

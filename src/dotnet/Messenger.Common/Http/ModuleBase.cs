@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Messenger.Common.Http
 {
-    public abstract class ModuleBase<T> : WebModuleBase where T : class
+    public abstract class ModuleBase<T> : WebModuleBase where T : RequestBase, IRequest
     {
         private Logger m_logger = LogManager.GetCurrentClassLogger();
 
@@ -48,12 +48,18 @@ namespace Messenger.Common.Http
             try
             {
                 T request = JsonConvert.DeserializeObject<T>(requestString);
+                if (!request.Validate())
+                {
+                    m_logger.Error("Invalid request");
+                    await SendResponse(context, HttpStatusCode.BadRequest, new ServerError("Invalid request"));
+                }
+
                 await OnRequest(context, request);
             }
             catch (Exception e)
             {
                 m_logger.Error(e, "Failed to parse request");
-                await SendResponse(context, HttpStatusCode.OK, new ServerError("Invalid request"));
+                await SendResponse(context, HttpStatusCode.BadRequest, new ServerError("Invalid request"));
                 return;
             }
         }

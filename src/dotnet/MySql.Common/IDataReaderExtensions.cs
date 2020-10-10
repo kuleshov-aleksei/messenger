@@ -29,5 +29,40 @@ namespace MySql.Common
             return record.GetDateTime(fieldId);
         }
 
+        public static int? GetInt32(this IDataRecord record, string fieldName)
+        {
+            int fieldId = record.GetOrdinal(fieldName);
+
+            if (record.IsDBNull(fieldId))
+            {
+                return null;
+            }
+
+            return record.GetInt32(fieldId);
+        }
+
+        public static short? GetInt16(this IDataRecord record, string fieldName)
+        {
+            int fieldId = record.GetOrdinal(fieldName);
+
+            if (record.IsDBNull(fieldId))
+            {
+                return null;
+            }
+
+            return record.GetInt16(fieldId);
+        }
+
+        public static long? GetInt64(this IDataRecord record, string fieldName)
+        {
+            int fieldId = record.GetOrdinal(fieldName);
+
+            if (record.IsDBNull(fieldId))
+            {
+                return null;
+            }
+
+            return record.GetInt64(fieldId);
+        }
     }
 }
