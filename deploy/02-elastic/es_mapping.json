@@ -1,0 +1,59 @@
+{
+  "settings": {
+    "analysis": {
+      "filter": {
+        "russian_stop": {
+          "type": "stop",
+          "stopwords_path": "analysis/ru_RU/stopwords-ru.txt"
+        },
+        "ru_RU": {
+          "locale": "ru_RU",
+          "type": "hunspell",
+          "dedup": "true"
+        }
+      },
+      "analyzer": {
+        "hunspell_russian": {
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "russian_stop",
+            "ru_RU"
+          ]
+        },
+        "rebuilt_russian_less_stemmer": {
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "russian_stop"
+          ]
+        }
+      }
+    },
+	"number_of_shards": 3,
+	"number_of_replicas": 0
+  },
+  "mappings": {
+    "dynamic": "strict",
+    "properties": {
+      "user_id": { "type": "integer" },
+      "chat_id": { "type": "integer" },
+      "message_time": { "format": "epoch_second", "type": "date" },
+	  "image_url_original": { "type": "keyword" },
+	  "image_url_large": { "type": "keyword" },
+	  "image_url_medium": { "type": "keyword" },
+	  "image_url_small": { "type": "keyword" },
+	  "image_processing_time": { "format": "epoch_second", "type": "date" },
+      "text": { 
+		"type": "text",
+		"fields": {
+		  "exact": {
+			"type": "text",
+			"analyzer": "rebuilt_russian_less_stemmer"
+		  }
+		},
+		"analyzer": "hunspell_russian"
+	  }
+    }
+  }
+}
