@@ -1,4 +1,5 @@
 ﻿using EmbedIO;
+using Messenger.Common;
 using Messenger.Common.Http;
 using MySql.Data.MySqlClient;
 using NLog;

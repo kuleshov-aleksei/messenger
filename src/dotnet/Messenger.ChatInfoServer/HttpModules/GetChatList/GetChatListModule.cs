@@ -7,6 +7,7 @@ using System.Data;
 using System.Net;
 using System.Threading.Tasks;
 using MySql.Common;
+using Messenger.Common;
 
 namespace Messenger.ChatInfoServer.HttpModules.GetChatList
 {

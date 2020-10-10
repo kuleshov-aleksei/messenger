@@ -34,14 +34,14 @@ namespace Messenger.MessengerServer.HttpModules.PutMessage
 
             Dictionary<string, object> requestDoc = new Dictionary<string, object>()
             {
-                { "chat_id", request.ChatId },
-                { "message_id", messageId },
-                { "text", request.Message },
-                { "user_id", request.AuthorId },
-                { "message_time", UnixEpochTools.ToEpoch(DateTime.UtcNow) },
+                { GlobalSettings.EsFieldChatId, request.ChatId },
+                { GlobalSettings.EsFieldMessageId, messageId },
+                { GlobalSettings.EsFieldText, request.Message },
+                { GlobalSettings.EsFieldUserId, request.AuthorId },
+                { GlobalSettings.EsFieldMessageTime, UnixEpochTools.ToEpoch(DateTime.UtcNow) },
             };
 
-            IUpdateRequest<object, object> updateRequest = new UpdateRequest<object, object>(GlobalSettings.Instance.EsIndexName, messageId)
+            IUpdateRequest<object, object> updateRequest = new UpdateRequest<object, object>(GlobalSettings.EsIndexName, messageId)
             {
                 Doc = requestDoc,
                 DocAsUpsert = true,
@@ -64,6 +64,7 @@ namespace Messenger.MessengerServer.HttpModules.PutMessage
             }
 
             m_logger.Info($"Message {messageId} written");
+            await SendResponse(context, HttpStatusCode.OK);
         }
     }
 }
