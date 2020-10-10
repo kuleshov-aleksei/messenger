@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common Tools", "Common Tool
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.ChatInfoServer", "Messenger.ChatInfoServer\Messenger.ChatInfoServer.csproj", "{694F629D-7D31-4481-B39F-F60F14F87079}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.MessengerServer", "Messenger.MessengerServer\Messenger.MessengerServer.csproj", "{794A5458-2570-45A7-852C-7FFAF9C85F9B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{694F629D-7D31-4481-B39F-F60F14F87079}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{694F629D-7D31-4481-B39F-F60F14F87079}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{694F629D-7D31-4481-B39F-F60F14F87079}.Release|Any CPU.Build.0 = Release|Any CPU
+		{794A5458-2570-45A7-852C-7FFAF9C85F9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{794A5458-2570-45A7-852C-7FFAF9C85F9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{794A5458-2570-45A7-852C-7FFAF9C85F9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{794A5458-2570-45A7-852C-7FFAF9C85F9B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
