@@ -9,7 +9,13 @@ namespace Messenger.Common
         public static GlobalSettings Instance => m_instance.Value;
 
         public Database Database { get; }
-        public string EsIndexName { get; } = "user_messages";
+        public const string EsIndexName = "user_messages";
+        public const int EsInitialMessagesCount = 30;
+        public const string EsFieldChatId = "chat_id";
+        public const string EsFieldMessageId = "message_id";
+        public const string EsFieldText = "text";
+        public const string EsFieldUserId = "user_id";
+        public const string EsFieldMessageTime = "message_time";
 
         private GlobalSettings()
         {

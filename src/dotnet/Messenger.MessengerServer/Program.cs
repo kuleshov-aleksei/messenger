@@ -25,6 +25,7 @@ namespace Messenger.MessengerServer
 
             List<IWebModule> webModules = new List<IWebModule>();
             webModules.Add(new HttpModules.PutMessage.PutMessageModule(elasticClient, idGenerator));
+            webModules.Add(new HttpModules.GetLastMessages.GetLastMessagesModule(elasticClient));
 
             HttpServer httpServer = new HttpServer(port, webModules);
             httpServer.Start();

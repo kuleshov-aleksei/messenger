@@ -58,8 +58,8 @@ namespace Messenger.Common.Http
             }
             catch (Exception e)
             {
-                m_logger.Error(e, "Failed to parse request");
-                await SendResponse(context, HttpStatusCode.BadRequest, new ServerError("Invalid request"));
+                m_logger.Error(e, "Failed to process request");
+                await SendResponse(context, HttpStatusCode.InternalServerError);
                 return;
             }
         }
