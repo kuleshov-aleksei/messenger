@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Messenger.MessengerServer.HttpModules.GetChatMembers
+namespace Messenger.ChatInfoServer.HttpModules.GetChatMembers
 {
     public class GetChatMembersRequest
     {

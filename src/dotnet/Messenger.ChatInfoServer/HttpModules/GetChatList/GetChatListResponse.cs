@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Messenger.MessengerServer.HttpModules.GetChatList
+namespace Messenger.ChatInfoServer.HttpModules.GetChatList
 {
     public class ChatList
     {

@@ -6,7 +6,7 @@ using NLog;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Messenger.MessengerServer.HttpModules.GetChatMembers
+namespace Messenger.ChatInfoServer.HttpModules.GetChatMembers
 {
     internal class GetChatMembersModule : ModuleBase<GetChatMembersRequest>
     {

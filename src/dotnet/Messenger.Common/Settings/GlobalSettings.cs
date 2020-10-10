@@ -1,7 +1,7 @@
 ﻿using MySql.Common;
 using System;
 
-namespace Messenger.MessengerServer
+namespace Messenger.ChatInfoServer
 {
     public class GlobalSettings
     {
