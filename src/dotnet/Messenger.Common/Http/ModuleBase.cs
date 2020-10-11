@@ -48,7 +48,8 @@ namespace Messenger.Common.Http
             try
             {
                 T request = JsonConvert.DeserializeObject<T>(requestString);
-                if (!request.Validate())
+
+                if (request != null && !request.Validate())
                 {
                     m_logger.Error("Invalid request");
                     await SendResponse(context, HttpStatusCode.BadRequest, new ServerError("Invalid request"));

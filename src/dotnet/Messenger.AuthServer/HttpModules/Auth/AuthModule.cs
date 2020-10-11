@@ -8,8 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Net;
-using System.Reflection;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Messenger.AuthServer.HttpModules.Auth
@@ -19,12 +17,10 @@ namespace Messenger.AuthServer.HttpModules.Auth
         public override bool IsFinalHandler => true;
         public JwtHelper m_jwtHelper;
 
-        public AuthModule()
+        public AuthModule(JwtHelper jwtHelper)
             : base(Routes.AUTH)
         {
-            AssemblyName currentAssembly = Assembly.GetExecutingAssembly().GetName();
-            string issuer = $"{currentAssembly.Name}.{currentAssembly.Version.Major}.{currentAssembly.Version.Minor}.{currentAssembly.Version.Build}";
-            m_jwtHelper = new JwtHelper(issuer, "jwt_secret.secret");
+            m_jwtHelper = jwtHelper;
         }
 
         protected override async Task OnRequest(IHttpContext context, AuthRequest request)
@@ -45,14 +41,15 @@ namespace Messenger.AuthServer.HttpModules.Auth
 
             int userId = GetUserId(request.Login);
 
-            string refreshToken = m_jwtHelper.CreateRefreshJWT(request.DeviceName, userId);
-            string accessToken = m_jwtHelper.CreateAccessJWT(refreshToken);
+            string tempRefreshToken = m_jwtHelper.CreateSession(request.DeviceName, userId);
+            string accessToken = m_jwtHelper.CreateAccessJWT(tempRefreshToken, out string refreshToken);
 
-            context.Response.SetCookie(new Cookie("access_token", accessToken)
+            context.Response.SetCookie(new Cookie(JwtHelper.AccessTokenName, accessToken)
             {
                 HttpOnly = true,
             });
-            context.Response.SetCookie(new Cookie("refresh_token", refreshToken)
+
+            context.Response.SetCookie(new Cookie(JwtHelper.RefreshTokenName, refreshToken)
             {
                 HttpOnly = true,
             });

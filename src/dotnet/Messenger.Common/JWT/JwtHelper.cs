@@ -15,6 +15,9 @@ namespace Messenger.Common.JWT
         private string m_issuer;
         private SymmetricSecurityKey m_securityKey;
 
+        public const string AccessTokenName = "access_token";
+        public const string RefreshTokenName = "refresh_token";
+
         public JwtHelper(string issuer, string secretKeyPath)
         {
             m_issuer = issuer;
@@ -32,11 +35,12 @@ namespace Messenger.Common.JWT
         /// Should be used for refreshing accessToken
         /// </summary>
         /// <returns>Access token</returns>
-        public string CreateAccessJWT(string refreshToken)
+        public string CreateAccessJWT(string refreshToken, out string newRefreshToken)
         {
             IEnumerable<Claim> claims;
             if (!Validate(refreshToken, out claims))
             {
+                newRefreshToken = null;
                 return null;
             }
 
@@ -46,11 +50,13 @@ namespace Messenger.Common.JWT
                 if (claim.Type == ClaimTypes.NameIdentifier)
                 {
                     userId = int.Parse(claim.Value);
+                    break;
                 }
             }
 
             if (userId == 0)
             {
+                newRefreshToken = null;
                 return null;
             }
 
@@ -79,19 +85,58 @@ namespace Messenger.Common.JWT
 
             if (revoked)
             {
+                newRefreshToken = null;
                 return null;
             }
 
-            return CreateJWT(userId, TimeSpan.FromMinutes(15));
+            int sessionId = 0;
+            GlobalSettings.Instance.Database.ExecuteSql(
+                @"SELECT `session_id`
+                FROM `session`
+                WHERE `user_id` = @p_user_id
+                AND `token` = @p_token",
+                reader =>
+                {
+                    sessionId = reader.GetInt32("session_id").Value;
+                },
+                new Dictionary<string, object>
+                {
+                    { "p_user_id", userId },
+                    { "p_token", refreshToken },
+                }
+            );
+
+            if (sessionId == 0)
+            {
+                newRefreshToken = null;
+                return null;
+            }
+
+            string accessToken = CreateJWT(userId, TimeSpan.FromMinutes(15));
+            newRefreshToken = CreateRefreshJWT(userId);
+
+            GlobalSettings.Instance.Database.ExecuteSql(
+                @"UPDATE `session`
+                SET `token` = @p_new_token
+                WHERE `session_id` = @p_session_id",
+                null,
+                new Dictionary<string, object>
+                {
+                    { "p_session_id", sessionId },
+                    { "p_new_token", newRefreshToken },
+                }
+            );
+
+            return accessToken;
         }
 
         /// <summary>
         /// Should be executed on authorization
         /// </summary>
         /// <returns>Refresh token</returns>
-        public string CreateRefreshJWT(string deviceName, int userId, string audience = "WebClient")
+        public string CreateSession(string deviceName, int userId, string audience = "WebClient")
         {
-            string refreshToken = CreateJWT(userId, TimeSpan.FromDays(30), audience);
+            string refreshToken = CreateRefreshJWT(userId, audience);
 
             GlobalSettings.Instance.Database.ExecuteSql(
                 @"INSERT INTO `session` (`user_id`, `device_name`, `token`)
@@ -106,6 +151,11 @@ namespace Messenger.Common.JWT
             );
 
             return refreshToken;
+        }
+
+        private string CreateRefreshJWT(int userId, string audience = "WebClient")
+        {
+            return CreateJWT(userId, TimeSpan.FromDays(30), audience);
         }
 
         public string CreateJWT(int userId, TimeSpan duration, string audience = "WebClient")
