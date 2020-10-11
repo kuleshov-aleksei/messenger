@@ -1,0 +1,1 @@
+ALTER TABLE `session` MODIFY COLUMN `session_id` INT auto_increment;

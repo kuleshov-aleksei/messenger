@@ -12,6 +12,9 @@ namespace Messenger.AuthServer.HttpModules.Auth
         [JsonProperty("password")]
         public string Password { get; set; }
 
+        [JsonProperty("device_name")]
+        public string DeviceName { get; set; }
+
         public override bool Validate()
         {
             if (string.IsNullOrEmpty(Password))
@@ -20,6 +23,11 @@ namespace Messenger.AuthServer.HttpModules.Auth
             }
 
             if (string.IsNullOrEmpty(Login))
+            {
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(DeviceName))
             {
                 return false;
             }
