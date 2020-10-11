@@ -22,15 +22,20 @@ namespace Messenger.AuthServer.HttpModules.RefreshAccessToken
         protected override async Task OnRequest(IHttpContext context, RequestBase request)
         {
             Cookie cookie = context.Request.Cookies.First(x => x.Name == JwtHelper.RefreshTokenName);
-            if (cookie == null)
+            if (cookie == null || string.IsNullOrEmpty(cookie.Value))
             {
-                await SendResponse(context, HttpStatusCode.BadRequest, new ServerError("assess token is empty"));
+                await SendResponse(context, HttpStatusCode.Unauthorized, new ServerError("access token is empty"));
                 return;
             }
 
             string refreshToken = cookie.Value;
 
             string accessToken = m_jwtHelper.CreateAccessJWT(refreshToken, out string newRefreshToken);
+
+            if (accessToken == null || newRefreshToken == null)
+            {
+                await SendResponse(context, HttpStatusCode.Unauthorized);
+            }
 
             context.Response.SetCookie(new Cookie(JwtHelper.AccessTokenName, accessToken)
             {

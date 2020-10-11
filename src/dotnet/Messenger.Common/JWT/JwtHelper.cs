@@ -37,6 +37,8 @@ namespace Messenger.Common.JWT
         /// <returns>Access token</returns>
         public string CreateAccessJWT(string refreshToken, out string newRefreshToken)
         {
+            m_logger.Info("Creating access token");
+
             IEnumerable<Claim> claims;
             if (!Validate(refreshToken, out claims))
             {
@@ -59,6 +61,8 @@ namespace Messenger.Common.JWT
                 newRefreshToken = null;
                 return null;
             }
+
+            m_logger.Info($"Creating access token for user {userId}");
 
             bool revoked = false;
             GlobalSettings.Instance.Database.ExecuteSql(
@@ -85,6 +89,7 @@ namespace Messenger.Common.JWT
 
             if (revoked)
             {
+                m_logger.Info($"Refresh token is revoked, can't update");
                 newRefreshToken = null;
                 return null;
             }
@@ -115,6 +120,8 @@ namespace Messenger.Common.JWT
             string accessToken = CreateJWT(userId, TimeSpan.FromMinutes(15));
             newRefreshToken = CreateRefreshJWT(userId);
 
+            m_logger.Info($"Updating refresh token for session {sessionId}");
+
             GlobalSettings.Instance.Database.ExecuteSql(
                 @"UPDATE `session`
                 SET `token` = @p_new_token
@@ -136,6 +143,7 @@ namespace Messenger.Common.JWT
         /// <returns>Refresh token</returns>
         public string CreateSession(string deviceName, int userId, string audience = "WebClient")
         {
+            m_logger.Info($"Creating new session for user {userId}");
             string refreshToken = CreateRefreshJWT(userId, audience);
 
             GlobalSettings.Instance.Database.ExecuteSql(
@@ -182,6 +190,8 @@ namespace Messenger.Common.JWT
 
         public bool Validate(string token, out IEnumerable<Claim> claims, string audience = "WebClient")
         {
+            m_logger.Info($"Validating token");
+
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
 
             TokenValidationParameters validationParameters = new TokenValidationParameters
@@ -195,12 +205,16 @@ namespace Messenger.Common.JWT
             try
             {
                 ClaimsPrincipal claimsPrincipal = handler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
+
+                m_logger.Info($"Authenticated = {claimsPrincipal.Identity.IsAuthenticated}");
+
                 claims = claimsPrincipal.Claims;
                 return claimsPrincipal.Identity.IsAuthenticated;
 
             }
             catch (Exception e)
             {
+                m_logger.Info($"Token error");
                 m_logger.Error(e);
                 claims = null;
                 return false;
