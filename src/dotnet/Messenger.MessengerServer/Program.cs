@@ -8,6 +8,7 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Loader;
+using System.Threading;
 
 namespace Messenger.MessengerServer
 {
@@ -34,7 +35,11 @@ namespace Messenger.MessengerServer
             HttpServer httpServer = new HttpServer(port, webModules);
             httpServer.Start();
 
-            Console.ReadKey();
+            m_running = true;
+            while (m_running)
+            {
+                Thread.Sleep(100);
+            }
         }
 
         static void Main(string[] args)
