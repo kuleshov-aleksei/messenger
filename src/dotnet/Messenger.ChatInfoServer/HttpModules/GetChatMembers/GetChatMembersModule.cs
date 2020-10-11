@@ -1,10 +1,13 @@
 ﻿using EmbedIO;
 using Messenger.Common;
 using Messenger.Common.Http;
+using Messenger.Common.JWT;
 using MySql.Common;
 using Newtonsoft.Json;
 using NLog;
+using System.Collections.Generic;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Messenger.ChatInfoServer.HttpModules.GetChatMembers
@@ -15,13 +18,13 @@ namespace Messenger.ChatInfoServer.HttpModules.GetChatMembers
 
         public override bool IsFinalHandler => true;
 
-        public GetChatMembersModule()
-            : base(Routes.GET_CHAT_MEMBERS)
+        public GetChatMembersModule(JwtHelper jwtHelper)
+            : base(Routes.GET_CHAT_MEMBERS, jwtHelper)
         {
 
         }
 
-        protected override async Task OnRequest(IHttpContext context, GetChatMembersRequest request)
+        protected override async Task OnRequest(IHttpContext context, GetChatMembersRequest request, IEnumerable<Claim> claims)
         {
             GetChatMembersResponse response = LoadChatMembers(request.ChatId);
 

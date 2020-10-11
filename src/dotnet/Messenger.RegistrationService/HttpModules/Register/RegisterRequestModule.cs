@@ -3,6 +3,7 @@ using Messenger.Common;
 using Messenger.Common.Http;
 using System.Collections.Generic;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Messenger.RegistrationService.HttpModules.Register
@@ -12,12 +13,12 @@ namespace Messenger.RegistrationService.HttpModules.Register
         public override bool IsFinalHandler => true;
 
         public RegisterRequestModule()
-            : base (Routes.REGISTER)
+            : base (Routes.REGISTER, null)
         {
-
+            base.NeedAuthorization = false;
         }
 
-        protected override async Task OnRequest(IHttpContext context, RegisterRequest request)
+        protected override async Task OnRequest(IHttpContext context, RegisterRequest request, IEnumerable<Claim> claims)
         {
             bool userExists = false;
 

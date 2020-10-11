@@ -8,6 +8,9 @@ using System.Net;
 using System.Threading.Tasks;
 using MySql.Common;
 using Messenger.Common;
+using System.Collections.Generic;
+using System.Security.Claims;
+using Messenger.Common.JWT;
 
 namespace Messenger.ChatInfoServer.HttpModules.GetChatList
 {
@@ -17,14 +20,22 @@ namespace Messenger.ChatInfoServer.HttpModules.GetChatList
 
         public override bool IsFinalHandler => true;
 
-        public GetChatListModule()
-            :base(Routes.GET_CHAT_LIST)
+        public GetChatListModule(JwtHelper jwtHelper)
+            : base(Routes.GET_CHAT_LIST, jwtHelper)
         {
 
         }
 
-        protected override async Task OnRequest(IHttpContext context, GetChatListRequest request)
+        protected override async Task OnRequest(IHttpContext context, GetChatListRequest request, IEnumerable<Claim> claims)
         {
+            int claimedUser = JwtHelper.GetUserId(claims);
+            if (request.UserId != claimedUser)
+            {
+                m_logger.Info($"Trying to get chats of user {request.UserId}, but claimed user is {claimedUser}");
+                await SendResponse(context, HttpStatusCode.Forbidden);
+                return;
+            }
+
             ChatList response = LoadChatsOfUser(request.UserId);
 
             await SendResponse(context, HttpStatusCode.OK, JsonConvert.SerializeObject(response, Formatting.Indented));

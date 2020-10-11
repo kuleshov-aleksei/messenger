@@ -1,6 +1,7 @@
 ﻿using EmbedIO;
 using Messenger.Common.Elastic;
 using Messenger.Common.Http;
+using Messenger.Common.JWT;
 using Messenger.Common.Settings;
 using Messenger.Common.Tools;
 using Nest;
@@ -27,10 +28,12 @@ namespace Messenger.MessengerServer
 
             int port = int.Parse(DBSettings.ReadSettings("service_messenger_port"));
 
+            JwtHelper jwtHelper = new JwtHelper("jwt_secret.secret");
+
             List<IWebModule> webModules = new List<IWebModule>();
-            webModules.Add(new HttpModules.PutMessage.PutMessageModule(elasticClient, idGenerator));
-            webModules.Add(new HttpModules.GetLastMessages.GetLastMessagesModule(esInteractor));
-            webModules.Add(new HttpModules.GetMessagesFrom.GetMessagesFromModule(esInteractor));
+            webModules.Add(new HttpModules.PutMessage.PutMessageModule(elasticClient, idGenerator, jwtHelper));
+            webModules.Add(new HttpModules.GetLastMessages.GetLastMessagesModule(esInteractor, jwtHelper));
+            webModules.Add(new HttpModules.GetMessagesFrom.GetMessagesFromModule(esInteractor, jwtHelper));
 
             HttpServer httpServer = new HttpServer(port, webModules);
             httpServer.Start();

@@ -1,5 +1,6 @@
 ﻿using EmbedIO;
 using Messenger.Common.Http;
+using Messenger.Common.JWT;
 using Messenger.Common.Settings;
 using NLog;
 using System;
@@ -20,11 +21,13 @@ namespace Messenger.ChatInfoServer
 
             int port = int.Parse(DBSettings.ReadSettings("service_chat_info_port"));
 
+            JwtHelper jwtHelper = new JwtHelper("jwt_secret.secret");
+
             List<IWebModule> webModules = new List<IWebModule>();
-            webModules.Add(new HttpModules.GetChatList.GetChatListModule());
-            webModules.Add(new HttpModules.GetChatMembers.GetChatMembersModule());
-            webModules.Add(new HttpModules.CreateChat.CreateChatModule());
-            webModules.Add(new HttpModules.InviteToChat.InviteChatModule());
+            webModules.Add(new HttpModules.GetChatList.GetChatListModule(jwtHelper));
+            webModules.Add(new HttpModules.GetChatMembers.GetChatMembersModule(jwtHelper));
+            webModules.Add(new HttpModules.CreateChat.CreateChatModule(jwtHelper));
+            webModules.Add(new HttpModules.InviteToChat.InviteChatModule(jwtHelper));
 
             HttpServer httpServer = new HttpServer(port, webModules);
             httpServer.Start();

@@ -22,9 +22,7 @@ namespace Messenger.AuthServer
 
             int port = int.Parse(DBSettings.ReadSettings("service_authorization_port"));
 
-            AssemblyName currentAssembly = Assembly.GetExecutingAssembly().GetName();
-            string issuer = $"{currentAssembly.Name}.{currentAssembly.Version.Major}.{currentAssembly.Version.Minor}.{currentAssembly.Version.Build}";
-            JwtHelper jwtHelper = new JwtHelper(issuer, "jwt_secret.secret");
+            JwtHelper jwtHelper = new JwtHelper("jwt_secret.secret");
 
             List<IWebModule> webModules = new List<IWebModule>();
             webModules.Add(new HttpModules.Auth.AuthModule(jwtHelper));

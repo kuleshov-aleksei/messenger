@@ -1,10 +1,12 @@
 ﻿using EmbedIO;
 using Messenger.Common;
 using Messenger.Common.Http;
+using Messenger.Common.JWT;
 using MySql.Data.MySqlClient;
 using NLog;
 using System.Collections.Generic;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Messenger.ChatInfoServer.HttpModules.InviteToChat
@@ -15,13 +17,13 @@ namespace Messenger.ChatInfoServer.HttpModules.InviteToChat
 
         public override bool IsFinalHandler => true;
 
-        public InviteChatModule()
-            : base(Routes.INVITE_TO_CHAT)
+        public InviteChatModule(JwtHelper jwtHelper)
+            : base(Routes.INVITE_TO_CHAT, jwtHelper)
         {
 
         }
 
-        protected override async Task OnRequest(IHttpContext context, InviteChatRequest request)
+        protected override async Task OnRequest(IHttpContext context, InviteChatRequest request, IEnumerable<Claim> claims)
         {
             if (request.AddedBy == 0 || request.InvitedUserId == 0 || request.ChatId == 0)
             {
@@ -30,6 +32,14 @@ namespace Messenger.ChatInfoServer.HttpModules.InviteToChat
             }
 
             m_logger.Info($"Inviting user {request.InvitedUserId} to chat {request.ChatId} by {request.AddedBy}");
+
+            int claimedUser = JwtHelper.GetUserId(claims);
+            if (request.AddedBy != claimedUser)
+            {
+                m_logger.Info($"Trying to send invite from {request.AddedBy}, but claimed user is {claimedUser}");
+                await SendResponse(context, HttpStatusCode.Forbidden);
+                return;
+            }
 
             try
             {

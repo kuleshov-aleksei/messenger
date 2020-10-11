@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Messenger.AuthServer.HttpModules.Auth
@@ -18,12 +19,13 @@ namespace Messenger.AuthServer.HttpModules.Auth
         public JwtHelper m_jwtHelper;
 
         public AuthModule(JwtHelper jwtHelper)
-            : base(Routes.AUTH)
+            : base(Routes.AUTH, null)
         {
             m_jwtHelper = jwtHelper;
+            base.NeedAuthorization = false;
         }
 
-        protected override async Task OnRequest(IHttpContext context, AuthRequest request)
+        protected override async Task OnRequest(IHttpContext context, AuthRequest request, IEnumerable<Claim> claims)
         {
             bool usernameSucceed = AuthenticateUsername(request.Login, request.Password);
             bool emailSucceed = false;

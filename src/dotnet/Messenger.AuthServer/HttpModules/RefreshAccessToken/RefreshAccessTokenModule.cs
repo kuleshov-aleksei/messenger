@@ -1,8 +1,10 @@
 ﻿using EmbedIO;
 using Messenger.Common.Http;
 using Messenger.Common.JWT;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Messenger.AuthServer.HttpModules.RefreshAccessToken
@@ -14,12 +16,13 @@ namespace Messenger.AuthServer.HttpModules.RefreshAccessToken
         public JwtHelper m_jwtHelper;
 
         public RefreshAccessTokenModule(JwtHelper jwtHelper)
-            : base (Routes.REFRESH)
+            : base (Routes.REFRESH, null)
         {
             m_jwtHelper = jwtHelper;
+            base.NeedAuthorization = false;
         }
 
-        protected override async Task OnRequest(IHttpContext context, RequestBase request)
+        protected override async Task OnRequest(IHttpContext context, RequestBase request, IEnumerable<Claim> claims)
         {
             Cookie cookie = context.Request.Cookies.First(x => x.Name == JwtHelper.RefreshTokenName);
             if (cookie == null || string.IsNullOrEmpty(cookie.Value))

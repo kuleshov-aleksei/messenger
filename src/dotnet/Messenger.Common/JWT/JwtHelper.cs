@@ -12,16 +12,14 @@ namespace Messenger.Common.JWT
     public class JwtHelper
     {
         private Logger m_logger = LogManager.GetCurrentClassLogger();
-        private string m_issuer;
+        private string m_issuer = "AuthServer";
         private SymmetricSecurityKey m_securityKey;
 
         public const string AccessTokenName = "access_token";
         public const string RefreshTokenName = "refresh_token";
 
-        public JwtHelper(string issuer, string secretKeyPath)
+        public JwtHelper(string secretKeyPath)
         {
-            m_issuer = issuer;
-
             if (!File.Exists(secretKeyPath))
             {
                 throw new ApplicationException("Secret JWT key does not exists");
@@ -46,16 +44,7 @@ namespace Messenger.Common.JWT
                 return null;
             }
 
-            int userId = 0;
-            foreach (Claim claim in claims)
-            {
-                if (claim.Type == ClaimTypes.NameIdentifier)
-                {
-                    userId = int.Parse(claim.Value);
-                    break;
-                }
-            }
-
+            int userId = GetUserId(claims);
             if (userId == 0)
             {
                 newRefreshToken = null;
@@ -135,6 +124,19 @@ namespace Messenger.Common.JWT
             );
 
             return accessToken;
+        }
+
+        public static int GetUserId(IEnumerable<Claim> claims)
+        {
+            foreach (Claim claim in claims)
+            {
+                if (claim.Type == ClaimTypes.NameIdentifier)
+                {
+                    return int.Parse(claim.Value);
+                }
+            }
+
+            return 0;
         }
 
         /// <summary>
