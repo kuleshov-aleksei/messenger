@@ -31,10 +31,18 @@ namespace MySql.Common
             }
         }
 
-        public void ExecuteSql(string sql, Action<IDataReader> onRow = null)
+        public void ExecuteSql(string sql, Action<IDataReader> onRow = null, Dictionary<string, object> parameters = null)
         {
             MySqlCommand command = m_mySqlConnection.CreateCommand();
             command.CommandText = sql;
+
+            if (parameters != null)
+            {
+                foreach (KeyValuePair<string, object> keyValuePair in parameters)
+                {
+                    command.Parameters.AddWithValue($"@{keyValuePair.Key}", keyValuePair.Value);
+                }
+            }
 
             if (onRow == null)
             {
