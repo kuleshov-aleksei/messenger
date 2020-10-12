@@ -2,6 +2,6 @@
 {
     internal static class Routes
     {
-        internal const string REGISTER = "/register";
+        internal const string REGISTER = "/register/register";
     }
 }
