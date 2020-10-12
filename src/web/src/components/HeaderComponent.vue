@@ -9,9 +9,17 @@
             text-color="#fff"
             active-text-color="#ffd04b"
         >
-            <a href="/messenger" target="_self"><el-menu-item class="el-menu-item" index="1"><i class="el-icon-chat-line-square"/>Общение</el-menu-item></a>
-            <a href="/profile" target="_self" class="first-right-el"><el-menu-item class="el-menu-item" index="2"><i class="el-icon-user-solid"/>Профиль</el-menu-item></a>
-            <a href="/settings" target="_self"><el-menu-item class="el-menu-item" index="3"><i class="el-icon-setting"/>Настройки</el-menu-item></a>
+            <el-menu-item index="messenger" class="el-menu-item">
+                <i class="el-icon-chat-line-square"/>Общение
+            </el-menu-item>
+            <div class="first-right-el">
+                <el-menu-item index="profile" class="el-menu-item">
+                    <i class="el-icon-user-solid"/>Профиль
+                </el-menu-item>
+            </div>
+            <el-menu-item index="settings" class="el-menu-item">
+                <i class="el-icon-setting"/>Настройки
+            </el-menu-item>
         </el-menu>
     </div>
 </template>
@@ -26,6 +34,7 @@ export default {
     methods: {
         handleSelect(key, keyPath) {
             console.log(key, keyPath);
+            this.$root.$emit("header-click", keyPath);
         },
     },
 };

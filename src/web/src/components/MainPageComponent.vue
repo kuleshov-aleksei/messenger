@@ -15,6 +15,7 @@
 import HeaderComponent from "./HeaderComponent.vue";
 import MessengerComponent from "./MessengerComponent.vue";
 import SettingsComponent from "./SettingsComponent.vue";
+import ProfileComponent from "./ProfileComponent.vue";
 import UndefinedComponent from "./UndefinedComponent.vue";
 
 export default {
@@ -32,13 +33,16 @@ export default {
         };
     },
     mounted: function () {
-        this.$root.$on("sidebar-click", (text) => {
+        this.$root.$on("header-click", (text) => {
             switch (text.join()) {
                 case "messenger":
                     this.componentName = MessengerComponent;
                     break;
                 case "settings":
                     this.componentName = SettingsComponent;
+                    break;
+                case "profile":
+                    this.componentName = ProfileComponent;
                     break;
                 case "collapse":
                     break;

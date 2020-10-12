@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Общение</h1>
+        <h1>Профиль</h1>
     </div>
 </template>
 
