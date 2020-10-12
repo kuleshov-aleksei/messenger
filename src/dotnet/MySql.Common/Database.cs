@@ -31,10 +31,18 @@ namespace MySql.Common
             }
         }
 
-        public void ExecuteSql(string sql, Action<IDataReader> onRow = null)
+        public void ExecuteSql(string sql, Action<IDataReader> onRow = null, Dictionary<string, object> parameters = null)
         {
             MySqlCommand command = m_mySqlConnection.CreateCommand();
             command.CommandText = sql;
+
+            if (parameters != null)
+            {
+                foreach (KeyValuePair<string, object> keyValuePair in parameters)
+                {
+                    command.Parameters.AddWithValue($"@{keyValuePair.Key}", keyValuePair.Value);
+                }
+            }
 
             if (onRow == null)
             {
@@ -48,6 +56,45 @@ namespace MySql.Common
                     {
                         onRow(reader);
                     }
+                }
+            }
+        }
+
+        public void ExecuteProcedure(string procedureName, List<Tuple<string, object, ParameterDirection, MySqlDbType>> parameters, out Dictionary<string, object> returnValues)
+        {
+            MySqlCommand command = m_mySqlConnection.CreateCommand();
+            command.CommandText = procedureName;
+            command.CommandType = CommandType.StoredProcedure;
+
+            for (int i = 0; i < parameters.Count; i++)
+            {
+                Tuple<string, object, ParameterDirection, MySqlDbType> parameter = parameters[i];
+
+                string parameterName = $"@{parameter.Item1}";
+                if (parameter.Item3 == ParameterDirection.Input)
+                {
+                    command.Parameters.AddWithValue(parameterName, parameter.Item2);
+                    command.Parameters[parameterName].Direction = ParameterDirection.Input;
+                }
+                else if (parameter.Item3 == ParameterDirection.Output)
+                {
+                    command.Parameters.Add(parameterName, parameter.Item4);
+                    command.Parameters[parameterName].Direction = ParameterDirection.Output;
+                }
+            }
+
+            command.ExecuteNonQueryAsync();
+
+            returnValues = new Dictionary<string, object>();
+
+            for (int i = 0; i < parameters.Count; i++)
+            {
+                Tuple<string, object, ParameterDirection, MySqlDbType> parameter = parameters[i];
+
+                string parameterName = $"@{parameter.Item1}";
+                if (parameter.Item3 == ParameterDirection.Output)
+                {
+                    returnValues.Add(parameter.Item1, command.Parameters[parameterName].Value);
                 }
             }
         }

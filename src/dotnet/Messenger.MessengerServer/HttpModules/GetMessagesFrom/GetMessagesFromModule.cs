@@ -1,8 +1,11 @@
 ﻿using EmbedIO;
 using Messenger.Common.Http;
+using Messenger.Common.JWT;
 using Newtonsoft.Json;
 using NLog;
+using System.Collections.Generic;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Messenger.MessengerServer.HttpModules.GetMessagesFrom
@@ -15,13 +18,13 @@ namespace Messenger.MessengerServer.HttpModules.GetMessagesFrom
 
         private EsInteractor m_esInteractor;
 
-        public GetMessagesFromModule(EsInteractor esInteractor)
-            : base(Routes.GET_MESSAGES_FROM)
+        public GetMessagesFromModule(EsInteractor esInteractor, JwtHelper jwtHelper)
+            : base(Routes.GET_MESSAGES_FROM, jwtHelper)
         {
             m_esInteractor = esInteractor;
         }
 
-        protected override async Task OnRequest(IHttpContext context, GetMessagesFromRequest request)
+        protected override async Task OnRequest(IHttpContext context, GetMessagesFromRequest request, IEnumerable<Claim> claims)
         {
             m_logger.Trace($"Retrieving messages of chat {request.ChatId} from {request.UnixTime}");
 

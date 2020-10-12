@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
     <Platform>x64</Platform>
-    <Version>0.0.1</Version>
+    <Version>1.0.0</Version>
   </PropertyGroup>
   
   <ItemGroup>
@@ -12,8 +12,13 @@
     <PackageReference Include="NEST" Version="7.9.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="NLog" Version="4.7.5" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <None Update="jwt_secret.secret" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\MySql.Common\MySql.Common.csproj" />
   </ItemGroup>

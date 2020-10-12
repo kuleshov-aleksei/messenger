@@ -1,6 +1,5 @@
 ﻿using EmbedIO;
 using Messenger.Common.Http;
-using Messenger.Common.JWT;
 using Messenger.Common.Settings;
 using NLog;
 using System;
@@ -8,7 +7,7 @@ using System.Collections.Generic;
 using System.Runtime.Loader;
 using System.Threading;
 
-namespace Messenger.ChatInfoServer
+namespace Messenger.RegistrationService
 {
     class Program
     {
@@ -19,21 +18,16 @@ namespace Messenger.ChatInfoServer
         {
             m_logger.Info("*** Starting ***");
 
-            int port = int.Parse(DBSettings.ReadSettings("service_chat_info_port"));
-
-            JwtHelper jwtHelper = new JwtHelper("jwt_secret.secret");
+            int port = int.Parse(DBSettings.ReadSettings("service_registration_port"));
 
             List<IWebModule> webModules = new List<IWebModule>();
-            webModules.Add(new HttpModules.GetChatList.GetChatListModule(jwtHelper));
-            webModules.Add(new HttpModules.GetChatMembers.GetChatMembersModule(jwtHelper));
-            webModules.Add(new HttpModules.CreateChat.CreateChatModule(jwtHelper));
-            webModules.Add(new HttpModules.InviteToChat.InviteChatModule(jwtHelper));
+            webModules.Add(new HttpModules.Register.RegisterRequestModule());
 
             HttpServer httpServer = new HttpServer(port, webModules);
             httpServer.Start();
 
             m_running = true;
-            while(m_running)
+            while (m_running)
             {
                 Thread.Sleep(100);
             }

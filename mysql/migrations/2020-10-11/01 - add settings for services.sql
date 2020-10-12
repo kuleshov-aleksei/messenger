@@ -1,0 +1,2 @@
+INSERT INTO `dcsm`.`settings` (`name`, `value`, `description`) VALUES ('service_registration_port', '23580', 'Port for registration service');
+INSERT INTO `dcsm`.`settings` (`name`, `value`, `description`) VALUES ('service_authorization_port', '23581', 'Port for authorization service');

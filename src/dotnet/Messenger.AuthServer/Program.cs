@@ -5,10 +5,11 @@ using Messenger.Common.Settings;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading;
 
-namespace Messenger.ChatInfoServer
+namespace Messenger.AuthServer
 {
     class Program
     {
@@ -19,21 +20,19 @@ namespace Messenger.ChatInfoServer
         {
             m_logger.Info("*** Starting ***");
 
-            int port = int.Parse(DBSettings.ReadSettings("service_chat_info_port"));
+            int port = int.Parse(DBSettings.ReadSettings("service_authorization_port"));
 
             JwtHelper jwtHelper = new JwtHelper("jwt_secret.secret");
 
             List<IWebModule> webModules = new List<IWebModule>();
-            webModules.Add(new HttpModules.GetChatList.GetChatListModule(jwtHelper));
-            webModules.Add(new HttpModules.GetChatMembers.GetChatMembersModule(jwtHelper));
-            webModules.Add(new HttpModules.CreateChat.CreateChatModule(jwtHelper));
-            webModules.Add(new HttpModules.InviteToChat.InviteChatModule(jwtHelper));
+            webModules.Add(new HttpModules.Auth.AuthModule(jwtHelper));
+            webModules.Add(new HttpModules.RefreshAccessToken.RefreshAccessTokenModule(jwtHelper));
 
             HttpServer httpServer = new HttpServer(port, webModules);
             httpServer.Start();
 
             m_running = true;
-            while(m_running)
+            while (m_running)
             {
                 Thread.Sleep(100);
             }

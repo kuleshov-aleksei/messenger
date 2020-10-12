@@ -1,12 +1,14 @@
 ﻿using EmbedIO;
 using Messenger.Common;
 using Messenger.Common.Http;
+using Messenger.Common.JWT;
 using Messenger.Common.Tools;
 using Nest;
 using NLog;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Messenger.MessengerServer.HttpModules.PutMessage
@@ -19,16 +21,24 @@ namespace Messenger.MessengerServer.HttpModules.PutMessage
 
         public override bool IsFinalHandler => true;
 
-        public PutMessageModule(ElasticClient elasticClient, IdGenerator idGenerator)
-            :base(Routes.PUT_MESSAGE)
+        public PutMessageModule(ElasticClient elasticClient, IdGenerator idGenerator, JwtHelper jwtHelper)
+            : base(Routes.PUT_MESSAGE, jwtHelper)
         {
             m_elasticClient = elasticClient;
             m_idGenerator = idGenerator;
         }
 
-        protected override async Task OnRequest(IHttpContext context, PutMessageRequest request)
+        protected override async Task OnRequest(IHttpContext context, PutMessageRequest request, IEnumerable<Claim> claims)
         {
             m_logger.Info($"Writing message from user {request.AuthorId} to chat {request.ChatId}");
+
+            int claimedUser = JwtHelper.GetUserId(claims);
+            if (request.AuthorId != claimedUser)
+            {
+                m_logger.Info($"Trying to write message from user {request.AuthorId}, but claimed user is {claimedUser}");
+                await SendResponse(context, HttpStatusCode.Forbidden);
+                return;
+            }
 
             string messageId = $"{m_idGenerator.GenerateUniqueId()}";
 

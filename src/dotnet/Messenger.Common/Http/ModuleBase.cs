@@ -1,9 +1,12 @@
 ﻿using EmbedIO;
+using Messenger.Common.JWT;
 using Newtonsoft.Json;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,10 +15,13 @@ namespace Messenger.Common.Http
     public abstract class ModuleBase<T> : WebModuleBase where T : RequestBase, IRequest
     {
         private Logger m_logger = LogManager.GetCurrentClassLogger();
+        private JwtHelper m_jwtHelper;
+        protected bool NeedAuthorization { get; set; } = true;
 
-        protected ModuleBase(string baseRoute)
+        protected ModuleBase(string baseRoute, JwtHelper jwtHelper)
             : base(baseRoute)
         {
+            m_jwtHelper = jwtHelper;
         }
 
         protected bool TryGetRequestString(IHttpRequest request, out string stringRequest)
@@ -48,13 +54,27 @@ namespace Messenger.Common.Http
             try
             {
                 T request = JsonConvert.DeserializeObject<T>(requestString);
-                if (!request.Validate())
+                IEnumerable<Claim> claims = null;
+
+                if (request != null)
                 {
-                    m_logger.Error("Invalid request");
-                    await SendResponse(context, HttpStatusCode.BadRequest, new ServerError("Invalid request"));
+                    if (!request.Validate())
+                    {
+                        m_logger.Error("Invalid request");
+                        await SendResponse(context, HttpStatusCode.BadRequest, new ServerError("Invalid request"));
+                    }
+
+                    if (NeedAuthorization)
+                    {
+                        if (!request.CheckAuthorization(m_jwtHelper, context.Request.Cookies, out claims))
+                        {
+                            m_logger.Error("Authorization failed");
+                            await SendResponse(context, HttpStatusCode.Unauthorized);
+                        }
+                    }
                 }
 
-                await OnRequest(context, request);
+                await OnRequest(context, request, claims);
             }
             catch (Exception e)
             {
@@ -64,7 +84,7 @@ namespace Messenger.Common.Http
             }
         }
 
-        protected abstract Task OnRequest(IHttpContext context, T request);
+        protected abstract Task OnRequest(IHttpContext context, T request, IEnumerable<Claim> claims);
 
         public static Task SendResponse(IHttpContext context, HttpStatusCode statusCode)
         {

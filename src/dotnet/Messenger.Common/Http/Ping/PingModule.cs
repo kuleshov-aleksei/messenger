@@ -1,11 +1,8 @@
 ﻿using EmbedIO;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Messenger.Common.Http.Ping
@@ -13,13 +10,14 @@ namespace Messenger.Common.Http.Ping
     internal class PingModule : ModuleBase<PingRequest>
     {
         public PingModule()
-            : base(Routes.PING_ROUTE)
+            : base(Routes.PING_ROUTE, null)
         {
+            base.NeedAuthorization = false;
         }
 
         public override bool IsFinalHandler => true;
 
-        protected override async Task OnRequest(IHttpContext context, PingRequest request)
+        protected override async Task OnRequest(IHttpContext context, PingRequest request, IEnumerable<Claim> claims)
         {
             await SendResponse(context, HttpStatusCode.OK,
                 JsonConvert.SerializeObject(
