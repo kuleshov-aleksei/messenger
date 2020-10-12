@@ -8,6 +8,10 @@
     <Version>2.0.0</Version>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PublishDir>$(SolutionDir)/build/Messenger.ChatInfoServer</PublishDir>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Include="..\NLog\NLog.config" Link="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
