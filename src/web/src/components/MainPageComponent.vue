@@ -4,7 +4,6 @@
             <HeaderComponent />
         </el-header>
         <el-container>
-            <SideBarComponent />
             <el-main>
                 <component v-bind:is="componentName"></component>
             </el-main>
@@ -14,7 +13,6 @@
 
 <script>
 import HeaderComponent from "./HeaderComponent.vue";
-import SideBarComponent from "./SideBarComponent.vue";
 import MessengerComponent from "./MessengerComponent.vue";
 import SettingsComponent from "./SettingsComponent.vue";
 import UndefinedComponent from "./UndefinedComponent.vue";
@@ -23,7 +21,6 @@ export default {
     name: "MainPageComponent",
     components: {
         HeaderComponent,
-        SideBarComponent,
         MessengerComponent,
         SettingsComponent,
         UndefinedComponent,
