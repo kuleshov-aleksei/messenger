@@ -1,8 +1,8 @@
 <template>
-    <div>
-        <h1>Настройки</h1>
-        <el-button type="primary" v-on:click="ping">Кнопка которая отправляет POST запрос</el-button>
-    </div>
+  <div class="settings">
+    <h1>Настройки</h1>
+    <el-button type="primary" v-on:click="ping">Кнопка которая отправляет POST запрос</el-button>
+  </div>
 </template>
 
 <script>
@@ -23,6 +23,3 @@ export default {
     },
 };
 </script>
-
-<style>
-</style>

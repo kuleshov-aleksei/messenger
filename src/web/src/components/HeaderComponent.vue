@@ -4,40 +4,33 @@
             :default-active="activeIndex"
             class="el-menu"
             mode="horizontal"
-            @select="handleSelect"
             background-color="#545c64"
             text-color="#fff"
             active-text-color="#ffd04b"
         >
-            <el-menu-item index="messenger" class="el-menu-item">
-                <i class="el-icon-chat-line-square"/>Общение
-            </el-menu-item>
-            <div class="first-right-el">
-                <el-menu-item index="profile" class="el-menu-item">
-                    <i class="el-icon-user-solid"/>Профиль
+            <router-link to="/">
+                <el-menu-item index="messenger" class="el-menu-item">
+                    <i class="el-icon-chat-line-square" />Общение
                 </el-menu-item>
-            </div>
-            <el-menu-item index="settings" class="el-menu-item">
-                <i class="el-icon-setting"/>Настройки
-            </el-menu-item>
+            </router-link>
+            <router-link to="/profile">
+                <div class="first-right-el">
+                    <el-menu-item index="profile" class="el-menu-item">
+                        <i class="el-icon-user-solid" />Профиль
+                    </el-menu-item>
+                </div>
+            </router-link>
+            <router-link to="/settings">
+                <el-menu-item index="settings" class="el-menu-item">
+                    <i class="el-icon-setting" />Настройки
+                </el-menu-item>
+            </router-link>
         </el-menu>
     </div>
 </template>
 
 <script>
-export default {
-    data() {
-        return {
-            activeIndex: "1",
-        };
-    },
-    methods: {
-        handleSelect(key, keyPath) {
-            console.log(key, keyPath);
-            this.$root.$emit("header-click", keyPath);
-        },
-    },
-};
+export default {};
 </script>
 
 <style>
@@ -46,13 +39,14 @@ export default {
 }
 
 .el-menu {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  list-style: none;
-  margin: 0;
-  padding: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-width: 0px !important;
 }
 
 .first-right-el {
@@ -60,12 +54,11 @@ export default {
 }
 
 .el-menu-item {
-  margin: 0 20px;
+    margin: 0 20px;
 }
 
-#header-wrapper > ul > a{
-    color: #FFFFFF;
+#header-wrapper > ul > a {
+    color: #ffffff;
     text-decoration: none;
 }
-
 </style>
