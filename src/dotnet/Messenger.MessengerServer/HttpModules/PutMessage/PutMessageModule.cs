@@ -3,12 +3,12 @@ using Messenger.Common;
 using Messenger.Common.Http;
 using Messenger.Common.JWT;
 using Messenger.Common.Tools;
+using MySql.Common;
 using Nest;
 using NLog;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Messenger.MessengerServer.HttpModules.PutMessage
@@ -28,15 +28,36 @@ namespace Messenger.MessengerServer.HttpModules.PutMessage
             m_idGenerator = idGenerator;
         }
 
-        protected override async Task OnRequest(IHttpContext context, PutMessageRequest request, IEnumerable<Claim> claims)
+        // TODO: Add user validation
+        protected override async Task OnRequest(IHttpContext context, PutMessageRequest request, int userId)
         {
-            m_logger.Info($"Writing message from user {request.AuthorId} to chat {request.ChatId}");
+            m_logger.Info($"Writing message from user {userId} to chat {request.ChatId}");
 
-            int claimedUser = JwtHelper.GetUserId(claims);
-            if (request.AuthorId != claimedUser)
+            bool unathorized = false;
+            GlobalSettings.Instance.Database.ExecuteSql(
+                $@"SELECT COUNT(*) AS 'count'
+                FROM `v_chat_members`
+                WHERE `chat_id` = {request.ChatId}
+                AND `user_id` = {userId}",
+                reader =>
+                {
+                    int? count = reader.GetInt32("count");
+                    if (!count.HasValue)
+                    {
+                        unathorized = true;
+                        return;
+                    }
+
+                    if (count.Value == 0)
+                    {
+                        unathorized = true;
+                        return;
+                    }
+                });
+
+            if (unathorized)
             {
-                m_logger.Info($"Trying to write message from user {request.AuthorId}, but claimed user is {claimedUser}");
-                await SendResponse(context, HttpStatusCode.Forbidden);
+                await SendResponse(context, HttpStatusCode.Unauthorized);
                 return;
             }
 
@@ -47,7 +68,7 @@ namespace Messenger.MessengerServer.HttpModules.PutMessage
                 { GlobalSettings.EsFieldChatId, request.ChatId },
                 { GlobalSettings.EsFieldMessageId, messageId },
                 { GlobalSettings.EsFieldText, request.Message },
-                { GlobalSettings.EsFieldUserId, request.AuthorId },
+                { GlobalSettings.EsFieldUserId, userId },
                 { GlobalSettings.EsFieldMessageTime, UnixEpochTools.ToEpoch(DateTime.UtcNow) },
             };
 

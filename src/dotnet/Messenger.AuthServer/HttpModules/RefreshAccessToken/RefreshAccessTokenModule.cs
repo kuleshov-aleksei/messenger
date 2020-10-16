@@ -22,7 +22,7 @@ namespace Messenger.AuthServer.HttpModules.RefreshAccessToken
             base.NeedAuthorization = false;
         }
 
-        protected override async Task OnRequest(IHttpContext context, RequestBase request, IEnumerable<Claim> claims)
+        protected override async Task OnRequest(IHttpContext context, RequestBase request, int userId)
         {
             Cookie cookie = context.Request.Cookies.First(x => x.Name == JwtHelper.RefreshTokenName);
             if (cookie == null || string.IsNullOrEmpty(cookie.Value))

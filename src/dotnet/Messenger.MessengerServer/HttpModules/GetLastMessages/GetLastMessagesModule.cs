@@ -23,7 +23,8 @@ namespace Messenger.MessengerServer.HttpModules.GetLastMessages
             m_esInteractor = esInteractor;
         }
 
-        protected override async Task OnRequest(IHttpContext context, GetLastMessagesRequest request, IEnumerable<Claim> claims)
+        // TODO: Add user validation
+        protected override async Task OnRequest(IHttpContext context, GetLastMessagesRequest request, int userId)
         {
             m_logger.Trace($"Retrieving messages of chat {request.ChatId}");
 

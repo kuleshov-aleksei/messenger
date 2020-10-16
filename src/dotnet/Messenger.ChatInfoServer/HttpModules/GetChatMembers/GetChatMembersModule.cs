@@ -5,9 +5,7 @@ using Messenger.Common.JWT;
 using MySql.Common;
 using Newtonsoft.Json;
 using NLog;
-using System.Collections.Generic;
 using System.Net;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Messenger.ChatInfoServer.HttpModules.GetChatMembers
@@ -24,7 +22,8 @@ namespace Messenger.ChatInfoServer.HttpModules.GetChatMembers
 
         }
 
-        protected override async Task OnRequest(IHttpContext context, GetChatMembersRequest request, IEnumerable<Claim> claims)
+        // TODO: Add user validation
+        protected override async Task OnRequest(IHttpContext context, GetChatMembersRequest request, int userId)
         {
             GetChatMembersResponse response = LoadChatMembers(request.ChatId);
 

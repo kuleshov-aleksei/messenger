@@ -2,14 +2,11 @@
 using Messenger.Common.Http;
 using Newtonsoft.Json;
 using NLog;
-using System;
 using System.Data;
 using System.Net;
 using System.Threading.Tasks;
 using MySql.Common;
 using Messenger.Common;
-using System.Collections.Generic;
-using System.Security.Claims;
 using Messenger.Common.JWT;
 
 namespace Messenger.ChatInfoServer.HttpModules.GetChatList
@@ -26,17 +23,9 @@ namespace Messenger.ChatInfoServer.HttpModules.GetChatList
 
         }
 
-        protected override async Task OnRequest(IHttpContext context, GetChatListRequest request, IEnumerable<Claim> claims)
+        protected override async Task OnRequest(IHttpContext context, GetChatListRequest request, int userId)
         {
-            int claimedUser = JwtHelper.GetUserId(claims);
-            if (request.UserId != claimedUser)
-            {
-                m_logger.Info($"Trying to get chats of user {request.UserId}, but claimed user is {claimedUser}");
-                await SendResponse(context, HttpStatusCode.Forbidden);
-                return;
-            }
-
-            ChatList response = LoadChatsOfUser(request.UserId);
+            ChatList response = LoadChatsOfUser(userId);
 
             await SendResponse(context, HttpStatusCode.OK, JsonConvert.SerializeObject(response, Formatting.Indented));
         }

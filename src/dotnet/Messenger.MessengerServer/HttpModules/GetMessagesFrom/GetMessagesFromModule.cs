@@ -24,7 +24,8 @@ namespace Messenger.MessengerServer.HttpModules.GetMessagesFrom
             m_esInteractor = esInteractor;
         }
 
-        protected override async Task OnRequest(IHttpContext context, GetMessagesFromRequest request, IEnumerable<Claim> claims)
+        // TODO: Add user validation
+        protected override async Task OnRequest(IHttpContext context, GetMessagesFromRequest request, int userId)
         {
             m_logger.Trace($"Retrieving messages of chat {request.ChatId} from {request.UnixTime}");
 

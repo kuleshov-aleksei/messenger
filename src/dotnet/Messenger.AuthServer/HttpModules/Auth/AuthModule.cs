@@ -27,7 +27,7 @@ namespace Messenger.AuthServer.HttpModules.Auth
             base.NeedAuthorization = false;
         }
 
-        protected override async Task OnRequest(IHttpContext context, AuthRequest request, IEnumerable<Claim> claims)
+        protected override async Task OnRequest(IHttpContext context, AuthRequest request, int userIdUnused)
         {
             bool usernameSucceed = AuthenticateUsername(request.Login, request.Password);
             bool emailSucceed = false;
@@ -48,17 +48,13 @@ namespace Messenger.AuthServer.HttpModules.Auth
             string tempRefreshToken = m_jwtHelper.CreateSession(request.DeviceName, userId);
             string accessToken = m_jwtHelper.CreateAccessJWT(tempRefreshToken, out string refreshToken);
 
-            context.Response.SetCookie(new Cookie(JwtHelper.AccessTokenName, accessToken)
+            AuthResponse authResponse = new AuthResponse
             {
-                HttpOnly = true,
-            });
+                RefreshToken = refreshToken,
+                AccessToken = accessToken
+            };
 
-            context.Response.SetCookie(new Cookie(JwtHelper.RefreshTokenName, refreshToken)
-            {
-                HttpOnly = true,
-            });
-
-            await SendResponse(context, HttpStatusCode.OK);
+            await SendResponse(context, HttpStatusCode.OK, authResponse);
         }
 
         private bool AuthenticateUsername(string username, string password)

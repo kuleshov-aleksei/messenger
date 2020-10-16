@@ -37,14 +37,12 @@ namespace Messenger.Common.JWT
         {
             m_logger.Info("Creating access token");
 
-            IEnumerable<Claim> claims;
-            if (!Validate(refreshToken, out claims))
+            if (!Validate(refreshToken, out int userId))
             {
                 newRefreshToken = null;
                 return null;
             }
 
-            int userId = GetUserId(claims);
             if (userId == 0)
             {
                 newRefreshToken = null;
@@ -128,6 +126,11 @@ namespace Messenger.Common.JWT
 
         public static int GetUserId(IEnumerable<Claim> claims)
         {
+            if (claims == null)
+            {
+                return 0;
+            }
+
             foreach (Claim claim in claims)
             {
                 if (claim.Type == ClaimTypes.NameIdentifier)
@@ -190,7 +193,7 @@ namespace Messenger.Common.JWT
             return handler.WriteToken(token);
         }
 
-        public bool Validate(string token, out IEnumerable<Claim> claims, string audience = "WebClient")
+        public bool Validate(string token, out int userId, string audience = "WebClient")
         {
             m_logger.Info($"Validating token");
 
@@ -210,7 +213,7 @@ namespace Messenger.Common.JWT
 
                 m_logger.Info($"Authenticated = {claimsPrincipal.Identity.IsAuthenticated}");
 
-                claims = claimsPrincipal.Claims;
+                userId = JwtHelper.GetUserId(claimsPrincipal.Claims);
                 return claimsPrincipal.Identity.IsAuthenticated;
 
             }
@@ -218,7 +221,7 @@ namespace Messenger.Common.JWT
             {
                 m_logger.Info($"Token error");
                 m_logger.Error(e);
-                claims = null;
+                userId = 0;
                 return false;
             }
         }

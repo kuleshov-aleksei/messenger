@@ -54,7 +54,7 @@ namespace Messenger.Common.Http
             try
             {
                 T request = JsonConvert.DeserializeObject<T>(requestString);
-                IEnumerable<Claim> claims = null;
+                int userId = 0;
 
                 if (request != null)
                 {
@@ -62,19 +62,28 @@ namespace Messenger.Common.Http
                     {
                         m_logger.Error("Invalid request");
                         await SendResponse(context, HttpStatusCode.BadRequest, new ServerError("Invalid request"));
+                        return;
                     }
 
                     if (NeedAuthorization)
                     {
-                        if (!request.CheckAuthorization(m_jwtHelper, context.Request.Cookies, out claims))
+                        if (!request.CheckAuthorization(m_jwtHelper, request, out userId))
                         {
                             m_logger.Error("Authorization failed");
                             await SendResponse(context, HttpStatusCode.Unauthorized);
+                            return;
+                        }
+
+                        if (userId == 0)
+                        {
+                            m_logger.Error("Authorization failed");
+                            await SendResponse(context, HttpStatusCode.Unauthorized);
+                            return;
                         }
                     }
                 }
 
-                await OnRequest(context, request, claims);
+                await OnRequest(context, request, userId);
             }
             catch (Exception e)
             {
@@ -84,7 +93,7 @@ namespace Messenger.Common.Http
             }
         }
 
-        protected abstract Task OnRequest(IHttpContext context, T request, IEnumerable<Claim> claims);
+        protected abstract Task OnRequest(IHttpContext context, T request, int userId);
 
         public static Task SendResponse(IHttpContext context, HttpStatusCode statusCode)
         {
@@ -119,6 +128,11 @@ namespace Messenger.Common.Http
         public static async Task SendResponse(IHttpContext context, HttpStatusCode statusCode, ServerError serverError)
         {
             await SendResponse(context, statusCode, JsonConvert.SerializeObject(serverError));
+        }
+        
+        public static async Task SendResponse(IHttpContext context, HttpStatusCode statusCode, ResponseBase response)
+        {
+            await SendResponse(context, statusCode, response.ToJson());
         }
     }
 }

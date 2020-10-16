@@ -18,7 +18,7 @@ namespace Messenger.RegistrationService.HttpModules.Register
             base.NeedAuthorization = false;
         }
 
-        protected override async Task OnRequest(IHttpContext context, RegisterRequest request, IEnumerable<Claim> claims)
+        protected override async Task OnRequest(IHttpContext context, RegisterRequest request, int userId)
         {
             bool userExists = false;
 

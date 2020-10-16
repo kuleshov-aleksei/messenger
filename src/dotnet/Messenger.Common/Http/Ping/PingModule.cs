@@ -17,7 +17,7 @@ namespace Messenger.Common.Http.Ping
 
         public override bool IsFinalHandler => true;
 
-        protected override async Task OnRequest(IHttpContext context, PingRequest request, IEnumerable<Claim> claims)
+        protected override async Task OnRequest(IHttpContext context, PingRequest request, int userId)
         {
             await SendResponse(context, HttpStatusCode.OK,
                 JsonConvert.SerializeObject(

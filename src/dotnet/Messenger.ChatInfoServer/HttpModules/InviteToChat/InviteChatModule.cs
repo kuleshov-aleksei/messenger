@@ -23,30 +23,22 @@ namespace Messenger.ChatInfoServer.HttpModules.InviteToChat
 
         }
 
-        protected override async Task OnRequest(IHttpContext context, InviteChatRequest request, IEnumerable<Claim> claims)
+        protected override async Task OnRequest(IHttpContext context, InviteChatRequest request, int userId)
         {
-            if (request.AddedBy == 0 || request.InvitedUserId == 0 || request.ChatId == 0)
+            if (request.InvitedUserId == 0 || request.ChatId == 0)
             {
                 await SendResponse(context, HttpStatusCode.BadRequest);
                 return;
             }
 
-            m_logger.Info($"Inviting user {request.InvitedUserId} to chat {request.ChatId} by {request.AddedBy}");
-
-            int claimedUser = JwtHelper.GetUserId(claims);
-            if (request.AddedBy != claimedUser)
-            {
-                m_logger.Info($"Trying to send invite from {request.AddedBy}, but claimed user is {claimedUser}");
-                await SendResponse(context, HttpStatusCode.Forbidden);
-                return;
-            }
+            m_logger.Info($"Inviting user {request.InvitedUserId} to chat {request.ChatId} by {userId}");
 
             try
             {
                 await GlobalSettings.Instance.Database.ExecuteProcedureAsync("p_add_user_to_chat", new Dictionary<string, object>
                 {
                     { "new_user_id", request.InvitedUserId },
-                    { "added_by", request.AddedBy },
+                    { "added_by", userId },
                     { "chat_id", request.ChatId }
                 });
             }

@@ -10,6 +10,12 @@ namespace Messenger.Common.Http
 {
     public abstract class RequestBase : IRequest
     {
+        [JsonProperty("access_token")]
+        public string AccessToken { get; set; }
+
+        [JsonProperty("refresh_token")]
+        public string RefreshToken { get; set; }
+
         public string ToJson(Formatting formatting = Formatting.Indented)
         {
             return JsonConvert.SerializeObject(this, formatting);
@@ -17,18 +23,15 @@ namespace Messenger.Common.Http
 
         public abstract bool Validate();
 
-        public bool CheckAuthorization(JwtHelper jwtHelper, ICookieCollection cookies, out IEnumerable<Claim> claims)
+        public bool CheckAuthorization(JwtHelper jwtHelper, RequestBase requestBase, out int userId)
         {
-            Cookie cookie = cookies.FirstOrDefault(x => x.Name == JwtHelper.AccessTokenName);
-            if (cookie == null || string.IsNullOrEmpty(cookie.Value))
+            if (requestBase == null || string.IsNullOrEmpty(requestBase.AccessToken))
             {
-                claims = null;
+                userId = 0;
                 return false;
             }
 
-            string accessToken = cookie.Value;
-
-            return jwtHelper.Validate(accessToken, out claims);
+            return jwtHelper.Validate(requestBase.AccessToken, out userId);
         }
     }
 }
