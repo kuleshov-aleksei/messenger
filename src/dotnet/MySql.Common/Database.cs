@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,6 +10,7 @@ namespace MySql.Common
     public class Database
     {
         private MySqlConnection m_mySqlConnection;
+        private Logger m_logger = LogManager.GetCurrentClassLogger();
 
         public Database(DatabaseConnectionSettings databaseConnectionSettings)
         {
@@ -62,6 +64,8 @@ namespace MySql.Common
 
         public void ExecuteProcedure(string procedureName, List<Tuple<string, object, ParameterDirection, MySqlDbType>> parameters, out Dictionary<string, object> returnValues)
         {
+            m_logger.Trace($"Executing procedure {procedureName}");
+
             MySqlCommand command = m_mySqlConnection.CreateCommand();
             command.CommandText = procedureName;
             command.CommandType = CommandType.StoredProcedure;
@@ -83,7 +87,7 @@ namespace MySql.Common
                 }
             }
 
-            command.ExecuteNonQueryAsync();
+            command.ExecuteNonQuery();
 
             returnValues = new Dictionary<string, object>();
 

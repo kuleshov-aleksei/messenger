@@ -4,6 +4,7 @@ using Messenger.Common.Http;
 using Messenger.Common.JWT;
 using MySql.Common;
 using MySql.Data.MySqlClient;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -15,6 +16,7 @@ namespace Messenger.AuthServer.HttpModules.Auth
 {
     public class AuthModule : ModuleBase<AuthRequest>
     {
+        private Logger m_logger = LogManager.GetCurrentClassLogger();
         public override bool IsFinalHandler => true;
         public JwtHelper m_jwtHelper;
 
@@ -68,6 +70,12 @@ namespace Messenger.AuthServer.HttpModules.Auth
             parameters.Add(new Tuple<string, object, ParameterDirection, MySqlDbType>("p_out_valid", null, ParameterDirection.Output, MySqlDbType.Int32));
 
             GlobalSettings.Instance.Database.ExecuteProcedure("p_valid_password_username", parameters, out Dictionary<string, object> returnValue);
+
+            if (!returnValue.ContainsKey("p_out_valid"))
+            {
+                m_logger.Error("Invalid response from db");
+                return false;
+            }
 
             return (int)returnValue["p_out_valid"] > 0;
         }

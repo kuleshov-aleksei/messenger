@@ -19,7 +19,7 @@ namespace Messenger.Common.Http
 
         public bool CheckAuthorization(JwtHelper jwtHelper, ICookieCollection cookies, out IEnumerable<Claim> claims)
         {
-            Cookie cookie = cookies.First(x => x.Name == JwtHelper.AccessTokenName);
+            Cookie cookie = cookies.FirstOrDefault(x => x.Name == JwtHelper.AccessTokenName);
             if (cookie == null || string.IsNullOrEmpty(cookie.Value))
             {
                 claims = null;
