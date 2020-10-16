@@ -1,26 +1,33 @@
 <template>
-    <el-container>
-        <el-header>
-            <HeaderComponent />
-        </el-header>
-        <el-container>
-            <div>
-                <h1>Test Auth</h1>
-            </div>
-        </el-container>
-    </el-container>
+    <div class="auth-holder">
+        <el-input placeholder="Login" v-model="input" @input="testInput"></el-input>
+        <el-input placeholder="Password" v-model="input" show-password></el-input>
+    </div>
 </template>
 
 <script>
-import HeaderComponent from "../../components/HeaderComponent.vue";
 
 export default {
-    name: "MainPageComponent",
-    components: {
-        HeaderComponent,
-    }
-};
+    data() {
+      return {
+        links: [],
+        state: '',
+        timeout:  null
+      };
+    },
+    methods: {
+      testInput(text)
+        {
+            console.log(text);
+        }
+    },
+  };
 </script>
 
 <style>
+.auth-holder {
+    max-width: 400px;
+    margin:auto;
+    margin-top:20px;
+}
 </style>
