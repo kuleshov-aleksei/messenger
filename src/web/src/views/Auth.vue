@@ -15,6 +15,7 @@
 <script>
 import axios from "axios";
 import store from "../store"
+import { api_url } from "../store"
 
 export default {
     data() {
@@ -31,7 +32,7 @@ export default {
         this.auth("example_api@example.com", "my_password");
       },
       auth: function(login, password) {
-          axios.post(store.state.api_url + "/auth/auth", {
+          axios.post(api_url + "/auth/auth", {
             login: login,
             password: password,
             device_name: "vue-dev",
