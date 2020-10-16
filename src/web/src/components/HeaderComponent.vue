@@ -1,7 +1,6 @@
 <template>
     <div id="header-wrapper">
         <el-menu
-            :default-active="activeIndex"
             class="el-menu"
             mode="horizontal"
             background-color="#545c64"
