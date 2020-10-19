@@ -1,34 +1,41 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.IO;
+﻿using MySql.Data.MySqlClient;
+using NLog;
+using System.Data;
 
 namespace MySql.Common
 {
-    public class DatabaseConnectionSettings
+    public class DatabaseConnection
     {
-        [JsonProperty("host")]
-        public string Host { get; set; }
+        private MySqlConnection m_mysqlConnection;
+        private Logger m_logger = LogManager.GetCurrentClassLogger();
 
-        [JsonProperty("port")]
-        public int Port { get; set; }
-
-        [JsonProperty("database_name")]
-        public string DatabaseName { get; set; }
-
-        [JsonProperty("user")]
-        public string User { get; set; }
-
-        [JsonProperty("password")]
-        public string Password { get; set; }
-
-        public static DatabaseConnectionSettings ReadFromFile(string jsonFilename)
+        public DatabaseConnection(string connectionString)
         {
-            if (!File.Exists(jsonFilename))
-            {
-                throw new ApplicationException("File does not exists");
-            }
+            m_mysqlConnection = new MySqlConnection(connectionString);
+            m_logger.Trace($"Creating mysql wrapper for server {m_mysqlConnection.Site}");
 
-            return JsonConvert.DeserializeObject<DatabaseConnectionSettings>(File.ReadAllText(jsonFilename));
+            m_mysqlConnection.StateChange += OnMysqlConnectionStateChange;
+        }
+
+        private void OnMysqlConnectionStateChange(object sender, StateChangeEventArgs e)
+        {
+            m_logger.Trace($"State changed: prev state = {e.OriginalState} new state = {e.CurrentState}");
+            if (e.CurrentState == ConnectionState.Closed)
+            {
+                Open();
+            }
+        }
+
+        public void Open()
+        {
+            ConnectionState connectionState = m_mysqlConnection.State;
+            m_mysqlConnection.Open();
+            m_logger.Trace($"Openning connection. Previous state {connectionState}, current state {m_mysqlConnection.State}");
+        }
+
+        public MySqlCommand CreateCommand()
+        {
+            return m_mysqlConnection.CreateCommand();
         }
     }
 }

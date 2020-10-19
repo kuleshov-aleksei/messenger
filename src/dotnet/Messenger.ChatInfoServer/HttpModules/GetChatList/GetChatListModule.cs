@@ -25,6 +25,7 @@ namespace Messenger.ChatInfoServer.HttpModules.GetChatList
 
         protected override async Task OnRequest(IHttpContext context, GetChatListRequest request, int userId)
         {
+            m_logger.Trace($"Loading chats of user {userId}");
             ChatList response = LoadChatsOfUser(userId);
 
             await SendResponse(context, HttpStatusCode.OK, JsonConvert.SerializeObject(response, Formatting.Indented));

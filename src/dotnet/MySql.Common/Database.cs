@@ -9,7 +9,7 @@ namespace MySql.Common
 {
     public class Database
     {
-        private MySqlConnection m_mySqlConnection;
+        private DatabaseConnection m_dbConnection;
         private Logger m_logger = LogManager.GetCurrentClassLogger();
 
         public Database(DatabaseConnectionSettings databaseConnectionSettings)
@@ -21,11 +21,11 @@ namespace MySql.Common
                 $"user={databaseConnectionSettings.User};" +
                 $"password={databaseConnectionSettings.Password}";
 
-            m_mySqlConnection = new MySqlConnection(connectionString);
+            m_dbConnection = new DatabaseConnection(connectionString);
 
             try
             {
-                m_mySqlConnection.Open();
+                m_dbConnection.Open();
             }
             catch (Exception e)
             {
@@ -35,7 +35,7 @@ namespace MySql.Common
 
         public void ExecuteSql(string sql, Action<IDataReader> onRow = null, Dictionary<string, object> parameters = null)
         {
-            MySqlCommand command = m_mySqlConnection.CreateCommand();
+            MySqlCommand command = m_dbConnection.CreateCommand();
             command.CommandText = sql;
 
             if (parameters != null)
@@ -66,7 +66,7 @@ namespace MySql.Common
         {
             m_logger.Trace($"Executing procedure {procedureName}");
 
-            MySqlCommand command = m_mySqlConnection.CreateCommand();
+            MySqlCommand command = m_dbConnection.CreateCommand();
             command.CommandText = procedureName;
             command.CommandType = CommandType.StoredProcedure;
 
@@ -110,7 +110,7 @@ namespace MySql.Common
 
         public async Task ExecuteProcedureAsync(string procedureName, Dictionary<string, object> parameters = null)
         {
-            MySqlCommand command = m_mySqlConnection.CreateCommand();
+            MySqlCommand command = m_dbConnection.CreateCommand();
             command.CommandText = procedureName;
             command.CommandType = CommandType.StoredProcedure;
 
