@@ -21,12 +21,12 @@
                 <ul v-if="chats.length > 0">
                     <li v-for="chat in chats" :key="chat.title">
                         <div class="chat-item">
-                            <el-avatar :size="small" :src="chat.image_small"></el-avatar><div class="chat-title">{{ chat.title }}</div>
+                            <el-avatar size="medium" :src="chat.image_medium"></el-avatar><div class="chat-title">{{ chat.title }}</div>
                         </div>
                         <hr class="hr-chat-breaker">
                     </li>
                 </ul>
-                <div v-if="chats.length == 0" class="chat-not-found">К сожалению, мы не нашли ваши чаты.<br><br>
+                <div v-if="chats.length == 0" class="chat-not-found">Бесед пока нет<br><br>
                 Создайте новый или попросите друзей вас пригласить.</div>
             </div>
             <div class="chat">Выберите чат или создайте новый</div>
@@ -57,9 +57,9 @@ export default {
                 console.log(response);
                 this.chats = response.data.chats;
                 for (var i = 0; i < this.chats.length; i++) {
-                    if (this.chats[i].image_small == null)
+                    if (this.chats[i].image_medium == null)
                     {
-                        this.chats[i].image_small = "https://help-zte.ru/assets/img/icon/notfound.png"
+                        this.chats[i].image_medium = "https://help-zte.ru/assets/img/icon/notfound.png"
                     }
                 }
             })
@@ -96,7 +96,7 @@ export default {
 }
 
 .chat-not-found {
-    text-align: left;
+    text-align: center;
 }
 
 .chat-item {
@@ -104,8 +104,11 @@ export default {
 }
 
 .chat-item > .chat-title {
-    font-size: 1em;
-    margin: auto;
+    font-size: 14px;
+    margin-top: auto;
+    margin-bottom: auto;
+    text-align: left;
+    padding-left: 10px;
 }
 
 .hr-chat-breaker {
@@ -129,7 +132,11 @@ export default {
     margin-top: 10px;
   }
 #grid > div {
-  font-size: 1vw;
+  font-size: 18px;
   text-align: center;
+}
+
+ul {
+    padding-left: 0px;
 }
 </style>
