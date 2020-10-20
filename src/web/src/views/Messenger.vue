@@ -1,40 +1,77 @@
 <template>
     <div class="messenger">
-        <el-dialog
-            title="Создать новый чат"
-            :visible.sync="dialogVisible"
-            width="30%">
-            <el-input
-                placeholder="Введите название чата"
-                v-model="new_chat_title"
-                clearable>
-            </el-input>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">Отмена</el-button>
-                <el-button type="primary" @click="dialogVisible = false" v-on:click="create_new_chat">Создать</el-button>
-            </span>
-        </el-dialog>
-
         <div id="grid">
             <div class="chat-list-header">
                 <el-input placeholder="Search" prefix-icon="el-icon-search" v-model="search_input" clearable></el-input>
                 <el-button class="add-button" icon="el-icon-plus" circle @click="dialogVisible = true"></el-button>
             </div>
-            <div class="chat-header">Title placeholder</div>
+            <div class="chat-header">
+                <h3>{{current_chat ? current_chat.title : chat_title_placeholder}}</h3>
+                <el-button class="chat-members" v-if="current_chat_members.length > 2" type="text" @click="show_chat_info">{{current_chat_members.length}} {{get_declination(current_chat_members.length)}}</el-button>
+            </div>
             <div class="chat-list">
                 <ul v-if="chats.length > 0">
                     <li v-for="chat in chats" :key="chat.title">
-                        <div class="chat-item">
-                            <el-avatar size="medium" :src="chat.image_medium"></el-avatar><div class="chat-title">{{ chat.title }}</div>
+                        <div class="chat-item" @click="on_chat_selected(chat)">
+                            <el-avatar class="chat-medium-avatar" :src="chat.image_medium">
+                                <img src="../assets/notfound.png"/>
+                            </el-avatar>
+                            <div class="chat-title">{{ chat.title }}</div>
                         </div>
                         <hr class="hr-chat-breaker">
                     </li>
                 </ul>
                 <div v-if="chats.length == 0" class="chat-not-found">Бесед пока нет<br><br>
-                Создайте новый или попросите друзей вас пригласить.</div>
+                Создайте новую или попросите друзей вас пригласить.</div>
             </div>
-            <div class="chat">Выберите чат или создайте новый</div>
+            <div class="chat"></div>
         </div>
+
+        <el-dialog
+            title="Создать новую беседу"
+            :visible.sync="dialogVisible"
+            width="30%">
+                <el-input
+                    placeholder="Введите название беседы"
+                    v-model="new_chat_title"
+                    clearable>
+                </el-input>
+                <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">Отмена</el-button>
+                <el-button type="primary" @click="dialogVisible = false" v-on:click="create_new_chat">Создать</el-button>
+            </span>
+        </el-dialog>
+
+        <el-dialog
+            title="Информация о беседе"
+            :visible.sync="chat_info_visible"
+            width="30%"
+            v-if="current_chat != null">
+                <div class="chat-info-header">
+                    <el-avatar class="avatar" :src="current_chat.image_medium">
+                        <img src="../assets/notfound.png"/>
+                    </el-avatar>
+                    <div class="title-container">
+                        <h1>{{current_chat.title}}</h1>
+                        <h2>{{current_chat_members.length}} {{get_declination(current_chat_members.length)}}</h2>
+                    </div>
+                </div>
+                <hr>
+                <div class="chat-members-list">
+                    <ul>
+                        <li v-for="member in current_chat_members" :key="member.id">
+                            <el-avatar size="large" :src="member.image_medium">
+                                <img src="../assets/notfound.png"/>
+                            </el-avatar>
+                            <el-button type="text">{{member.name}} {{member.surname}}</el-button>
+                            <div class="member-info" v-if="member.invited_by_name == null">Создатель беседы</div>
+                            <div class="member-info" v-if="member.invited_by_name != null">Пригласил {{member.invited_by_name}} {{member.invited_by_surname}}</div>
+                        </li>
+                    </ul>
+                </div>
+                <span slot="footer" class="dialog-footer">
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -49,6 +86,11 @@ export default {
         search_input: '',
         new_chat_title: '',
         dialogVisible: false,
+        chat_title_placeholder: 'Выберите беседу или создайте новую',
+        chat_info_visible: false,
+        current_chat_members: [
+        ],
+        current_chat: null,
         chats: [
         ]
       };
@@ -59,14 +101,7 @@ export default {
                 access_token: store.state.access_token,
             })
             .then((response) => {
-                console.log(response);
                 this.chats = response.data.chats;
-                for (var i = 0; i < this.chats.length; i++) {
-                    if (this.chats[i].image_medium == null)
-                    {
-                        this.chats[i].image_medium = "https://help-zte.ru/assets/img/icon/notfound.png"
-                    }
-                }
             })
             .catch((error) => {
                 console.log(error);
@@ -103,6 +138,31 @@ export default {
                 });
             }
         },
+        on_chat_selected: function(chat) {
+            this.current_chat = chat;
+            this.get_chat_members(chat.id);
+        },
+        get_chat_members: function(chat_id) {
+            axios.post(api_url + "/chat/get_chat_members", {
+                access_token: store.state.access_token,
+                chat_id: chat_id,
+            })
+            .then((response) => {
+                console.log(response.data.chat_members);
+                this.current_chat_members = response.data.chat_members;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        },
+        get_declination: function(count) {
+            var cases = [2, 0, 1, 1, 1, 2];
+            var titles = ['участник', 'участника', 'участников'];
+            return titles[ (count % 100 > 4 && count % 100 < 20) ? 2 : cases[(count % 10 < 5) ? count % 10 : 5] ];
+        },
+        show_chat_info: function() {
+            this.chat_info_visible = true;
+        }
     },
     mounted() {
         this.load_chats();
@@ -110,11 +170,12 @@ export default {
   };
 </script>
 
-<style>
+<style lang="scss">
 .messenger {
     max-width: 70%;
     margin-left: auto;
     margin-right: auto;
+    padding-top: 30px;
 }
 
 .add-button {
@@ -138,10 +199,15 @@ export default {
 .chat-item {
     display: flex;
     padding: 10px 0 10px 0;
+
+    .chat-medium-avatar {
+        width: 48px;
+        height: 48px;
+    }
 }
 
 .chat-item > .chat-title {
-    font-size: 14px;
+    font-size: 16px;
     margin-top: auto;
     margin-bottom: auto;
     text-align: left;
@@ -167,13 +233,83 @@ export default {
     height: 90vh;
     margin: 0;
     margin-top: 10px;
-  }
+}
+
 #grid > div {
   font-size: 18px;
-  text-align: center;
+}
+
+.chat-header {
+    text-align: left;
+    padding: 0 0 0 50px;
+    margin-top: auto;
+    margin-bottom: auto;
+    display: flex;
+
+    .chat-members {
+        margin-top: auto;
+        margin-bottom: auto;
+        padding-left: 20px;
+    }
+
+    button > span {
+        color: gray;
+    }
 }
 
 ul {
     padding-left: 0px;
+}
+
+.chat-info-header {
+    display: flex;
+    margin-bottom: 20px;
+
+    .avatar {
+        height: 120px;
+        width: 120px;
+        margin-left: 20px;
+    }
+
+    .title-container {
+        margin: auto 0 auto 0;
+        margin-left: 50px;
+
+        h1 {
+            color: black;
+            text-align: left;
+        }
+
+        h2 {
+            color: gray;
+            font-size: 1em;
+            text-align: left;
+        }
+    }
+}
+
+.chat-members-list {
+
+    li {
+        text-align: left;
+        display: flex;
+        justify-content: left;
+        align-items: center;
+        margin-bottom: 10px;
+        
+        button {
+            font-size: 1.5em;
+            padding-left: 15px;
+        }
+
+        .member-info {
+            margin-left: auto
+        }
+    }
+
+    ul {
+        list-style-type: none;
+    }
+
 }
 </style>
