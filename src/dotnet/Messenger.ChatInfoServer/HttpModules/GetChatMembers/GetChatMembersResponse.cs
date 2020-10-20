@@ -39,5 +39,8 @@ namespace Messenger.ChatInfoServer.HttpModules.GetChatMembers
 
         [JsonProperty("image_large")]
         public string ImageLarge { get; set; }
+
+        [JsonProperty("username")]
+        public string UserName { get; set; }
     }
 }
