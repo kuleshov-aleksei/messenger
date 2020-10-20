@@ -35,7 +35,7 @@ namespace Messenger.ChatInfoServer.HttpModules.GetChatList
         {
             ChatList chatList = new ChatList();
 
-            string sql = $@"SELECT `title`, `image_small`, `image_medium`, `user_id`
+            string sql = $@"SELECT `chat`.`id` as 'id', `title`, `image_small`, `image_medium`, `user_id`
                         FROM `chat`
                         INNER JOIN `chat_members` ON `chat`.`id` = `chat_members`.`chat_id`
                         WHERE `chat_members`.`user_id` = {userId}";
@@ -45,6 +45,7 @@ namespace Messenger.ChatInfoServer.HttpModules.GetChatList
                 {
                     Chat chat = new Chat
                     {
+                        Id = reader.GetString("id"),
                         Title = reader.GetString("title"),
                         ImageMedium = reader.GetString("image_medium"),
                         ImageSmall = reader.GetString("image_small"),

@@ -34,7 +34,7 @@ namespace Messenger.ChatInfoServer.HttpModules.GetChatMembers
         {
             GetChatMembersResponse response = new GetChatMembersResponse();
                  
-            string sql = $@"SELECT `chat_id`, `name`, `surname`, `invited_by_name`, `invited_by_surname`, `joined_at`
+            string sql = $@"SELECT `user_id`, `chat_id`, `name`, `surname`, `invited_by_name`, `invited_by_surname`, `joined_at`, `image_small`, `image_medium`, `image_large`
                         FROM 
                         `v_chat_members`
                         WHERE `v_chat_members`.`chat_id` = {chatId}";
@@ -49,6 +49,10 @@ namespace Messenger.ChatInfoServer.HttpModules.GetChatMembers
                         InvitedByName = reader.GetString("invited_by_name"),
                         InvitedBySurname = reader.GetString("invited_by_surname"),
                         JoinedAt = reader.GetDateTime("joined_at"),
+                        Id = reader.GetInt32("user_id").Value,
+                        ImageSmall = reader.GetString("image_small"),
+                        ImageMedium = reader.GetString("image_medium"),
+                        ImageLarge = reader.GetString("image_large"),
                     };
 
                     if (chatMember.InvitedByName == "SYSTEM")

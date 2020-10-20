@@ -15,6 +15,9 @@ namespace Messenger.ChatInfoServer.HttpModules.GetChatList
         [JsonProperty("title")]
         public string Title { get; set; }
 
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
         [JsonProperty("image_medium")]
         public string ImageMedium { get; set; }
 

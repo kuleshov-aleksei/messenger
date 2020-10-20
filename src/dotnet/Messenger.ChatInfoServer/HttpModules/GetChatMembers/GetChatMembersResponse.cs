@@ -27,5 +27,17 @@ namespace Messenger.ChatInfoServer.HttpModules.GetChatMembers
 
         [JsonProperty("invited_by_surname")]
         public string InvitedBySurname { get; set; }
+
+        [JsonProperty("id")]
+        public int Id { get; set; }
+
+        [JsonProperty("image_small")]
+        public string ImageSmall { get; set; }
+
+        [JsonProperty("image_medium")]
+        public string ImageMedium { get; set; }
+
+        [JsonProperty("image_large")]
+        public string ImageLarge { get; set; }
     }
 }
