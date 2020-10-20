@@ -4,10 +4,14 @@
             title="Создать новый чат"
             :visible.sync="dialogVisible"
             width="30%">
-            <span>This is a placeholder</span>
+            <el-input
+                placeholder="Введите название чата"
+                v-model="new_chat_title"
+                clearable>
+            </el-input>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">Отмена</el-button>
-                <el-button type="primary" @click="dialogVisible = false">Создать</el-button>
+                <el-button type="primary" @click="dialogVisible = false" v-on:click="create_new_chat">Создать</el-button>
             </span>
         </el-dialog>
 
@@ -43,13 +47,14 @@ export default {
     data() {
       return {
         search_input: '',
+        new_chat_title: '',
         dialogVisible: false,
         chats: [
         ]
       };
     },
     methods: {
-      load_chats: function() {
+        load_chats: function() {
             axios.post(api_url + "/chat/get_chat_list", {
                 access_token: store.state.access_token,
             })
@@ -66,6 +71,37 @@ export default {
             .catch((error) => {
                 console.log(error);
             });
+        },
+        create_new_chat: function() {
+            axios.post(api_url + "/chat/create_chat", {
+                access_token: store.state.access_token,
+                title: this.new_chat_title,
+            })
+            .then(() => {
+                this.notify(true, "Создание чата", "Чат \"" + this.new_chat_title + "\" создан");
+                this.new_chat_title = '';
+                this.load_chats();
+            })
+            .catch((error) => {
+                this.notify(false, "Создание чата", "Ошибка при создании чата.<br>Код " + error.response.status + " " + error.response.statusText);
+            });
+        },
+        notify: function(success, title, message){
+            if (success) {
+                this.$notify({
+                    title: title,
+                    dangerouslyUseHTMLString: true,
+                    message: message,
+                    type: 'success'
+                });
+            }
+            else {
+                this.$notify.error({
+                    title: title,
+                    dangerouslyUseHTMLString: true,
+                    message: message,
+                });
+            }
         },
     },
     mounted() {
@@ -101,6 +137,7 @@ export default {
 
 .chat-item {
     display: flex;
+    padding: 10px 0 10px 0;
 }
 
 .chat-item > .chat-title {
