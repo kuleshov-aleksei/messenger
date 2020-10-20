@@ -63,7 +63,8 @@
                             <el-avatar size="large" :src="member.image_medium">
                                 <img src="../assets/notfound.png"/>
                             </el-avatar>
-                            <el-button type="text">{{member.name}} {{member.surname}}</el-button>
+                            <el-button slot="reference" type="text">{{member.name}} {{member.surname}}</el-button>
+                            <div class="username">@{{member.username}}</div>
                             <div class="member-info" v-if="member.invited_by_name == null">Создатель беседы</div>
                             <div class="member-info" v-if="member.invited_by_name != null">Пригласил {{member.invited_by_name}} {{member.invited_by_surname}}</div>
                         </li>
@@ -289,7 +290,6 @@ ul {
 }
 
 .chat-members-list {
-
     li {
         text-align: left;
         display: flex;
@@ -305,11 +305,20 @@ ul {
         .member-info {
             margin-left: auto
         }
+
+        .username {
+            padding-left: 12px;
+        }
     }
 
     ul {
         list-style-type: none;
     }
-
 }
+
+.el-popover__title {
+    margin-bottom: 0;
+    text-align: center;
+}
+
 </style>
