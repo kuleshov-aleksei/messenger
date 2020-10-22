@@ -10,7 +10,10 @@
   "dependencies": {
     "axios": "^0.20.0",
     "core-js": "^3.6.5",
+    "cors": "^2.8.5",
     "element-ui": "^2.13.2",
+    "google-protobuf": "^3.13.0",
+    "grpc-web": "^1.2.1",
     "js-cookie": "^2.2.1",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
