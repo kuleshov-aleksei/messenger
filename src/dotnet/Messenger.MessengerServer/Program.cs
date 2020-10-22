@@ -1,13 +1,16 @@
 ﻿using EmbedIO;
+using Grpc.Core;
 using Messenger.Common.Elastic;
 using Messenger.Common.Http;
 using Messenger.Common.JWT;
 using Messenger.Common.Settings;
 using Messenger.Common.Tools;
+using Messenger.MessengerServer.gRPC;
 using Nest;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Loader;
 using System.Threading;
 
@@ -38,11 +41,22 @@ namespace Messenger.MessengerServer
             HttpServer httpServer = new HttpServer(port, webModules);
             httpServer.Start();
 
+            Server grpcServer = new Server
+            {
+                Services = { EchoService.BindService(new EchoServiceImpl()) },
+                Ports = { { "0.0.0.0", 7813, ServerCredentials.Insecure } }
+            };
+            grpcServer.Start();
+
+            m_logger.Info($"gRPC server is listening on {grpcServer.Ports.ElementAt(0).Host}:{grpcServer.Ports.ElementAt(0).Port}");
+
             m_running = true;
             while (m_running)
             {
                 Thread.Sleep(100);
             }
+
+            grpcServer.ShutdownAsync().Wait();
         }
 
         static void Main(string[] args)

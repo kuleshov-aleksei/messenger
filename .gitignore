@@ -387,3 +387,6 @@ MigrationBackup/
 .ionide/
 
 # End of https://www.toptal.com/developers/gitignore/api/csharp,angular
+
+jwt_secret.secret
+*_pb.js

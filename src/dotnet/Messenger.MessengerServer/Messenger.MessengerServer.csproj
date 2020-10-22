@@ -23,4 +23,19 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.13.0" />
+    <PackageReference Include="Grpc.Core" Version="2.33.1" />
+    <PackageReference Include="Grpc.Tools" Version="2.33.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="..\..\common\gRPC\echo.proto" GrpcServices="Server">
+      <Link>gRPC\echo.proto</Link>
+    </Protobuf>
+  </ItemGroup>
+
 </Project>
