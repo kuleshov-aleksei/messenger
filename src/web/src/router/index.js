@@ -25,6 +25,11 @@ const routes = [
     name: 'Profile',
     component: () => import('../views/Profile.vue')
   },
+  {
+    path: '/playground',
+    name: 'Playground',
+    component: () => import('../views/Playground.vue')
+  },
   { 
     path: '/404', 
     name: '404', 
