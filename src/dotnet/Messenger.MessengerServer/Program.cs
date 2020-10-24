@@ -26,8 +26,8 @@ namespace Messenger.MessengerServer
             m_logger.Info("*** Starting ***");
 
             ElasticClient elasticClient = ESClient.CreateElasticClient();
-            EsInteractor esInteractor = new EsInteractor(elasticClient);
             IdGenerator idGenerator = new IdGenerator();
+            EsInteractor esInteractor = new EsInteractor(elasticClient, idGenerator);
 
             int port = int.Parse(DBSettings.ReadSettings("service_messenger_port"));
 

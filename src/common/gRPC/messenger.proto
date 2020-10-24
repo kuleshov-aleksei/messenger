@@ -29,7 +29,8 @@ message Message {
 
 message MessageRequest {
 	string access_token = 1;
-	Message message = 2;
+	string message = 2;
+	int32 chat_id = 3;
 }
 
 message MessageList {

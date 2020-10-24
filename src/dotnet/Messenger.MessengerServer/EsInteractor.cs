@@ -1,5 +1,6 @@
 ﻿using Messenger.Common;
 using Messenger.Common.Elastic;
+using Messenger.Common.Tools;
 using Nest;
 using NLog;
 using System;
@@ -12,6 +13,7 @@ namespace Messenger.MessengerServer
     {
         private Logger m_logger = LogManager.GetCurrentClassLogger();
         private ElasticClient m_elasticClient;
+        private IdGenerator m_idGenerator;
 
         private Fields m_includeFields = new Field[] {
             GlobalSettings.EsFieldChatId,
@@ -20,9 +22,10 @@ namespace Messenger.MessengerServer
             GlobalSettings.EsFieldMessageTime,
         };
 
-        public EsInteractor(ElasticClient elasticClient)
+        public EsInteractor(ElasticClient elasticClient, IdGenerator idGenerator)
         {
             m_elasticClient = elasticClient;
+            m_idGenerator = idGenerator;
         }
 
         public MessagesResponse GetLastMessagesOfChat(int chatId)
@@ -133,6 +136,42 @@ namespace Messenger.MessengerServer
             };
 
             return response;
+        }
+
+        internal bool PutMessage(EsMessage message)
+        {
+            string messageId = $"{m_idGenerator.GenerateUniqueId()}";
+
+            Dictionary<string, object> requestDoc = new Dictionary<string, object>()
+            {
+                { GlobalSettings.EsFieldChatId, message.ChatId },
+                { GlobalSettings.EsFieldMessageId, messageId },
+                { GlobalSettings.EsFieldText, message.Message },
+                { GlobalSettings.EsFieldUserId, message.UserId },
+                { GlobalSettings.EsFieldMessageTime, UnixEpochTools.ToEpoch(DateTime.UtcNow) },
+            };
+
+            IUpdateRequest<object, object> updateRequest = new UpdateRequest<object, object>(GlobalSettings.EsIndexName, messageId)
+            {
+                Doc = requestDoc,
+                DocAsUpsert = true,
+                RetryOnConflict = 10
+            };
+
+            IUpdateResponse<object> response = m_elasticClient.Update<object, object>(updateRequest);
+            if (response.ServerError != null)
+            {
+                m_logger.Error($"Error saving message {messageId}. Error: {response.ServerError}");
+                return false;
+            };
+
+            if (!response.IsValid)
+            {
+                m_logger.Error($"Error saving message {messageId}. Error: {response.DebugInformation}");
+                return false;
+            }
+
+            return true;
         }
     }
 }
