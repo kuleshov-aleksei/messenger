@@ -9,8 +9,8 @@
 
 <script>
 //import store from "../store"
-const {EchoRequest} = require('./../gRPC/echo_pb.js');
-const {EchoServiceClient} = require('./../gRPC/echo_grpc_web_pb.js');
+const {EchoRequest} = require('./../gRPC/messenger_pb.js');
+const {MessengerServiceClient} = require('./../gRPC/messenger_grpc_web_pb.js');
 
 export default {
     data() {
@@ -21,7 +21,7 @@ export default {
     created: function() {
       //this.echoService = new EchoServiceClient('http://192.168.40.43:7813');
       //this.echoService = new EchoServiceClient('http://192.168.40.76:10000');
-      this.echoService = new EchoServiceClient('http://api.encamy.keenetic.pro');
+      this.echoService = new MessengerServiceClient('http://api.encamy.keenetic.pro');
     },
     methods: {
       send_echo: function() {

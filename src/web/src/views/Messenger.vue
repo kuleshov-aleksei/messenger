@@ -234,7 +234,7 @@ export default {
     grid-template-areas: 
         "chat-list-header chat-header"
         "chat-list chat";
-    grid-template-rows: 60px 100%;
+    grid-template-rows: 60px 90%;
     grid-template-columns: 20% 1fr;
     grid-gap: 1px;
     height: 90vh;
@@ -244,6 +244,10 @@ export default {
 
 #grid > div {
   font-size: 18px;
+}
+
+.chat {
+    margin-left: 20px;
 }
 
 .chat-header {
