@@ -16,16 +16,14 @@ namespace Messenger.MessengerServer.HttpModules.PutMessage
     internal class PutMessageModule : ModuleBase<PutMessageRequest>
     {
         private Logger m_logger = LogManager.GetCurrentClassLogger();
-        private ElasticClient m_elasticClient;
-        private IdGenerator m_idGenerator;
+        private EsInteractor m_esInteractor;
 
         public override bool IsFinalHandler => true;
 
-        public PutMessageModule(ElasticClient elasticClient, IdGenerator idGenerator, JwtHelper jwtHelper)
+        public PutMessageModule(EsInteractor esInteractor, JwtHelper jwtHelper)
             : base(Routes.PUT_MESSAGE, jwtHelper)
         {
-            m_elasticClient = elasticClient;
-            m_idGenerator = idGenerator;
+            m_esInteractor = esInteractor;
         }
 
         // TODO: Add user validation
@@ -61,41 +59,23 @@ namespace Messenger.MessengerServer.HttpModules.PutMessage
                 return;
             }
 
-            string messageId = $"{m_idGenerator.GenerateUniqueId()}";
-
-            Dictionary<string, object> requestDoc = new Dictionary<string, object>()
+            EsMessage esMessage = new EsMessage
             {
-                { GlobalSettings.EsFieldChatId, request.ChatId },
-                { GlobalSettings.EsFieldMessageId, messageId },
-                { GlobalSettings.EsFieldText, request.Message },
-                { GlobalSettings.EsFieldUserId, userId },
-                { GlobalSettings.EsFieldMessageTime, UnixEpochTools.ToEpoch(DateTime.UtcNow) },
+                ChatId = request.ChatId,
+                Message = request.Message,
+                UserId = userId
             };
 
-            IUpdateRequest<object, object> updateRequest = new UpdateRequest<object, object>(GlobalSettings.EsIndexName, messageId)
+            bool putResult = m_esInteractor.PutMessage(esMessage);
+            if (!putResult)
             {
-                Doc = requestDoc,
-                DocAsUpsert = true,
-                RetryOnConflict = 10
-            };
-
-            IUpdateResponse<object> response = m_elasticClient.Update<object, object>(updateRequest);
-            if (response.ServerError != null)
-            {
-                m_logger.Error($"Error saving message {messageId}. Error: {response.ServerError}");
                 await SendResponse(context, HttpStatusCode.InternalServerError);
-                return;
-            };
-
-            if (!response.IsValid)
-            {
-                m_logger.Error($"Error saving message {messageId}. Error: {response.DebugInformation}");
-                await SendResponse(context, HttpStatusCode.InternalServerError);
-                return;
             }
-
-            m_logger.Info($"Message {messageId} written");
-            await SendResponse(context, HttpStatusCode.OK);
+            else
+            {
+                m_logger.Info($"Message written");
+                await SendResponse(context, HttpStatusCode.OK);
+            }
         }
     }
 }
