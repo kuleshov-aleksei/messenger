@@ -179,7 +179,7 @@ export default {
 
 <style lang="scss">
 .messenger {
-    max-width: 70%;
+    max-width: 60%;
     margin-left: auto;
     margin-right: auto;
     padding-top: 30px;

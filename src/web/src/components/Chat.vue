@@ -186,12 +186,12 @@ export default {
   height: 100%;
 
   .chat_holder {
-    display: table-row;
-    height: 100%;
+    max-height: 70vh;
+    height: 70vh;
     width: 100%;
     position: relative;
     background: white;
-    max-height: 100%;
+    overflow-y: auto;
 
     .message {
       display: grid;
@@ -222,6 +222,7 @@ export default {
       .message_date {
         grid-area: message_date;
         text-align: right;
+        margin-right: 10px;
       }
     }
   }

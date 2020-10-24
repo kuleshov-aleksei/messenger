@@ -48,4 +48,23 @@ body {
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #555 #F5F5F5;
+}
+
+/* Works on Chrome/Edge/Safari */
+*::-webkit-scrollbar {
+  width: 8px;
+  background-color: #F5F5F5;
+}
+*::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: #F5F5F5;
+}
+*::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: rgb(84, 92, 100);
+}
 </style>
