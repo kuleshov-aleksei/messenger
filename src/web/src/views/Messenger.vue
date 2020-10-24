@@ -24,7 +24,9 @@
                 <div v-if="chats.length == 0" class="chat-not-found">Бесед пока нет<br><br>
                 Создайте новую или попросите друзей вас пригласить.</div>
             </div>
-            <div class="chat"></div>
+            <div class="chat">
+                <Chat/>
+            </div>
         </div>
 
         <el-dialog
@@ -79,8 +81,13 @@
 <script>
 import axios from "axios";
 import { api_url } from "../store"
+import store from "../store"
+import Chat from "../components/Chat.vue";
 
 export default {
+    components: {
+        Chat,
+    },
     data() {
       return {
         search_input: '',
@@ -141,6 +148,7 @@ export default {
         on_chat_selected: function(chat) {
             this.current_chat = chat;
             this.get_chat_members(chat.id);
+            store.commit('set_chat_id', chat.id);
         },
         get_chat_members: function(chat_id) {
             axios.post(api_url + "/chat/get_chat_members", {
@@ -148,7 +156,6 @@ export default {
                 chat_id: chat_id,
             })
             .then((response) => {
-                console.log(response.data.chat_members);
                 this.current_chat_members = response.data.chat_members;
             })
             .catch((error) => {
