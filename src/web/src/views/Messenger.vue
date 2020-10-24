@@ -78,7 +78,6 @@
 
 <script>
 import axios from "axios";
-import store from "../store"
 import { api_url } from "../store"
 
 export default {
@@ -99,7 +98,7 @@ export default {
     methods: {
         load_chats: function() {
             axios.post(api_url + "/chat/get_chat_list", {
-                access_token: store.state.access_token,
+                access_token: localStorage.getItem("access_token"),
             })
             .then((response) => {
                 this.chats = response.data.chats;
@@ -110,7 +109,7 @@ export default {
         },
         create_new_chat: function() {
             axios.post(api_url + "/chat/create_chat", {
-                access_token: store.state.access_token,
+                access_token: localStorage.getItem("access_token"),
                 title: this.new_chat_title,
             })
             .then(() => {
@@ -145,7 +144,7 @@ export default {
         },
         get_chat_members: function(chat_id) {
             axios.post(api_url + "/chat/get_chat_members", {
-                access_token: store.state.access_token,
+                access_token: localStorage.getItem("access_token"),
                 chat_id: chat_id,
             })
             .then((response) => {

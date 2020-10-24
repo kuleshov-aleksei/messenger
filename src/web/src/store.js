@@ -21,17 +21,7 @@ export default new Vuex.Store({
   strict: debug,
   middlewares: debug ? [createLogger()] : [],  
   state: {
-    access_token: '',
-    refresh_token: '',
   },
   mutations: {
-    save_access_token(state, token)
-    {
-      state.access_token = token;
-    },
-    save_refresh_token(state, token)
-    {
-      state.refresh_token = token;
-    }
   }
 })

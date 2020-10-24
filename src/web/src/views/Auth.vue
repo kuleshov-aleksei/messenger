@@ -14,7 +14,6 @@
 
 <script>
 import axios from "axios";
-import store from "../store"
 import { api_url } from "../store"
 
 export default {
@@ -38,8 +37,8 @@ export default {
             device_name: "vue-dev",
           })
           .then((response) => {
-            store.commit('save_refresh_token', response.data["refresh_token"]);
-            store.commit('save_access_token', response.data["access_token"]);
+            localStorage.setItem("refresh_token", response.data["refresh_token"]);
+            localStorage.setItem("access_token", response.data["access_token"]);
           })
           .catch((error) => {
             console.log(error);
