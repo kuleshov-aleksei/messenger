@@ -1,10 +1,11 @@
 ﻿using MySql.Data.MySqlClient;
 using NLog;
+using System;
 using System.Data;
 
 namespace MySql.Common
 {
-    public class DatabaseConnection
+    public class DatabaseConnection : IDisposable
     {
         private MySqlConnection m_mysqlConnection;
         private Logger m_logger = LogManager.GetCurrentClassLogger();
@@ -15,6 +16,7 @@ namespace MySql.Common
             m_logger.Trace($"Creating mysql wrapper for server {m_mysqlConnection.Site}");
 
             m_mysqlConnection.StateChange += OnMysqlConnectionStateChange;
+            m_mysqlConnection.Open();
         }
 
         private void OnMysqlConnectionStateChange(object sender, StateChangeEventArgs e)
@@ -36,6 +38,11 @@ namespace MySql.Common
         public MySqlCommand CreateCommand()
         {
             return m_mysqlConnection.CreateCommand();
+        }
+
+        public void Dispose()
+        {
+            m_mysqlConnection.Dispose();
         }
     }
 }

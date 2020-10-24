@@ -43,7 +43,7 @@ namespace Messenger.MessengerServer
 
             Server grpcServer = new Server
             {
-                Services = { EchoService.BindService(new EchoServiceImpl()) },
+                Services = { MessengerService.BindService(new MessengerServiceImpl(esInteractor, jwtHelper)) },
                 Ports = { { "0.0.0.0", 7813, ServerCredentials.Insecure } }
             };
             grpcServer.Start();

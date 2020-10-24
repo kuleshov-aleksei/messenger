@@ -11,6 +11,7 @@ namespace MySql.Common
     {
         private DatabaseConnection m_dbConnection;
         private Logger m_logger = LogManager.GetCurrentClassLogger();
+        private string m_connectionString;
 
         public Database(DatabaseConnectionSettings databaseConnectionSettings)
         {
@@ -21,42 +22,37 @@ namespace MySql.Common
                 $"user={databaseConnectionSettings.User};" +
                 $"password={databaseConnectionSettings.Password}";
 
+            m_connectionString = connectionString;
             m_dbConnection = new DatabaseConnection(connectionString);
-
-            try
-            {
-                m_dbConnection.Open();
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
         }
 
         public void ExecuteSql(string sql, Action<IDataReader> onRow = null, Dictionary<string, object> parameters = null)
         {
-            MySqlCommand command = m_dbConnection.CreateCommand();
-            command.CommandText = sql;
+            using (DatabaseConnection dbConnection = new DatabaseConnection(m_connectionString))
+            {
+                MySqlCommand command = dbConnection.CreateCommand();
+                command.CommandText = sql;
 
-            if (parameters != null)
-            {
-                foreach (KeyValuePair<string, object> keyValuePair in parameters)
+                if (parameters != null)
                 {
-                    command.Parameters.AddWithValue($"@{keyValuePair.Key}", keyValuePair.Value);
-                }
-            }
-
-            if (onRow == null)
-            {
-                command.ExecuteNonQuery();
-            }
-            else
-            {
-                using (MySqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
+                    foreach (KeyValuePair<string, object> keyValuePair in parameters)
                     {
-                        onRow(reader);
+                        command.Parameters.AddWithValue($"@{keyValuePair.Key}", keyValuePair.Value);
+                    }
+                }
+
+                if (onRow == null)
+                {
+                    command.ExecuteNonQuery();
+                }
+                else
+                {
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            onRow(reader);
+                        }
                     }
                 }
             }
