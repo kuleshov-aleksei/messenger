@@ -29,7 +29,7 @@
           v-model="user_input"
           class="user-input">
         </el-input>
-        <el-button type="text" icon="el-icon-s-promotion"></el-button>
+        <el-button type="text" icon="el-icon-s-promotion" @click="send_message"></el-button>
       </div>
     </div>
   </div>
@@ -38,7 +38,7 @@
 <script>
 import store from "../store";
 import { api_url } from "../store"
-const {GetLastMessagesRequest} = require('./../gRPC/messenger_pb.js');
+const {GetLastMessagesRequest, MessageRequest} = require('./../gRPC/messenger_pb.js');
 const {MessengerServiceClient} = require('./../gRPC/messenger_grpc_web_pb.js');
 
 const monthNames = ["января", "февраля", "марта", "апреля", "мая", "июня",
@@ -70,6 +70,38 @@ export default {
     }
   },
   methods: {
+    send_message: function() {
+      var request = new MessageRequest();
+      request.setAccessToken(localStorage.getItem("access_token"));
+      request.setMessage(this.user_input);
+      request.setChatId(this.chat_id);
+
+      console.log("sending message");
+      this.messengerService.sendMessage(request, {}, this.onMessageSentResponse);
+      this.user_input = '';
+    },
+    onMessageSentResponse: function(err, response)
+    {
+      if (err != null)
+      {
+        console.log(err);
+        this.$notify.error({
+            title: 'Error',
+            message: err
+        });
+      }
+      else if (response != null)
+      {
+        if (response.hasErrorMessage())
+        {
+          console.log(response.getErrorMessage());
+          this.$notify.error({
+            title: 'Error',
+            message: response.getErrorMessage()
+          });
+        }
+      }
+    },
     on_chat_id_changed: function() {
       console.log("chat id is changed");
       this.messages = [];
@@ -80,7 +112,6 @@ export default {
         request.setAccessToken(localStorage.getItem("access_token"));
         request.setChatId(this.chat_id);
 
-        console.log("sending message");
         this.messengerService.getLastMessages(request, {}, this.on_message_received);
     },
     on_message_received: function(err, response) {
