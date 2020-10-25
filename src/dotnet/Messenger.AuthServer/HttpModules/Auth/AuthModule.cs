@@ -63,7 +63,7 @@ namespace Messenger.AuthServer.HttpModules.Auth
 
             parameters.Add(new Tuple<string, object, ParameterDirection, MySqlDbType>("p_username", username, ParameterDirection.Input, MySqlDbType.VarChar));
             parameters.Add(new Tuple<string, object, ParameterDirection, MySqlDbType>("p_password", password, ParameterDirection.Input, MySqlDbType.VarChar));
-            parameters.Add(new Tuple<string, object, ParameterDirection, MySqlDbType>("p_out_valid", null, ParameterDirection.Output, MySqlDbType.Int32));
+            parameters.Add(new Tuple<string, object, ParameterDirection, MySqlDbType>("p_out_valid", null, ParameterDirection.Output, MySqlDbType.Byte));
 
             GlobalSettings.Instance.Database.ExecuteProcedure("p_valid_password_username", parameters, out Dictionary<string, object> returnValue);
 
@@ -73,7 +73,7 @@ namespace Messenger.AuthServer.HttpModules.Auth
                 return false;
             }
 
-            return (int)returnValue["p_out_valid"] > 0;
+            return (sbyte)returnValue["p_out_valid"] > 0;
         }
 
         private int GetUserId(string login)
@@ -104,11 +104,11 @@ namespace Messenger.AuthServer.HttpModules.Auth
 
             parameters.Add(new Tuple<string, object, ParameterDirection, MySqlDbType>("p_email", email, ParameterDirection.Input, MySqlDbType.VarChar));
             parameters.Add(new Tuple<string, object, ParameterDirection, MySqlDbType>("p_password", password, ParameterDirection.Input, MySqlDbType.VarChar));
-            parameters.Add(new Tuple<string, object, ParameterDirection, MySqlDbType>("p_out_valid", null, ParameterDirection.Output, MySqlDbType.Int32));
+            parameters.Add(new Tuple<string, object, ParameterDirection, MySqlDbType>("p_out_valid", null, ParameterDirection.Output, MySqlDbType.Byte));
 
             GlobalSettings.Instance.Database.ExecuteProcedure("p_valid_password_email", parameters, out Dictionary<string, object> returnValue);
 
-            return (int)returnValue["p_out_valid"] > 0;
+            return (sbyte)returnValue["p_out_valid"] > 0;
         }
     }
 }

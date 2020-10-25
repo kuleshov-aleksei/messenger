@@ -13,8 +13,6 @@ namespace MySql.Common
         public DatabaseConnection(string connectionString)
         {
             m_mysqlConnection = new MySqlConnection(connectionString);
-            m_logger.Trace($"Creating mysql wrapper for server {m_mysqlConnection.Site}");
-
             m_mysqlConnection.Open();
         }
 
