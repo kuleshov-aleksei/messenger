@@ -26,13 +26,18 @@
     <div class="input_area">
       <div class="input_flex">
         <el-button type="text" icon="el-icon-paperclip"></el-button>
-        <el-input
-          type="textarea"
-          autosize
-          placeholder="Напишите что-нибудь..."
-          v-model="user_input"
-          class="user-input">
-        </el-input>
+        <div class="user-input el-textarea">
+          <textarea
+            placeholder="Напишите что-нибудь..."
+            class="el-textarea__inner"
+            :min-height="33"
+            :max-height="350"
+            @keydown.enter.exact.prevent
+            @keyup.enter.exact="send_message()"
+            @keydown.enter.shift.exact="newline"
+            v-model="user_input">
+          </textarea>
+        </div>
         <el-button type="text" icon="el-icon-s-promotion" @click="send_message"></el-button>
       </div>
     </div>
@@ -63,6 +68,18 @@ export default {
     this.chat_id = store.state.selected_chat_id;
     this.on_chat_id_changed();
   },
+  mounted: function() {
+    const tx = document.getElementsByClassName('el-textarea__inner');
+    for (let i = 0; i < tx.length; i++) {
+      tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
+      tx[i].addEventListener("input", OnInput, false);
+    }
+
+    function OnInput() {
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
+    }
+  },
   computed: {
     chat_id: {
       get: function() {
@@ -74,13 +91,16 @@ export default {
     }
   },
   methods: {
+    newline() {
+      this.user_input = `${this.user_input}\n`;
+    },
     send_message: function() {
       var request = new MessageRequest();
       request.setAccessToken(localStorage.getItem("access_token"));
       request.setMessage(this.user_input);
       request.setChatId(this.chat_id);
 
-      console.log("sending message");
+      console.log("sending message: " + this.user_input);
       this.messengerService.sendMessage(request, {}, this.onMessageSentResponse);
       this.user_input = '';
     },
@@ -107,7 +127,6 @@ export default {
       }
     },
     on_chat_id_changed: function() {
-      console.log("chat id is changed");
       this.messages = [];
       this.load_last_messages();
     },
@@ -223,8 +242,8 @@ export default {
   table-layout: fixed;
 
   .chat_holder {
-    max-height: 70vh;
-    height: 70vh;
+    max-height: 75vh;
+    height: 75vh;
     width: 100%;
     position: relative;
     background: white;
@@ -247,7 +266,7 @@ export default {
     .message {
       display: grid;
       grid-template-columns: auto 1.3fr 1fr;
-      grid-template-rows: 0.6fr 1.4fr;
+      grid-template-rows: 30px auto;
       gap: 0px 0px;
       grid-template-areas:
       "user_photo user_name message_date"
@@ -268,6 +287,7 @@ export default {
         grid-area: message_text;
         padding: 5px;
         text-align: left;
+        white-space: pre-line;
       }
 
       .message_date {
@@ -299,6 +319,11 @@ export default {
     .user-input {
       height: 100%;
       padding: 20px 0 20px 0;
+      overflow: hidden;
+
+      .el-textarea__inner {
+        line-height: 0.8;
+      }
     }
   }
 

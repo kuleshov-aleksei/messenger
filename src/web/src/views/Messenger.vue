@@ -188,7 +188,7 @@ export default {
 
 .messenger {
     max-width: 60%;
-    margin: 0 auto 30px auto;
+    margin: 0 auto 0 auto;
     background: white;
     border-radius: 4px;
     box-shadow: 0 1px 0 0 var(--steel_gray_120),0 0 0 1px var(--steel_gray_80);
@@ -249,7 +249,7 @@ export default {
         "chat-list-header chat-header"
         "chat-list chat";
     grid-template-rows: 80px 90%;
-    grid-template-columns: 25% 1fr;
+    grid-template-columns: 25% auto;
     grid-gap: 1px;
     margin: 0;
     margin-top: 10px;
