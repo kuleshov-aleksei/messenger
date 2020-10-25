@@ -9,7 +9,6 @@ namespace MySql.Common
 {
     public class Database
     {
-        private DatabaseConnection m_dbConnection;
         private Logger m_logger = LogManager.GetCurrentClassLogger();
         private string m_connectionString;
 
@@ -23,7 +22,6 @@ namespace MySql.Common
                 $"password={databaseConnectionSettings.Password}";
 
             m_connectionString = connectionString;
-            m_dbConnection = new DatabaseConnection(connectionString);
         }
 
         public void ExecuteSql(string sql, Action<IDataReader> onRow = null, Dictionary<string, object> parameters = null)
@@ -62,39 +60,42 @@ namespace MySql.Common
         {
             m_logger.Trace($"Executing procedure {procedureName}");
 
-            MySqlCommand command = m_dbConnection.CreateCommand();
-            command.CommandText = procedureName;
-            command.CommandType = CommandType.StoredProcedure;
-
-            for (int i = 0; i < parameters.Count; i++)
+            using (DatabaseConnection dbConnection = new DatabaseConnection(m_connectionString))
             {
-                Tuple<string, object, ParameterDirection, MySqlDbType> parameter = parameters[i];
+                MySqlCommand command = dbConnection.CreateCommand();
+                command.CommandText = procedureName;
+                command.CommandType = CommandType.StoredProcedure;
 
-                string parameterName = $"@{parameter.Item1}";
-                if (parameter.Item3 == ParameterDirection.Input)
+                for (int i = 0; i < parameters.Count; i++)
                 {
-                    command.Parameters.AddWithValue(parameterName, parameter.Item2);
-                    command.Parameters[parameterName].Direction = ParameterDirection.Input;
+                    Tuple<string, object, ParameterDirection, MySqlDbType> parameter = parameters[i];
+
+                    string parameterName = $"@{parameter.Item1}";
+                    if (parameter.Item3 == ParameterDirection.Input)
+                    {
+                        command.Parameters.AddWithValue(parameterName, parameter.Item2);
+                        command.Parameters[parameterName].Direction = ParameterDirection.Input;
+                    }
+                    else if (parameter.Item3 == ParameterDirection.Output)
+                    {
+                        command.Parameters.Add(parameterName, parameter.Item4);
+                        command.Parameters[parameterName].Direction = ParameterDirection.Output;
+                    }
                 }
-                else if (parameter.Item3 == ParameterDirection.Output)
+
+                command.ExecuteNonQuery();
+
+                returnValues = new Dictionary<string, object>();
+
+                for (int i = 0; i < parameters.Count; i++)
                 {
-                    command.Parameters.Add(parameterName, parameter.Item4);
-                    command.Parameters[parameterName].Direction = ParameterDirection.Output;
-                }
-            }
+                    Tuple<string, object, ParameterDirection, MySqlDbType> parameter = parameters[i];
 
-            command.ExecuteNonQuery();
-
-            returnValues = new Dictionary<string, object>();
-
-            for (int i = 0; i < parameters.Count; i++)
-            {
-                Tuple<string, object, ParameterDirection, MySqlDbType> parameter = parameters[i];
-
-                string parameterName = $"@{parameter.Item1}";
-                if (parameter.Item3 == ParameterDirection.Output)
-                {
-                    returnValues.Add(parameter.Item1, command.Parameters[parameterName].Value);
+                    string parameterName = $"@{parameter.Item1}";
+                    if (parameter.Item3 == ParameterDirection.Output)
+                    {
+                        returnValues.Add(parameter.Item1, command.Parameters[parameterName].Value);
+                    }
                 }
             }
         }
@@ -106,16 +107,19 @@ namespace MySql.Common
 
         public async Task ExecuteProcedureAsync(string procedureName, Dictionary<string, object> parameters = null)
         {
-            MySqlCommand command = m_dbConnection.CreateCommand();
-            command.CommandText = procedureName;
-            command.CommandType = CommandType.StoredProcedure;
-
-            foreach (KeyValuePair<string, object> keyValuePair in parameters)
+            using (DatabaseConnection dbConnection = new DatabaseConnection(m_connectionString))
             {
-                command.Parameters.AddWithValue($"@{keyValuePair.Key}", keyValuePair.Value);
-            }
+                MySqlCommand command = dbConnection.CreateCommand();
+                command.CommandText = procedureName;
+                command.CommandType = CommandType.StoredProcedure;
 
-            await command.ExecuteNonQueryAsync();
+                foreach (KeyValuePair<string, object> keyValuePair in parameters)
+                {
+                    command.Parameters.AddWithValue($"@{keyValuePair.Key}", keyValuePair.Value);
+                }
+
+                await command.ExecuteNonQueryAsync();
+            }
         }
     }
 }
