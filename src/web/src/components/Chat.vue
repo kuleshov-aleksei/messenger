@@ -1,22 +1,26 @@
 <template>
   <div class="chat_component">
     <!--<h1>DEBUG: selected {{chat_id}}</h1>-->
-    <div class="chat_holder">
-      <div class="message" v-for="message in messages.slice().reverse()" :key="message.unixTime">
-        <div class="user_photo">
-          <el-avatar size="large" :src="getImgUrl(message.authorImage)">
-            <img src="../assets/notfound.png"/>
-          </el-avatar>
-        </div>
-        <div class="user_name">
-          <b>{{message.authorName}} {{message.authorSurname}}</b>
-        </div>
-        <div class="message_text">
-          {{message.text}}
-        </div>
-        <div class="message_date">
-          {{unixTimeToHumanReadable(message.unixTime)}}
-        </div>
+    <div class="chat_holder" v-chat-scroll="{always: false, smooth: false}">
+      <div class="" v-for="message in messages.slice().reverse()" :key="message.unixTime">
+        <el-card shadow="never" class="box-card" v-bind:class="{message_other: message.isAuthor != true}">
+          <div class="message">
+            <div class="user_photo">
+              <el-avatar size="large" :src="getImgUrl(message.authorImage)">
+                <img src="../assets/notfound.png"/>
+              </el-avatar>
+            </div>
+            <div class="user_name">
+              <b>{{message.authorName}} {{message.authorSurname}}</b>
+            </div>
+            <div class="message_text">
+              {{message.text}}
+            </div>
+            <div class="message_date">
+              {{unixTimeToHumanReadable(message.unixTime)}}
+            </div>
+          </div>
+        </el-card>
       </div>
     </div>
     <div class="input_area">
@@ -148,6 +152,7 @@ export default {
               message.authorSurname = protoMessage.getAuthorSurname();
               message.authorImage = protoMessage.getAuthorImage();
               message.text = protoMessage.getText();
+              message.isAuthor = protoMessage.getIsAuthor();
 
               this.messages.push(message);
             });
@@ -210,11 +215,12 @@ export default {
 
 <style lang="scss">
 
+@import "../styles/variables.scss";
+
 .chat_component {
   display: table;
   width: 100%;
   table-layout: fixed;
-  height: 100%;
 
   .chat_holder {
     max-height: 70vh;
@@ -223,6 +229,20 @@ export default {
     position: relative;
     background: white;
     overflow-y: auto;
+
+    .message_self {
+      margin-left: auto;
+      margin-right: 0;
+    }
+
+    .box-card {
+      max-width: 60%;
+      margin: 5px 5px 2px auto;
+    }
+
+    .message_other {
+      margin-left: 10px;
+    }
 
     .message {
       display: grid;
@@ -266,7 +286,8 @@ export default {
     .input_flex {
       display: flex;
       flex-direction: row;
-      border: 1px solid rgb(190,190,190);
+      border: 1px solid $border-color;
+      border-left: 0px;
     }
 
     button {

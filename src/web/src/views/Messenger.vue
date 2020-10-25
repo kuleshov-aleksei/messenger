@@ -1,28 +1,34 @@
 <template>
     <div class="messenger">
         <div id="grid">
-            <div class="chat-list-header">
-                <el-input placeholder="Search" prefix-icon="el-icon-search" v-model="search_input" clearable></el-input>
-                <el-button class="add-button" icon="el-icon-plus" circle @click="dialogVisible = true"></el-button>
+            <div class="chat-list-header-container">
+                <div class="chat-list-header">
+                    <el-input placeholder="Search" prefix-icon="el-icon-search" v-model="search_input" clearable></el-input>
+                    <el-button class="add-button" icon="el-icon-plus" circle @click="dialogVisible = true"></el-button>
+                </div>
             </div>
-            <div class="chat-header">
-                <h3>{{current_chat ? current_chat.title : chat_title_placeholder}}</h3>
-                <el-button class="chat-members" v-if="current_chat_members.length > 2" type="text" @click="show_chat_info">{{current_chat_members.length}} {{get_declination(current_chat_members.length)}}</el-button>
+            <div class="chat-header-container">
+                <div class="chat-header">
+                    <h3>{{current_chat ? current_chat.title : chat_title_placeholder}}</h3>
+                    <el-button class="chat-members" v-if="current_chat_members.length > 2" type="text" @click="show_chat_info">{{current_chat_members.length}} {{get_declination(current_chat_members.length)}}</el-button>
+                </div>
             </div>
-            <div class="chat-list">
-                <ul v-if="chats.length > 0">
-                    <li v-for="chat in chats" :key="chat.title">
-                        <div class="chat-item" @click="on_chat_selected(chat)">
-                            <el-avatar class="chat-medium-avatar" :src="chat.image_medium">
-                                <img src="../assets/notfound.png"/>
-                            </el-avatar>
-                            <div class="chat-title">{{ chat.title }}</div>
-                        </div>
-                        <hr class="hr-chat-breaker">
-                    </li>
-                </ul>
-                <div v-if="chats.length == 0" class="chat-not-found">Бесед пока нет<br><br>
-                Создайте новую или попросите друзей вас пригласить.</div>
+            <div class="chat-list-container">
+                <div class="chat-list">
+                    <ul v-if="chats.length > 0">
+                        <li v-for="chat in chats" :key="chat.title">
+                            <div class="chat-item" @click="on_chat_selected(chat)">
+                                <el-avatar class="chat-medium-avatar" :src="chat.image_medium">
+                                    <img src="../assets/notfound.png"/>
+                                </el-avatar>
+                                <div class="chat-title">{{ chat.title }}</div>
+                            </div>
+                            <hr class="hr-chat-breaker">
+                        </li>
+                    </ul>
+                    <div v-if="chats.length == 0" class="chat-not-found">Бесед пока нет<br><br>
+                    Создайте новую или попросите друзей вас пригласить.</div>
+                </div>
             </div>
             <div class="chat">
                 <Chat/>
@@ -178,11 +184,14 @@ export default {
 </script>
 
 <style lang="scss">
+@import "../styles/variables.scss";
+
 .messenger {
     max-width: 60%;
-    margin-left: auto;
-    margin-right: auto;
-    padding-top: 30px;
+    margin: 0 auto 30px auto;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 1px 0 0 var(--steel_gray_120),0 0 0 1px var(--steel_gray_80);
 }
 
 .add-button {
@@ -192,11 +201,17 @@ export default {
 .chat-list-header {
     margin: auto;
     display: flex;
+    padding: 0 10px 0 10px;
+    margin-top: 20px;
 }
 
-.chat-list > ul {
-    list-style-type: none;
-    text-align: left;
+.chat-list {
+    padding: 0 10px 0 10px;
+
+    ul {
+        list-style-type: none;
+        text-align: left;
+    }
 }
 
 .chat-not-found {
@@ -222,8 +237,7 @@ export default {
 }
 
 .hr-chat-breaker {
-    color: gray;
-    background-color: gray;
+    background-color: $border-color;
     border: none;
     height: 1px;
     opacity: .5;
@@ -235,15 +249,29 @@ export default {
         "chat-list-header chat-header"
         "chat-list chat";
     grid-template-rows: 80px 90%;
-    grid-template-columns: 20% 1fr;
+    grid-template-columns: 25% 1fr;
     grid-gap: 1px;
-    height: 90vh;
     margin: 0;
     margin-top: 10px;
+    grid-gap: 0px;
+    position: relative;
 }
 
 #grid > div {
-  font-size: 18px;
+    font-size: 18px;
+    border-right: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
+    margin: 0; padding: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#grid div:nth-child(2n) {
+    border-right: none;
+}
+#grid div:nth-child(2) ~ div {
+    border-bottom: none;
 }
 
 .chat {
@@ -252,10 +280,10 @@ export default {
 
 .chat-header {
     text-align: left;
-    padding: 0 0 0 50px;
     margin-top: auto;
     margin-bottom: auto;
     display: flex;
+    flex-wrap: wrap;
 
     .chat-members {
         margin-top: auto;
@@ -265,6 +293,10 @@ export default {
 
     button > span {
         color: gray;
+    }
+
+    h3 {
+        padding: 0 0 0 50px;
     }
 }
 

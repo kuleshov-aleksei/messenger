@@ -8,6 +8,9 @@ import router from './router'
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 
+import VueChatScroll from 'vue-chat-scroll'
+Vue.use(VueChatScroll)
+
 new Vue({
   el: '#app',
   router,
