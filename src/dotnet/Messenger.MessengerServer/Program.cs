@@ -34,7 +34,7 @@ namespace Messenger.MessengerServer
             JwtHelper jwtHelper = new JwtHelper("jwt_secret.secret");
 
             List<IWebModule> webModules = new List<IWebModule>();
-            webModules.Add(new HttpModules.PutMessage.PutMessageModule(elasticClient, idGenerator, jwtHelper));
+            webModules.Add(new HttpModules.PutMessage.PutMessageModule(esInteractor, jwtHelper));
             webModules.Add(new HttpModules.GetLastMessages.GetLastMessagesModule(esInteractor, jwtHelper));
             webModules.Add(new HttpModules.GetMessagesFrom.GetMessagesFromModule(esInteractor, jwtHelper));
 
