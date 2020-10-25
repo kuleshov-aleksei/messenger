@@ -70,7 +70,8 @@ namespace Messenger.MessengerServer.gRPC
                     AuthorName = message.AuthorName,
                     AuthorSurname = message.AuthorSurname,
                     Text = message.Text,
-                    UnixTime = message.UnixTime
+                    UnixTime = message.UnixTime,
+                    IsAuthor = message.AuthorId == userId
                 });
             }
 

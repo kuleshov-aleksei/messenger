@@ -28,5 +28,8 @@ namespace Messenger.MessengerServer
 
         [JsonProperty("author_image_link_small")]
         public string AuthorImageLinkSmall { get; set; }
+
+        [JsonProperty("author_id")]
+        public int AuthorId { get; set; }
     }
 }

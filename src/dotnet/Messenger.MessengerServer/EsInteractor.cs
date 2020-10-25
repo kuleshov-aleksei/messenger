@@ -130,6 +130,7 @@ namespace Messenger.MessengerServer
                     AuthorName = users[document.user_id].Name,
                     AuthorSurname = users[document.user_id].Surname,
                     AuthorImageLinkSmall = users[document.user_id].ImageSmall,
+                    AuthorId = document.user_id,
                 };
 
                 response.Messages.Add(message);

@@ -25,6 +25,7 @@ message Message {
 	string author_name = 3;
 	string author_surname = 4;
 	string author_image = 5;
+	bool is_author = 6;
 }
 
 message MessageRequest {
