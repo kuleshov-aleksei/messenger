@@ -1,6 +1,7 @@
 ﻿using Grpc.Core;
 using Messenger.Common;
 using Messenger.Common.JWT;
+using Messenger.Common.Tools;
 using MySql.Common;
 using NLog;
 using Swan;
@@ -60,6 +61,14 @@ namespace Messenger.MessengerServer.gRPC
             {
                 MessageList = new MessageList()
             };
+
+            if (messagesResponse == null)
+            {
+                return Task.FromResult(new ServerResponse
+                {
+                    Empty = new Empty()
+                });
+            }
 
             serverResponse.MessageList.ChatId = messagesResponse.ChatId;
 
@@ -184,25 +193,26 @@ namespace Messenger.MessengerServer.gRPC
             DateTime lastRequestTime = DateTime.UtcNow;
             while (!context.CancellationToken.IsCancellationRequested)
             {
-                await Task.Delay(200);
-
-                ServerResponse response = GetMessagesFrom(lastRequestTime.ToUnixEpochDate(), request.ChatId, userId);
+                await Task.Delay(2000);
+                
+                ServerResponse response = GetMessagesFrom(UnixEpochTools.ToEpoch(lastRequestTime), request.ChatId, userId);
                 lastRequestTime = DateTime.UtcNow;
 
                 if (response != null)
                 {
+                    m_logger.Debug($"Got {response.MessageList.Messages.Count} new messages, sending");
                     await responseStream.WriteAsync(response);
                 }
             }
 
-            m_logger.Info($"Subsctiption expired");
+            m_logger.Info($"Subsctiption for user {userId} expired");
         }
 
         private ServerResponse GetMessagesFrom(long unixTime, int chatId, int userId)
         {
             MessagesResponse messagesResponse = m_esInteractor.GetMessagesFrom(unixTime, chatId);
 
-            if (messagesResponse.Messages.Count == 0)
+            if (messagesResponse == null || messagesResponse.Messages.Count == 0)
             {
                 return null;
             }

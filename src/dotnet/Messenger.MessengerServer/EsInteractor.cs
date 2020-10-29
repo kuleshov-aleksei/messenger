@@ -91,7 +91,7 @@ namespace Messenger.MessengerServer
                         new LongRangeQuery
                         {
                             Field = GlobalSettings.EsFieldMessageTime,
-                            LessThan = unixTime
+                            GreaterThanOrEqualTo = unixTime
                         }
                     },
                     MinimumShouldMatch = 2
@@ -111,7 +111,7 @@ namespace Messenger.MessengerServer
 
             if (searchResponse.Hits.Count == 0)
             {
-                m_logger.Trace("No messages found");
+                return null;
             }
 
             MessagesResponse response = new MessagesResponse();
