@@ -4,7 +4,7 @@ service MessengerService {
   rpc Echo(EchoRequest) returns (EchoResponse);
   rpc GetLastMessages(GetLastMessagesRequest) returns (ServerResponse);
   rpc SendMessage(MessageRequest) returns (ServerResponse);
-  rpc SubscribeToMessages(Empty) returns (stream ServerResponse);
+  rpc SubscribeToMessages(SubscribeRequest) returns (stream ServerResponse);
 }
 
 message EchoRequest {
@@ -27,6 +27,11 @@ message Message {
 	string author_surname = 4;
 	string author_image = 5;
 	bool is_author = 6;
+}
+
+message SubscribeRequest {
+	string access_token = 1;
+	int32 chat_id = 2;
 }
 
 message MessageRequest {

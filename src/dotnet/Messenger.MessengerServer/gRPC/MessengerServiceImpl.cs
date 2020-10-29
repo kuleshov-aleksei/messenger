@@ -3,6 +3,8 @@ using Messenger.Common;
 using Messenger.Common.JWT;
 using MySql.Common;
 using NLog;
+using Swan;
+using System;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -34,10 +36,10 @@ namespace Messenger.MessengerServer.gRPC
         {
             m_logger.Info("Got request for loading last messages");
 
-            if (request == null || string.IsNullOrEmpty(request.AccessToken))
+            if (request == null)
             {
-                m_logger.Info("Empty access token");
-                return CreateErrorResponse(HttpStatusCode.Unauthorized);
+                m_logger.Info("Empty request");
+                return CreateErrorResponse(HttpStatusCode.BadRequest);
             }
 
             if (request.ChatId <= 0)
@@ -45,11 +47,10 @@ namespace Messenger.MessengerServer.gRPC
                 return CreateErrorResponse(HttpStatusCode.BadRequest);
             }
 
-            bool authorized = m_jwtHelper.Validate(request.AccessToken, out int userId);
-            if (!authorized)
+            Task<ServerResponse> isValid = ValidateJWT(request.AccessToken, out int userId);
+            if (isValid != null)
             {
-                m_logger.Info("Invalid access token");
-                return CreateErrorResponse(HttpStatusCode.Unauthorized);
+                return isValid;
             }
 
             m_logger.Info($"Returning messages of chat {request.ChatId}");
@@ -82,10 +83,10 @@ namespace Messenger.MessengerServer.gRPC
         {
             m_logger.Info("Got request for loading last messages");
 
-            if (request == null || string.IsNullOrEmpty(request.AccessToken))
+            if (request == null)
             {
-                m_logger.Info("Empty access token");
-                return CreateErrorResponse(HttpStatusCode.Unauthorized);
+                m_logger.Info("Empty request");
+                return CreateErrorResponse(HttpStatusCode.BadRequest);
             }
 
             if (request.ChatId <= 0)
@@ -98,11 +99,10 @@ namespace Messenger.MessengerServer.gRPC
                 return CreateErrorResponse(HttpStatusCode.BadRequest);
             }
 
-            bool authorized = m_jwtHelper.Validate(request.AccessToken, out int userId);
-            if (!authorized)
+            Task<ServerResponse> isValid = ValidateJWT(request.AccessToken, out int userId);
+            if (isValid != null)
             {
-                m_logger.Info("Invalid access token");
-                return CreateErrorResponse(HttpStatusCode.Unauthorized);
+                return isValid;
             }
 
             m_logger.Info($"Writing message from user {userId} to chat {request.ChatId}");
@@ -160,6 +160,93 @@ namespace Messenger.MessengerServer.gRPC
             {
                 Empty = new Empty()
             });
+        }
+
+        public override async Task SubscribeToMessages(SubscribeRequest request, IServerStreamWriter<ServerResponse> responseStream, ServerCallContext context)
+        {
+            m_logger.Info("Got subscribe request");
+
+            Task<ServerResponse> isValid = ValidateJWT(request.AccessToken, out int userId);
+            if (isValid != null)
+            {
+                await responseStream.WriteAsync(isValid.Result);
+                return;
+            }
+
+            if (request.ChatId <= 0)
+            {
+                await responseStream.WriteAsync(CreateErrorResponse(HttpStatusCode.BadRequest).Result);
+                return;
+            }
+
+            m_logger.Info($"Subscribing user {userId} for updates of chat {request.ChatId}");
+
+            DateTime lastRequestTime = DateTime.UtcNow;
+            while (!context.CancellationToken.IsCancellationRequested)
+            {
+                await Task.Delay(200);
+
+                ServerResponse response = GetMessagesFrom(lastRequestTime.ToUnixEpochDate(), request.ChatId, userId);
+                lastRequestTime = DateTime.UtcNow;
+
+                if (response != null)
+                {
+                    await responseStream.WriteAsync(response);
+                }
+            }
+
+            m_logger.Info($"Subsctiption expired");
+        }
+
+        private ServerResponse GetMessagesFrom(long unixTime, int chatId, int userId)
+        {
+            MessagesResponse messagesResponse = m_esInteractor.GetMessagesFrom(unixTime, chatId);
+
+            if (messagesResponse.Messages.Count == 0)
+            {
+                return null;
+            }
+
+            ServerResponse serverResponse = new ServerResponse
+            {
+                MessageList = new MessageList()
+            };
+
+            serverResponse.MessageList.ChatId = messagesResponse.ChatId;
+
+            foreach (Message message in messagesResponse.Messages)
+            {
+                serverResponse.MessageList.Messages.Add(new global::Message
+                {
+                    AuthorImage = message.AuthorImageLinkSmall ?? string.Empty,
+                    AuthorName = message.AuthorName,
+                    AuthorSurname = message.AuthorSurname,
+                    Text = message.Text,
+                    UnixTime = message.UnixTime,
+                    IsAuthor = message.AuthorId == userId
+                });
+            }
+
+            return serverResponse;
+        }
+
+        private Task<ServerResponse> ValidateJWT(string token, out int userId)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                m_logger.Info("Empty access token");
+                userId = 0;
+                return CreateErrorResponse(HttpStatusCode.Unauthorized);
+            }
+
+            bool authorized = m_jwtHelper.Validate(token, out userId);
+            if (!authorized)
+            {
+                m_logger.Info("Invalid access token");
+                return CreateErrorResponse(HttpStatusCode.Unauthorized);
+            }
+
+            return null;
         }
 
         private Task<ServerResponse> CreateErrorResponse(HttpStatusCode statusCode)
