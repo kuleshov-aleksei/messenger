@@ -1,8 +1,7 @@
 <template>
   <div class="chat_component">
-    <!--<h1>DEBUG: selected {{chat_id}}</h1>-->
     <div class="chat_holder" v-chat-scroll="{always: false, smooth: false}">
-      <div class="" v-for="message in messages.slice().reverse()" :key="message.unixTime">
+      <div class="" v-for="(message, i) in messages.slice().reverse()" :key="message.unixTime + i">
         <el-card shadow="never" class="box-card" v-bind:class="{message_other: message.isAuthor != true}">
           <div class="message">
             <div class="user_photo">
@@ -47,7 +46,7 @@
 <script>
 import store from "../store";
 import { api_url } from "../store"
-const {GetLastMessagesRequest, MessageRequest} = require('./../gRPC/messenger_pb.js');
+const {GetLastMessagesRequest, MessageRequest, SubscribeRequest} = require('./../gRPC/messenger_pb.js');
 const {MessengerServiceClient} = require('./../gRPC/messenger_grpc_web_pb.js');
 
 const monthNames = ["января", "февраля", "марта", "апреля", "мая", "июня",
@@ -129,15 +128,36 @@ export default {
     on_chat_id_changed: function() {
       this.messages = [];
       this.load_last_messages();
+      this.subscribe_to_messages();
     },
     load_last_messages: function() {
-        var request = new GetLastMessagesRequest();
-        request.setAccessToken(localStorage.getItem("access_token"));
-        request.setChatId(this.chat_id);
+      var request = new GetLastMessagesRequest();
+      request.setAccessToken(localStorage.getItem("access_token"));
+      request.setChatId(this.chat_id);
 
-        this.messengerService.getLastMessages(request, {}, this.on_message_received);
+      this.messengerService.getLastMessages(request, {}, (error, response) => {
+        this.on_message_received(error, response, true)
+      });
     },
-    on_message_received: function(err, response) {
+    subscribe_to_messages: function() {
+      console.log("subscribing to updates");
+      var request = new SubscribeRequest();
+      request.setAccessToken(localStorage.getItem("access_token"));
+      request.setChatId(this.chat_id);
+
+      this.messengerService.subscribeToMessages(request)
+        .on("data", (response) => {
+          this.on_message_received(null, response, false);
+        })
+        .on("error", (error) => {
+          this.on_message_received(error, null);
+        })
+        .on("end", () => {
+          console.log("end");
+        });
+    },
+    on_message_received: function(err, response, initial) {
+      console.log("Received response: " + response);
       if (err != null)
       {
         console.log(err);
@@ -173,9 +193,20 @@ export default {
               message.text = protoMessage.getText();
               message.isAuthor = protoMessage.getIsAuthor();
 
-              this.messages.push(message);
+              if (initial == true)
+              {
+                this.messages.push(message);
+              }
+              else
+              {
+                this.messages.unshift(message);
+              }
             });
           }
+        }
+        else if (response.hasEmpty())
+        {
+          // do nothing
         }
         else
         {
