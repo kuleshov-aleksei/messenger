@@ -4,6 +4,7 @@ service MessengerService {
   rpc Echo(EchoRequest) returns (EchoResponse);
   rpc GetLastMessages(GetLastMessagesRequest) returns (ServerResponse);
   rpc SendMessage(MessageRequest) returns (ServerResponse);
+  rpc SubscribeToMessages(Empty) returns (stream ServerResponse);
 }
 
 message EchoRequest {
