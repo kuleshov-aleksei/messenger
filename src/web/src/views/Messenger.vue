@@ -53,7 +53,7 @@
         <el-dialog
             title="Информация о беседе"
             :visible.sync="chat_info_visible"
-            width="30%"
+            width=50%
             v-if="current_chat != null">
                 <div class="chat-info-header">
                     <el-avatar class="avatar" :src="current_chat.image_medium">
