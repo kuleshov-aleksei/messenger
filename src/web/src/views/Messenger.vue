@@ -227,6 +227,7 @@ export default {
     .chat-medium-avatar {
         width: 48px;
         height: 48px;
+        min-width: 48px;
     }
 }
 
