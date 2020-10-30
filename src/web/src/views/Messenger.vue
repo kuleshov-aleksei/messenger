@@ -187,7 +187,9 @@ export default {
 @import "../styles/variables.scss";
 
 .messenger {
-    max-width: 60%;
+    max-width: 80%;
+    min-width: 60%;
+    width: 80%;
     margin: 0 auto 0 auto;
     background: white;
     border-radius: 4px;
