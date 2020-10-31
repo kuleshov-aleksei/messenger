@@ -32,7 +32,9 @@
 export default {};
 </script>
 
-<style>
+<style lang="scss">
+@import "../styles/variables.scss";
+
 .el-header {
     padding: 0 !important;
 }
@@ -49,11 +51,9 @@ export default {};
 }
 
 .first-right-el {
-    margin-left: 40vw;
-}
-
-.el-menu-item {
-    margin: 0 20px;
+    margin-left: 30vw;
+    @include respond-to(mobile) { margin-left: 0; }
+    @include respond-to(medium-screens) { margin-left: 20vw; }
 }
 
 #header-wrapper > ul > a {
