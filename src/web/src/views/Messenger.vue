@@ -115,6 +115,13 @@ export default {
             })
             .then((response) => {
                 this.chats = response.data.chats;
+
+                this.chats.forEach(chat => {
+                    if (chat.id === store.state.selected_chat_id)
+                    {
+                        this.current_chat = chat;
+                    }
+                });
             })
             .catch((error) => {
                 console.log(error);
