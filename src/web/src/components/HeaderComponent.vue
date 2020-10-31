@@ -1,35 +1,50 @@
 <template>
-    <div id="header-wrapper">
-        <el-menu
-            class="el-menu"
-            mode="horizontal"
-            background-color="#545c64"
-            text-color="#fff"
-            active-text-color="#ffd04b"
-        >
-            <router-link to="/">
-                <el-menu-item index="messenger" class="el-menu-item">
-                    <i class="el-icon-chat-line-square" />Общение
+    <div class="header-wrapper">
+        <div class="header-container">
+            <el-menu
+                class="el-menu"
+                mode="horizontal"
+                background-color="#545c64"
+                text-color="#fff"
+                active-text-color="#ffd04b"
+                router
+                :default-active="current_route"
+            >
+                <el-menu-item class="el-menu-item" index="/">
+                    <img src="@/assets/logo.png" alt="logo" width="40" height="40" class="logo-img" />Talker
                 </el-menu-item>
-            </router-link>
-            <router-link to="/profile">
-                <div class="first-right-el">
-                    <el-menu-item index="profile" class="el-menu-item">
-                        <i class="el-icon-user-solid" />Профиль
-                    </el-menu-item>
-                </div>
-            </router-link>
-            <router-link to="/settings">
-                <el-menu-item index="settings" class="el-menu-item">
-                    <i class="el-icon-setting" />Настройки
-                </el-menu-item>
-            </router-link>
-        </el-menu>
+                <el-submenu index="/profile">
+                    <template slot="title" class="dropdown">Профиль</template>
+                    <el-menu-item index="/profile"><i class="el-icon-user-solid" />Аккаунт</el-menu-item>
+                    <el-menu-item index="/settings"><i class="el-icon-setting" />Настройки</el-menu-item>
+                </el-submenu>
+            </el-menu>
+        </div>
     </div>
 </template>
 
 <script>
-export default {};
+import store from "../store";
+
+export default {
+  data() {
+    return {
+    };
+  },
+  mounted: function() {
+    
+  },
+  computed: {
+      current_route: {
+      get: function() {
+        return store.state.current_route;
+      },
+      set: function(newRoute) {
+        store.commit('current_route', newRoute);
+      }
+    }
+  }
+}
 </script>
 
 <style lang="scss">
@@ -39,15 +54,22 @@ export default {};
     padding: 0 !important;
 }
 
+.dropdown {
+    flex-direction: row;
+}
+
 .el-menu {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    list-style: none;
-    margin: 0;
-    padding: 0;
     border-width: 0px !important;
+}
+
+.header-wrapper {
+    width: 100%;
+    background: #545c64;
+}
+
+.header-container {
+    margin: auto;
+    width: 50%;
 }
 
 .first-right-el {
@@ -56,8 +78,8 @@ export default {};
     @include respond-to(medium-screens) { margin-left: 20vw; }
 }
 
-#header-wrapper > ul > a {
-    color: #ffffff;
-    text-decoration: none;
+.logo-img {
+    padding-right: 20px;
 }
+
 </style>

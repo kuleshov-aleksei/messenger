@@ -21,12 +21,17 @@ export default new Vuex.Store({
   strict: debug,
   middlewares: debug ? [createLogger()] : [],  
   state: {
-    selected_chat_id: ''
+    selected_chat_id: '',
+    current_route: '',
   },
   mutations: {
     set_chat_id(state, chat_id)
     {
       state.selected_chat_id = chat_id;
     },
+    save_current_route(state, route)
+    {
+      state.current_route = route;
+    }
   }
 })

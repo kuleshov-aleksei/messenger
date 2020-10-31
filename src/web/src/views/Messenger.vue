@@ -185,6 +185,7 @@ export default {
         }
     },
     mounted() {
+        store.commit('save_current_route', '/');
         this.load_chats();
     }
   };

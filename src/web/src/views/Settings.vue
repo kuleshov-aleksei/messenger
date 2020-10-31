@@ -7,6 +7,7 @@
 
 <script>
 import axios from "axios";
+import store from "../store"
 
 export default {
     methods: {
@@ -21,5 +22,8 @@ export default {
                 });
         },
     },
+    mounted() {
+        store.commit('save_current_route', '/settings');
+    }
 };
 </script>
