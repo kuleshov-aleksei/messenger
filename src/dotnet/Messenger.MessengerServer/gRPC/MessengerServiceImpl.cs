@@ -6,8 +6,10 @@ using MySql.Common;
 using NLog;
 using Swan;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Messenger.MessengerServer.gRPC
@@ -91,7 +93,7 @@ namespace Messenger.MessengerServer.gRPC
 
         public override Task<ServerResponse> SendMessage(MessageRequest request, ServerCallContext context)
         {
-            m_logger.Info("Got request for loading last messages");
+            m_logger.Info("Got request for sending message");
 
             if (request == null)
             {
@@ -192,6 +194,8 @@ namespace Messenger.MessengerServer.gRPC
             m_logger.Info($"Subscribing user {userId} for updates of chat {request.ChatId}");
 
             long lastMessageTime = UnixEpochTools.ToEpoch(DateTime.UtcNow);
+            Stopwatch elapsed = new Stopwatch();
+            elapsed.Start();
             while (!context.CancellationToken.IsCancellationRequested)
             {
                 ServerResponse response = GetMessagesFrom(lastMessageTime, request.ChatId, userId);
@@ -204,9 +208,20 @@ namespace Messenger.MessengerServer.gRPC
                 }
                 else
                 {
-                    await Task.Delay(200);
+                    if (elapsed.ElapsedMilliseconds > 5000)
+                    {
+                        m_logger.Debug($"Sending empty");
+                        await responseStream.WriteAsync(new ServerResponse
+                        {
+                            Empty = new Empty()
+                        });
+                        elapsed.Restart();
+                    }
+
+                    await Task.Delay(100);
                 }
             }
+            elapsed.Stop();
 
             m_logger.Info($"Subsctiption for user {userId} expired");
         }
