@@ -37,20 +37,27 @@ export default {
         this.auth("i_gor@example.com", "my_password");
       },
       auth: function(login, password) {
-          axios.post(api_url + "/auth/auth", {
-            login: login,
-            password: password,
-            device_name: "vue-dev",
-          })
-          .then((response) => {
-            localStorage.setItem("refresh_token", response.data["refresh_token"]);
-            localStorage.setItem("access_token", response.data["access_token"]);
-          })
-          .catch((error) => {
-            console.log(error);
+        axios.post(api_url + "/auth/auth", {
+          login: login,
+          password: password,
+          device_name: "vue-dev",
+        })
+        .then((response) => {
+          localStorage.setItem("refresh_token", response.data["refresh_token"]);
+          localStorage.setItem("access_token", response.data["access_token"]);
+          this.$root.$emit('authorized');
+          this.$notify({
+            title: "Авторизация",
+            dangerouslyUseHTMLString: false,
+            message: "Авторизация прошла успешно",
+            type: 'success'
           });
-        },
-    },
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      }
+    }
   };
 </script>
 

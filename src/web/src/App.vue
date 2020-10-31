@@ -8,11 +8,53 @@
 
 <script>
 import HeaderComponent from "./components/HeaderComponent.vue";
+import axios from "axios";
+import { api_url } from "./store"
+
+var REFRESH_INTERVAL = 10 * 60 * 1000;
 
 export default {
     name: "App",
     components: {
         HeaderComponent,
+    },
+    data() {
+      return {
+        refreshTimer: null
+      };
+    },
+    methods: {
+      refreshToken: function() {
+        if (localStorage.getItem("refresh_token") === null)
+        {
+          clearInterval(this.refreshTimer);
+          return;
+        }
+        console.log("Refreshing access token");
+
+        axios.post(api_url + "/auth/refresh", {
+          refresh_token: localStorage.getItem("refresh_token"),
+          access_token: localStorage.getItem("access_token")
+        })
+        .then((response) => {
+          localStorage.setItem("refresh_token", response.data["refresh_token"]);
+          localStorage.setItem("access_token", response.data["access_token"]);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      },
+      createRefreshTimer: function() {
+        this.refreshTimer = setInterval(this.refreshToken, REFRESH_INTERVAL);
+      }
+    },
+    mounted: function() {
+      this.$root.$on('authorized', this.createRefreshTimer);
+
+      if (localStorage.getItem("refresh_token") !== null)
+      {
+        this.createRefreshTimer();
+      }
     }
 };
 </script>
