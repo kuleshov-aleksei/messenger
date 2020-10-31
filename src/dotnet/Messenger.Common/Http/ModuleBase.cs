@@ -87,7 +87,7 @@ namespace Messenger.Common.Http
             }
             catch (Exception e)
             {
-                m_logger.Error("Failed to process request: " + e.Message);
+                m_logger.Error($"Failed to process request: {e.Message}, {e.StackTrace}");
                 await SendResponse(context, HttpStatusCode.InternalServerError);
                 return;
             }

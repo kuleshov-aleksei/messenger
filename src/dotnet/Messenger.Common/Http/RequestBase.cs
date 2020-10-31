@@ -1,10 +1,5 @@
-﻿using EmbedIO;
-using Messenger.Common.JWT;
+﻿using Messenger.Common.JWT;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Security.Claims;
 
 namespace Messenger.Common.Http
 {

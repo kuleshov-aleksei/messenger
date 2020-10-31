@@ -1,16 +1,16 @@
 ﻿using EmbedIO;
+using Messenger.AuthServer.HttpModules.Auth;
 using Messenger.Common.Http;
 using Messenger.Common.JWT;
-using System.Collections.Generic;
-using System.Linq;
+using NLog;
 using System.Net;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Messenger.AuthServer.HttpModules.RefreshAccessToken
 {
-    public class RefreshAccessTokenModule : ModuleBase<RequestBase>
+    public class RefreshAccessTokenModule : ModuleBase<RefreshRequest>
     {
+        private Logger m_logger = LogManager.GetCurrentClassLogger();
         public override bool IsFinalHandler => true;
 
         public JwtHelper m_jwtHelper;
@@ -22,35 +22,24 @@ namespace Messenger.AuthServer.HttpModules.RefreshAccessToken
             base.NeedAuthorization = false;
         }
 
-        protected override async Task OnRequest(IHttpContext context, RequestBase request, int userId)
+        protected override async Task OnRequest(IHttpContext context, RefreshRequest request, int userId)
         {
-            Cookie cookie = context.Request.Cookies.First(x => x.Name == JwtHelper.RefreshTokenName);
-            if (cookie == null || string.IsNullOrEmpty(cookie.Value))
-            {
-                await SendResponse(context, HttpStatusCode.Unauthorized, new ServerError("access token is empty"));
-                return;
-            }
+            m_logger.Info($"Refreshing token of user {userId}");
 
-            string refreshToken = cookie.Value;
-
-            string accessToken = m_jwtHelper.CreateAccessJWT(refreshToken, out string newRefreshToken);
+            string accessToken = m_jwtHelper.CreateAccessJWT(request.RefreshToken, out string newRefreshToken);
 
             if (accessToken == null || newRefreshToken == null)
             {
                 await SendResponse(context, HttpStatusCode.Unauthorized);
             }
 
-            context.Response.SetCookie(new Cookie(JwtHelper.AccessTokenName, accessToken)
+            AuthResponse authResponse = new AuthResponse
             {
-                HttpOnly = true,
-            });
+                RefreshToken = newRefreshToken,
+                AccessToken = accessToken
+            };
 
-            context.Response.SetCookie(new Cookie(JwtHelper.RefreshTokenName, newRefreshToken)
-            {
-                HttpOnly = true,
-            });
-
-            await SendResponse(context, HttpStatusCode.OK);
+            await SendResponse(context, HttpStatusCode.OK, authResponse);
         }
     }
 }
