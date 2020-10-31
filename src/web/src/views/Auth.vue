@@ -7,7 +7,10 @@
       </div>
 
       <div class="dev">
-        <el-button type="primary" v-on:click="simple_auth">Авторизуй меня (DEV)</el-button>
+        <el-button type="primary" v-on:click="simple_auth">Авторизуй меня (DEV) postman rect</el-button>
+      </div>
+      <div class="dev">
+        <el-button type="primary" v-on:click="simple_auth_igor">Авторизуй меня (DEV) И Горь</el-button>
       </div>
     </div>
 </template>
@@ -29,6 +32,9 @@ export default {
       },
       simple_auth: function () {
         this.auth("example_api@example.com", "my_password");
+      },
+      simple_auth_igor: function() {
+        this.auth("i_gor@example.com", "my_password");
       },
       auth: function(login, password) {
           axios.post(api_url + "/auth/auth", {

@@ -1,1 +1,20 @@
 $border-color: #cecece;
+
+$small: 320px;
+$large: 1200px;
+$ultra-wide: 1920px;
+
+@mixin respond-to($media) {
+  @if $media == mobile {
+    @media only screen and (max-width: $small) { @content; }
+  }
+  @else if $media == medium-screens {
+    @media only screen and (min-width: $small + 1) and (max-width: $large - 1) { @content; }
+  }
+  @else if $media == regular {
+    @media only screen and (min-width: $large + 1) and (max-width: $ultra-wide - 1) { @content; }
+  }
+  @else if $media == wide-screens {
+    @media only screen and (min-width: $ultra-wide) { @content; }
+  }
+}

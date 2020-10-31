@@ -157,7 +157,6 @@ export default {
         });
     },
     on_message_received: function(err, response, initial) {
-      console.log("Received response: " + response);
       if (err != null)
       {
         console.log(err);
