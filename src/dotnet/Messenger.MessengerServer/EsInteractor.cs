@@ -91,7 +91,7 @@ namespace Messenger.MessengerServer
                         new LongRangeQuery
                         {
                             Field = GlobalSettings.EsFieldMessageTime,
-                            GreaterThanOrEqualTo = unixTime
+                            GreaterThan = unixTime
                         }
                     },
                     MinimumShouldMatch = 2

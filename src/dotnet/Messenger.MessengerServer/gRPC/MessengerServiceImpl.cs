@@ -6,6 +6,7 @@ using MySql.Common;
 using NLog;
 using Swan;
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -190,18 +191,20 @@ namespace Messenger.MessengerServer.gRPC
 
             m_logger.Info($"Subscribing user {userId} for updates of chat {request.ChatId}");
 
-            DateTime lastRequestTime = DateTime.UtcNow;
+            long lastMessageTime = UnixEpochTools.ToEpoch(DateTime.UtcNow);
             while (!context.CancellationToken.IsCancellationRequested)
             {
-                await Task.Delay(2000);
-                
-                ServerResponse response = GetMessagesFrom(UnixEpochTools.ToEpoch(lastRequestTime), request.ChatId, userId);
-                lastRequestTime = DateTime.UtcNow;
+                ServerResponse response = GetMessagesFrom(lastMessageTime, request.ChatId, userId);
 
                 if (response != null)
                 {
                     m_logger.Debug($"Got {response.MessageList.Messages.Count} new messages, sending");
                     await responseStream.WriteAsync(response);
+                    lastMessageTime = response.MessageList.Messages.Max(x => x.UnixTime);
+                }
+                else
+                {
+                    await Task.Delay(200);
                 }
             }
 
