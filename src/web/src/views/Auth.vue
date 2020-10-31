@@ -7,10 +7,10 @@
       </div>
 
       <div class="dev">
-        <el-button type="primary" v-on:click="simple_auth">Авторизуй меня (DEV) postman rect</el-button>
+        <el-button type="primary" v-on:click="simpleAuth">Авторизуй меня (DEV) postman rect</el-button>
       </div>
       <div class="dev">
-        <el-button type="primary" v-on:click="simple_auth_igor">Авторизуй меня (DEV) И Горь</el-button>
+        <el-button type="primary" v-on:click="simpleAuthIgor">Авторизуй меня (DEV) И Горь</el-button>
       </div>
     </div>
 </template>
@@ -18,6 +18,7 @@
 <script>
 import axios from "axios";
 import { api_url } from "../store"
+import { detect } from "detect-browser";
 
 export default {
     data() {
@@ -30,17 +31,17 @@ export default {
       authorize: function() {
         this.auth(this.text_input_login, this.text_input_password);
       },
-      simple_auth: function () {
+      simpleAuth: function () {
         this.auth("example_api@example.com", "my_password");
       },
-      simple_auth_igor: function() {
+      simpleAuthIgor: function() {
         this.auth("i_gor@example.com", "my_password");
       },
       auth: function(login, password) {
         axios.post(api_url + "/auth/auth", {
           login: login,
           password: password,
-          device_name: "vue-dev",
+          device_name: this.getDeviceDescription(),
         })
         .then((response) => {
           localStorage.setItem("refresh_token", response.data["refresh_token"]);
@@ -56,6 +57,10 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+      },
+      getDeviceDescription: function() {
+        var browser = detect();
+        return browser.name + " " + browser.version + " " + browser.os;
       }
     }
   };

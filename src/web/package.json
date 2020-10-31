@@ -11,6 +11,7 @@
     "axios": "^0.20.0",
     "core-js": "^3.6.5",
     "cors": "^2.8.5",
+    "detect-browser": "^5.2.0",
     "element-ui": "^2.13.2",
     "google-protobuf": "^3.13.0",
     "grpc-web": "^1.2.1",
