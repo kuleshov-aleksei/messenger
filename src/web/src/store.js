@@ -34,4 +34,4 @@ export default new Vuex.Store({
       state.current_route = route;
     }
   }
-})
+});

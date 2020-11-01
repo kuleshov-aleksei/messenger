@@ -18,6 +18,9 @@
                     <el-menu-item index="/profile"><i class="el-icon-user-solid" />Аккаунт</el-menu-item>
                     <el-menu-item index="/settings"><i class="el-icon-setting" />Настройки</el-menu-item>
                 </el-submenu>
+                <el-menu-item v-if="showAdmin" class="el-menu-item" index="/admin">
+                    <i class="el-icon-user-solid" />Администрирование
+                </el-menu-item>
             </el-menu>
         </div>
     </div>
@@ -25,14 +28,36 @@
 
 <script>
 import store from "../store";
+import sessionStore from "../sessionStore";
+import jwt_decode from "jwt-decode";
 
 export default {
   data() {
     return {
+        showAdmin: false,
     };
   },
   mounted: function() {
-    
+    this.checkPermission();
+    this.$root.$on('authorized', this.checkPermission);
+  },
+  methods: {
+      checkPermission: function() {
+        if (localStorage.getItem("access_token") !== null)
+        {
+            var decodedJWT = jwt_decode(localStorage.getItem("access_token"));
+            sessionStore.commit('set_roles', decodedJWT.role.split(','));
+        }
+
+        if (sessionStore.state.roles.includes('admin'))
+        {
+            this.showAdmin = true;
+        }
+        else
+        {
+            this.showAdmin = false;
+        }
+      }
   },
   computed: {
       current_route: {
