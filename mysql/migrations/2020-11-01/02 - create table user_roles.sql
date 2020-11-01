@@ -24,3 +24,8 @@ CREATE TABLE `dcsm`.`user_roles` (
 
 
 INSERT INTO `dcsm`.`user_roles` (`user_id`, `role_id`, `assigned_by`, `date_assigned`) VALUES ('2', '1', '2', '2020-11-01 16:16:48');
+
+ALTER TABLE `dcsm`.`user_roles` 
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (`user_id`, `role_id`);
+;

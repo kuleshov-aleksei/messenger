@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.JWTSecret", "Mess
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.RegistrationServer", "Messenger.RegistrationServer\Messenger.RegistrationServer.csproj", "{0F983265-7096-4ABA-8C87-613C52A0F59C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.Orchestrator", "Messenger.Orchestrator\Messenger.Orchestrator.csproj", "{09E1C959-4616-45C0-A1B9-D765C60084A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{0F983265-7096-4ABA-8C87-613C52A0F59C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F983265-7096-4ABA-8C87-613C52A0F59C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F983265-7096-4ABA-8C87-613C52A0F59C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09E1C959-4616-45C0-A1B9-D765C60084A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09E1C959-4616-45C0-A1B9-D765C60084A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09E1C959-4616-45C0-A1B9-D765C60084A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09E1C959-4616-45C0-A1B9-D765C60084A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
