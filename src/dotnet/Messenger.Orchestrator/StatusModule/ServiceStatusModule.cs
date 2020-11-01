@@ -31,6 +31,7 @@ namespace Messenger.Orchestrator.StatusModule
 
             if (roles == null || !roles.Contains("admin"))
             {
+                m_logger.Warn($"User {userId} does not have permissions for executing this method");
                 await SendResponse(context, HttpStatusCode.Forbidden);
                 return;
             }

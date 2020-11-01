@@ -2,6 +2,6 @@
 {
     internal class Routes
     {
-        internal const string ServiceStatus = "/service_status";
+        internal const string ServiceStatus = "/orchestrator/service_status";
     }
 }

@@ -34,6 +34,9 @@ namespace Messenger.Common.Http.Status
         [JsonProperty("free_memory")]
         public string FreeMemory { get; set; }
 
+        [JsonProperty("used_memory_percentage")]
+        public int UsedMemoryPercent { get; set; }
+
         [JsonProperty("start_time")]
         public string StartTime { get; set; }
 

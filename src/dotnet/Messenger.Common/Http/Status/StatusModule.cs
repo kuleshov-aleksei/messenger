@@ -21,7 +21,7 @@ namespace Messenger.Common.Http.Status
         private int m_processorsCount => Environment.ProcessorCount;
         private string m_userName => Environment.UserDomainName;
         private string m_startTime => Process.GetCurrentProcess().StartTime.ToString("HH:mm:ss dd.MM.yyyy");
-        private string m_workingTime => (DateTime.Now - Process.GetCurrentProcess().StartTime).Humanize();
+        private string m_workingTime => (DateTime.Now - Process.GetCurrentProcess().StartTime).Humanize(culture: new System.Globalization.CultureInfo("ru-RU"));
 
 
 
@@ -52,6 +52,7 @@ namespace Messenger.Common.Http.Status
                     UsedMemory = metrics.Used.Megabytes().Humanize("0.00"),
                     TotalMemory = metrics.Total.Megabytes().Humanize("0.00"),
                     FreeMemory = metrics.Free.Megabytes().Humanize("0.00"),
+                    UsedMemoryPercent = (int)Math.Round((metrics.Used / metrics.Total) * 100),
                     StartTime = m_startTime,
                     WorkingTime = m_workingTime,
                 },

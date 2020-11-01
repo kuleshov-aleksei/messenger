@@ -84,6 +84,7 @@ namespace Messenger.Common.Http
                 }
                 else if (NeedAuthorization)
                 {
+                    m_logger.Warn("Got empty request, but authorization is needed");
                     await SendResponse(context, HttpStatusCode.Forbidden);
                     return;
                 }
