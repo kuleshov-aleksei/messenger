@@ -70,17 +70,22 @@ namespace Messenger.Common.Http
                         if (!request.CheckAuthorization(m_jwtHelper, request, out userId))
                         {
                             m_logger.Error("Authorization failed");
-                            await SendResponse(context, HttpStatusCode.Unauthorized);
+                            await SendResponse(context, HttpStatusCode.Forbidden);
                             return;
                         }
 
                         if (userId == 0)
                         {
                             m_logger.Error("Authorization failed");
-                            await SendResponse(context, HttpStatusCode.Unauthorized);
+                            await SendResponse(context, HttpStatusCode.Forbidden);
                             return;
                         }
                     }
+                }
+                else if (NeedAuthorization)
+                {
+                    await SendResponse(context, HttpStatusCode.Forbidden);
+                    return;
                 }
 
                 await OnRequest(context, request, userId);

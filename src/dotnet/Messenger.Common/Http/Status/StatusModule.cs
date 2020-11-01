@@ -28,6 +28,8 @@ namespace Messenger.Common.Http.Status
         public StatusModule()
             : base (Routes.STATUS_ROUTE, null)
         {
+            base.NeedAuthorization = false;
+
             Version version = Assembly.GetEntryAssembly().GetName().Version;
             m_version = $"{version.Major}.{version.Minor}.{version.Build}";
             m_memoryClient = new MemoryMetricsClient();

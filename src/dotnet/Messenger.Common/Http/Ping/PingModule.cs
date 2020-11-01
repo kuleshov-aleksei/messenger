@@ -1,8 +1,6 @@
 ﻿using EmbedIO;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.Net;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Messenger.Common.Http.Ping

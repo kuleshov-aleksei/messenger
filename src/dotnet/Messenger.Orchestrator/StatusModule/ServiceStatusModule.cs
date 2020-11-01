@@ -12,6 +12,7 @@ namespace Messenger.Orchestrator.StatusModule
     {
         private Logger m_logger = LogManager.GetCurrentClassLogger();
         private Orchestator m_orchestator;
+        private JwtHelper m_jwtHelper;
 
         public override bool IsFinalHandler => true;
 
@@ -19,11 +20,20 @@ namespace Messenger.Orchestrator.StatusModule
             : base (Routes.ServiceStatus, jwtHelper)
         {
             m_orchestator = orchestator;
+            m_jwtHelper = jwtHelper;
         }
 
         protected override async Task OnRequest(IHttpContext context, ServiceStatusRequest request, int userId)
         {
             m_logger.Info("Handling service status request");
+
+            List<string> roles = m_jwtHelper.GetRoles(request.AccessToken);
+
+            if (roles == null || !roles.Contains("admin"))
+            {
+                await SendResponse(context, HttpStatusCode.Forbidden);
+                return;
+            }
 
             List<Service> services = m_orchestator.GetServices();
             ServiceStatusResponse response = new ServiceStatusResponse

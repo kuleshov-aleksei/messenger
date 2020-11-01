@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Security.Claims;
 using MySql.Common;
+using System.Linq;
 
 namespace Messenger.Common.JWT
 {
@@ -27,6 +28,27 @@ namespace Messenger.Common.JWT
 
             byte[] secret = File.ReadAllBytes(secretKeyPath);
             m_securityKey = new SymmetricSecurityKey(secret);
+        }
+
+        public List<string> GetRoles(string accessToken)
+        {
+            JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+            JwtSecurityToken token = handler.ReadJwtToken(accessToken);
+            foreach (Claim claim in token.Claims)
+            {
+                if (claim.Type == ClaimTypes.Role || claim.Type == "role")
+                {
+                    string roles = claim.Value;
+                    if (string.IsNullOrEmpty(roles))
+                    {
+                        return null;
+                    }
+
+                    return roles.Split(',').ToList();
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
