@@ -30,6 +30,11 @@ const routes = [
     name: 'Playground',
     component: () => import('../views/Playground.vue')
   },
+  {
+    path: '/admin',
+    name: 'Administration',
+    component: () => import('../views/Admin.vue')
+  },
   { 
     path: '/404', 
     name: '404', 
