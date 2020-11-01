@@ -24,11 +24,11 @@ namespace Messenger.Orchestrator
 
             JwtHelper jwtHelper = new JwtHelper("jwt_secret.secret");
 
-            Orchestator orchestator = new Orchestator();
+            using Orchestator orchestator = new Orchestator();
+            orchestator.Start();
 
             List<IWebModule> webModules = new List<IWebModule>();
-            //webModules.Add(new HttpModules.Auth.AuthModule(jwtHelper));
-            //webModules.Add(new HttpModules.RefreshAccessToken.RefreshAccessTokenModule(jwtHelper));
+            webModules.Add(new StatusModule.ServiceStatusModule(orchestator, jwtHelper));
 
             HttpServer httpServer = new HttpServer(port, webModules);
             httpServer.Start();

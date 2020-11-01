@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Messenger.Common.Http.Status
 {
-    internal class StatusResponse
+    public class StatusResponse
     {
         [JsonProperty("version")]
         public string Version { get; set; }
@@ -39,5 +39,8 @@ namespace Messenger.Common.Http.Status
 
         [JsonProperty("working_time")]
         public string WorkingTime { get; set; }
+
+        [JsonProperty("creation_date")]
+        public string CreationDate { get; set; }
     }
 }

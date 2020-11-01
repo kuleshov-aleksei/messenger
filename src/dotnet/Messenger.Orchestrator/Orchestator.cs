@@ -1,14 +1,19 @@
 ﻿using Messenger.Common;
 using MySql.Common;
 using NLog;
+using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Messenger.Orchestrator
 {
-    internal class Orchestator
+    internal class Orchestator : IDisposable
     {
         private readonly Logger m_logger = LogManager.GetCurrentClassLogger();
         private List<Service> m_services;
+        private Thread m_thread;
+        private volatile bool m_running;
+        private TimeSpan m_interval = TimeSpan.FromSeconds(90);
 
         public Orchestator()
         {
@@ -18,6 +23,48 @@ namespace Messenger.Orchestrator
             foreach (Service service in m_services)
             {
                 m_logger.Info(service);
+            }
+
+            m_thread = new Thread(ThreadFunc);
+            m_thread.IsBackground = true;
+        }
+
+        public void Start()
+        {
+            m_thread.Start();
+        }
+
+        public void Stop()
+        {
+            if (m_running)
+            {
+                m_running = false;
+                m_thread.Join();
+            }
+        }
+
+        public List<Service> GetServices()
+        {
+            return m_services;
+        }
+
+        private void ThreadFunc(object obj)
+        {
+            m_running = true;
+
+            while (m_running)
+            {
+                LoadStatus();
+
+                Thread.Sleep(m_interval);
+            }
+        }
+
+        private void LoadStatus()
+        {
+            foreach (Service service in m_services)
+            {
+                service.GetStatus();
             }
         }
 
@@ -42,6 +89,11 @@ namespace Messenger.Orchestrator
             );
 
             return services;
+        }
+
+        public void Dispose()
+        {
+            Stop();
         }
     }
 }
