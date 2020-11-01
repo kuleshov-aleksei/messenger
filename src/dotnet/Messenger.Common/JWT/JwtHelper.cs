@@ -175,6 +175,8 @@ namespace Messenger.Common.JWT
         {
             m_logger.Info($"Generating JWT for user {userId}");
 
+            string roles = GetUserRoles(userId);
+
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
 
             SecurityToken token = handler.CreateToken(new SecurityTokenDescriptor
@@ -186,11 +188,29 @@ namespace Messenger.Common.JWT
                 Expires = DateTime.UtcNow.Add(duration),
                 Subject = new ClaimsIdentity(new[] {
                     new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+                    new Claim(ClaimTypes.Role, roles),
                 }),
                 SigningCredentials = new SigningCredentials(m_securityKey, SecurityAlgorithms.HmacSha256Signature, SecurityAlgorithms.Sha512Digest),
             });
 
             return handler.WriteToken(token);
+        }
+
+        private string GetUserRoles(int userId)
+        {
+            string roles = string.Empty;
+            GlobalSettings.Instance.Database.ExecuteSql(
+                $@"SELECT `user_id`, `role_id`, `role`
+                FROM `user`
+                INNER JOIN `user_roles` ON `user_roles`.`user_id` = `user`.`id`
+                INNER JOIN `user_role` ON `user_roles`.`role_id` = `user_role`.`id`
+                WHERE `user`.`id` = {userId}
+                ",
+                onRow =>
+                {
+                    roles += onRow.GetString("role") + ",";
+                });
+            return roles.TrimEnd(',');
         }
 
         public bool Validate(string token, out int userId, string audience = "WebClient")
