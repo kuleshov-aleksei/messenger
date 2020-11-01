@@ -8,5 +8,6 @@ namespace Messenger.Common.Http
     {
         internal const string PING_ROUTE = "/ping";
         internal const string QUERY_SEARCH_ROUTE = "/query_search";
+        internal const string STATUS_ROUTE = "/status";
     }
 }

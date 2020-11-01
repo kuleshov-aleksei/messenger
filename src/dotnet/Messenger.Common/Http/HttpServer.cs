@@ -1,5 +1,6 @@
 ﻿using EmbedIO;
 using Messenger.Common.Http.Ping;
+using Messenger.Common.Http.Status;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace Messenger.Common.Http
                 .WithMode(HttpListenerMode.EmbedIO))
                 .WithCors()
                 .WithModule(new PingModule())
+                .WithModule(new StatusModule())
                 .WithLocalSessionManager()
                 .HandleUnhandledException(HandleException)
                 .HandleHttpException(HttpExceptionHandlerFunc);

@@ -24,6 +24,8 @@ namespace Messenger.Orchestrator
 
             JwtHelper jwtHelper = new JwtHelper("jwt_secret.secret");
 
+            Orchestator orchestator = new Orchestator();
+
             List<IWebModule> webModules = new List<IWebModule>();
             //webModules.Add(new HttpModules.Auth.AuthModule(jwtHelper));
             //webModules.Add(new HttpModules.RefreshAccessToken.RefreshAccessTokenModule(jwtHelper));
