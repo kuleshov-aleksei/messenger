@@ -61,6 +61,45 @@ namespace Messenger.MessengerServer
             return GetMessages(searchRequest, chatId);
         }
 
+        public MessagesResponse GetMessagesBefore(long unixTime, int chatId)
+        {
+            SearchRequest searchRequest = new SearchRequest(GlobalSettings.EsIndexName)
+            {
+                Size = GlobalSettings.EsMessagesCount,
+                Sort = new List<ISort>()
+                {
+                    new FieldSort
+                    {
+                        Field = GlobalSettings.EsFieldMessageTime,
+                        Order = SortOrder.Descending
+                    }
+                },
+                Source = new SourceFilter()
+                {
+                    Includes = m_includeFields
+                },
+                Query = new BoolQuery
+                {
+                    Should = new QueryContainer[]
+                    {
+                        new TermQuery
+                        {
+                            Field = GlobalSettings.EsFieldChatId,
+                            Value = chatId
+                        },
+                        new LongRangeQuery
+                        {
+                            Field = GlobalSettings.EsFieldMessageTime,
+                            LessThan = unixTime
+                        }
+                    },
+                    MinimumShouldMatch = 2
+                }
+            };
+
+            return GetMessages(searchRequest, chatId);
+        }
+
         public MessagesResponse GetMessagesFrom(long unixTime, int chatId)
         {
             SearchRequest searchRequest = new SearchRequest(GlobalSettings.EsIndexName)

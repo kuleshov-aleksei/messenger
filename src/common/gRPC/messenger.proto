@@ -5,6 +5,7 @@ service MessengerService {
   rpc GetLastMessages(GetLastMessagesRequest) returns (ServerResponse);
   rpc SendMessage(MessageRequest) returns (ServerResponse);
   rpc SubscribeToMessages(SubscribeRequest) returns (stream ServerResponse);
+  rpc GetMessagesFrom(GetMessagesFromRequest) returns (ServerResponse);
 }
 
 message EchoRequest {
@@ -18,6 +19,12 @@ message EchoResponse {
 message GetLastMessagesRequest {
 	string access_token = 1;
 	int32 chat_id = 2;
+}
+
+message GetMessagesFromRequest {
+	string access_token = 1;
+	int32 chat_id = 2;
+	int64 unix_time = 3;
 }
 
 message Message {

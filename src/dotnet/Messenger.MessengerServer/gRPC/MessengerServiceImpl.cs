@@ -4,12 +4,10 @@ using Messenger.Common.JWT;
 using Messenger.Common.Tools;
 using MySql.Common;
 using NLog;
-using Swan;
 using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Messenger.MessengerServer.gRPC
@@ -60,6 +58,61 @@ namespace Messenger.MessengerServer.gRPC
             m_logger.Info($"Returning messages of chat {request.ChatId}");
 
             MessagesResponse messagesResponse = m_esInteractor.GetLastMessagesOfChat(request.ChatId);
+            ServerResponse serverResponse = new ServerResponse
+            {
+                MessageList = new MessageList()
+            };
+
+            if (messagesResponse == null)
+            {
+                return Task.FromResult(new ServerResponse
+                {
+                    Empty = new Empty()
+                });
+            }
+
+            serverResponse.MessageList.ChatId = messagesResponse.ChatId;
+
+            foreach (Message message in messagesResponse.Messages)
+            {
+                serverResponse.MessageList.Messages.Add(new global::Message
+                {
+                    AuthorImage = message.AuthorImageLinkSmall ?? string.Empty,
+                    AuthorName = message.AuthorName,
+                    AuthorSurname = message.AuthorSurname,
+                    Text = message.Text,
+                    UnixTime = message.UnixTime,
+                    IsAuthor = message.AuthorId == userId
+                });
+            }
+
+            return Task.FromResult(serverResponse);
+        }
+
+        public override Task<ServerResponse> GetMessagesFrom(GetMessagesFromRequest request, ServerCallContext context)
+        {
+            m_logger.Info($"Got request for loading messages from {request.UnixTime}");
+
+            if (request == null)
+            {
+                m_logger.Info("Empty request");
+                return CreateErrorResponse(HttpStatusCode.BadRequest);
+            }
+
+            if (request.ChatId <= 0 || request.UnixTime <= 0)
+            {
+                return CreateErrorResponse(HttpStatusCode.BadRequest);
+            }
+
+            Task<ServerResponse> isValid = ValidateJWT(request.AccessToken, out int userId);
+            if (isValid != null)
+            {
+                return isValid;
+            }
+
+            m_logger.Info($"Returning messages from {request.UnixTime} of chat {request.ChatId}");
+
+            MessagesResponse messagesResponse = m_esInteractor.GetMessagesBefore(request.UnixTime, request.ChatId);
             ServerResponse serverResponse = new ServerResponse
             {
                 MessageList = new MessageList()
