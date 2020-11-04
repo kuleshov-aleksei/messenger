@@ -1,6 +1,6 @@
 <template>
   <div class="chat_component">
-    <div class="chat_holder" v-chat-scroll="{always: false, smooth: false}">
+    <div class="chat_holder" v-chat-scroll="{always: false, smooth: false}" @v-chat-scroll-top-reached="topReached">
       <div class="" v-for="(message, i) in messages.slice().reverse()" :key="message.unixTime + i">
         <el-card shadow="never" class="box-card" v-bind:class="{message_other: message.isAuthor != true}">
           <div class="message">
@@ -46,7 +46,7 @@
 <script>
 import store from "../store";
 import { api_url } from "../store"
-const {GetLastMessagesRequest, MessageRequest, SubscribeRequest} = require('./../gRPC/messenger_pb.js');
+const {GetLastMessagesRequest, MessageRequest, SubscribeRequest, GetMessagesFromRequest} = require('./../gRPC/messenger_pb.js');
 const {MessengerServiceClient} = require('./../gRPC/messenger_grpc_web_pb.js');
 
 const monthNames = ["января", "февраля", "марта", "апреля", "мая", "июня",
@@ -252,6 +252,17 @@ export default {
       }
 
       return hours + ':' + minutes.substr(-2);
+    },
+    topReached: function() {
+      var request = new GetMessagesFromRequest();
+      request.setAccessToken(localStorage.getItem("access_token"));
+      request.setChatId(this.chat_id);
+      let timestamps = this.messages.map(message => message.unixTime);
+      request.setUnixTime(Math.min(...timestamps));
+
+      this.messengerService.getMessagesFrom(request, {}, (error, response) => {
+        this.on_message_received(error, response, true)
+      });
     }
   },
   watch: {
@@ -277,7 +288,7 @@ export default {
     width: 100%;
     position: relative;
     background: white;
-    overflow-y: auto;
+    overflow-y: scroll;
 
     .message_self {
       margin-left: auto;
