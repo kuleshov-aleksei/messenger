@@ -7,10 +7,13 @@
                     <el-button class="add-button" icon="el-icon-plus" circle @click="dialogVisible = true"></el-button>
                 </div>
             </div>
-            <div class="chat-header-container">
+           <div class="chat-header-container">
                 <div class="chat-header">
-                    <h3>{{current_chat ? current_chat.title : chat_title_placeholder}}</h3>
-                    <el-button class="chat-members" v-if="current_chat_members.length > 2" type="text" @click="show_chat_info">{{current_chat_members.length}} {{get_declination(current_chat_members.length)}}</el-button>
+                    <div class="center-vertically">
+                        <h3>{{current_chat ? current_chat.title : chat_title_placeholder}}</h3>
+                    </div>
+                    <el-button class="chat-members" v-if="current_chat_members.length > 1" type="text" @click="show_chat_info">{{current_chat_members.length}} {{get_declination(current_chat_members.length)}}</el-button>
+                    <InviteUserToChat v-if="current_chat != null" class="center-vertically invite-component" :chatId="current_chat.id" />
                 </div>
             </div>
             <div class="chat-list-container">
@@ -45,9 +48,9 @@
                     clearable>
                 </el-input>
                 <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">Отмена</el-button>
-                <el-button type="primary" @click="dialogVisible = false" v-on:click="create_new_chat">Создать</el-button>
-            </span>
+                    <el-button @click="dialogVisible = false">Отмена</el-button>
+                    <el-button type="primary" @click="dialogVisible = false" v-on:click="create_new_chat">Создать</el-button>
+                </span>
         </el-dialog>
 
         <el-dialog
@@ -89,10 +92,12 @@ import axios from "axios";
 import { api_url } from "../store"
 import store from "../store"
 import Chat from "../components/Chat.vue";
+import InviteUserToChat from "../components/InviteUserToChat.vue";
 
 export default {
     components: {
         Chat,
+        InviteUserToChat,
     },
     data() {
       return {
@@ -120,6 +125,7 @@ export default {
                     if (chat.id === store.state.selected_chat_id)
                     {
                         this.current_chat = chat;
+                        this.get_chat_members(this.current_chat.id);
                     }
                 });
             })
@@ -160,6 +166,7 @@ export default {
         },
         on_chat_selected: function(chat) {
             this.current_chat = chat;
+            this.current_chat_members = [];
             this.get_chat_members(chat.id);
             store.commit('set_chat_id', chat.id);
         },
@@ -298,6 +305,7 @@ export default {
     margin-bottom: auto;
     display: flex;
     flex-wrap: wrap;
+    height: 100%;
 
     .chat-members {
         margin-top: auto;
@@ -305,7 +313,7 @@ export default {
         padding-left: 20px;
     }
 
-    button > span {
+    > button > span {
         color: gray;
     }
 
@@ -375,6 +383,10 @@ ul {
 .el-popover__title {
     margin-bottom: 0;
     text-align: center;
+}
+
+.invite-component {
+    margin-left: auto;
 }
 
 </style>

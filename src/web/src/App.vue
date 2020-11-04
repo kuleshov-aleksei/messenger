@@ -110,4 +110,9 @@ body {
   border-radius: 10px;
   background-color: rgb(84, 92, 100);
 }
+
+.center-vertically {
+  margin-top: auto;
+  margin-bottom: auto;
+}
 </style>

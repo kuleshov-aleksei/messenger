@@ -62,7 +62,7 @@
 import axios from "axios";
 import { api_url } from "../store"
 
-var REFRESH_INTERVAL = 100 * 1000;
+var REFRESH_INTERVAL = 20 * 1000;
 
 export default {
 data() {
