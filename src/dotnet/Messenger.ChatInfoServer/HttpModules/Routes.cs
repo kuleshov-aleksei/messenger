@@ -6,5 +6,6 @@
         internal const string GET_CHAT_MEMBERS = "/chat/get_chat_members";
         internal const string CREATE_CHAT = "/chat/create_chat";
         internal const string INVITE_TO_CHAT = "/chat/invite_to_chat";
+        internal const string INVITE_TO_CHAT_USERNAME = "/chat/invite_to_chat_username";
     }
 }

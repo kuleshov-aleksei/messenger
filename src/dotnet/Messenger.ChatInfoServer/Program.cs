@@ -28,6 +28,7 @@ namespace Messenger.ChatInfoServer
             webModules.Add(new HttpModules.GetChatMembers.GetChatMembersModule(jwtHelper));
             webModules.Add(new HttpModules.CreateChat.CreateChatModule(jwtHelper));
             webModules.Add(new HttpModules.InviteToChat.InviteChatModule(jwtHelper));
+            webModules.Add(new HttpModules.InviteToChat.InviteChatModuleByUsername(jwtHelper));
 
             HttpServer httpServer = new HttpServer(port, webModules);
             httpServer.Start();
