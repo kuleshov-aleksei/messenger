@@ -11,7 +11,7 @@ CREATE PROCEDURE `p_add_user_to_chat_by_name`(
 BEGIN
 	DECLARE new_user_id INT;
 
-	IF added_by = 2 THEN    
+	IF p_added_by = 2 THEN    
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Can not add user from system account';
 	ELSE
 		BEGIN
@@ -27,9 +27,13 @@ BEGIN
 				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'added_by is not a member of chat';
 			ELSE
 				SET new_user_id = (SELECT `id` FROM `user` WHERE `username` = p_username);
-            
-				INSERT INTO `chat_members` (`chat_id`, `user_id`, `joined_at`, `added_by`) 
-				VALUES (p_chat_id, new_user_id, NOW(), p_added_by);
+				
+				IF new_user_id is NULL OR new_user_id = 0 THEN
+					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'user not found';
+				ELSE
+					INSERT INTO `chat_members` (`chat_id`, `user_id`, `joined_at`, `added_by`) 
+					VALUES (p_chat_id, new_user_id, NOW(), p_added_by);
+				END IF;
 			END IF;
         END;
     END IF;

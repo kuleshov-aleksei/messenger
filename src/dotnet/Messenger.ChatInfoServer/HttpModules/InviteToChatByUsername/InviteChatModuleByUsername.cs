@@ -37,9 +37,23 @@ namespace Messenger.ChatInfoServer.HttpModules.InviteToChat
             }
             catch (MySqlException e)
             {
-                m_logger.Error(e);
-                await SendResponse(context, HttpStatusCode.BadRequest, new ServerError("Invalid request"));
-                return;
+                m_logger.Error($"Failed to execute procedure p_add_user_to_chat_by_name: {e.Message}. {e.StackTrace}");
+
+                if (e.Message == "added_by is not a member of chat")
+                {
+                    await SendResponse(context, HttpStatusCode.Forbidden, new ServerError("Текущий пользователь не может пригласить нового пользователя"));
+                    return;
+                }
+                else if (e.Message == "user not found")
+                {
+                    await SendResponse(context, HttpStatusCode.BadRequest, new ServerError("Пользователь не найден"));
+                    return;
+                }
+                else
+                {
+                    await SendResponse(context, HttpStatusCode.BadRequest, new ServerError("Invalid request"));
+                    return;
+                }
             }
 
             await SendResponse(context, HttpStatusCode.OK);
