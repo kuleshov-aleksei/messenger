@@ -60,6 +60,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "styles/variables.scss";
 
 body {
     margin: 0 !important;
@@ -115,4 +116,29 @@ body {
   margin-top: auto;
   margin-bottom: auto;
 }
+
+.center-horizonally {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.background-body {
+  margin-top: 10px;
+  min-width: 50%;
+  margin: 10px auto 0 auto;
+  padding: 10px;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 0 0 var(--steel_gray_120),0 0 0 1px var(--steel_gray_80);
+
+  @include respond-to(mobile) { max-width: 100%; }
+  @include respond-to(medium-screens) { max-width: 100%; }
+  @include respond-to(regular) { max-width: 60% }
+  @include respond-to(wide-screens) { max-width: 50% }
+}
+
+.el-avatar {
+  background: none;
+}
+
 </style>

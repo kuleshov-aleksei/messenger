@@ -1,5 +1,5 @@
 <template>
-  <div class="admin">
+  <div class="background-body">
     <el-tabs v-model="activeTabName">
       <el-tab-pane label="Статус сервисов" name="status">
         <ServiceStatus />
@@ -44,21 +44,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../styles/variables.scss";
-
-.admin {
-  margin-top: 10px;
-  min-width: 50%;
-  margin: 10px auto 0 auto;
-  padding: 10px;
-  background: white;
-  border-radius: 4px;
-  box-shadow: 0 1px 0 0 var(--steel_gray_120),0 0 0 1px var(--steel_gray_80);
-
-  @include respond-to(mobile) { max-width: 100%; }
-  @include respond-to(medium-screens) { max-width: 100%; }
-  @include respond-to(regular) { max-width: 60% }
-  @include respond-to(wide-screens) { max-width: 50% }
-}
 
 </style>
