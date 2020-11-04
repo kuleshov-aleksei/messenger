@@ -13,7 +13,7 @@
                         <h3>{{current_chat ? current_chat.title : chat_title_placeholder}}</h3>
                     </div>
                     <el-button class="chat-members" v-if="current_chat_members.length > 1" type="text" @click="show_chat_info">{{current_chat_members.length}} {{get_declination(current_chat_members.length)}}</el-button>
-                    <InviteUserToChat v-if="current_chat != null" class="center-vertically invite-component" :chatId="current_chat.id" />
+                    <InviteUserToChat v-if="current_chat != null" class="center-vertically invite-component" :chatId="current_chat.id" :onSuccess="onSuccessfullInvitation"/>
                 </div>
             </div>
             <div class="chat-list-container">
@@ -166,11 +166,11 @@ export default {
         },
         on_chat_selected: function(chat) {
             this.current_chat = chat;
-            this.current_chat_members = [];
             this.get_chat_members(chat.id);
             store.commit('set_chat_id', chat.id);
         },
         get_chat_members: function(chat_id) {
+            this.current_chat_members = [];
             axios.post(api_url + "/chat/get_chat_members", {
                 access_token: localStorage.getItem("access_token"),
                 chat_id: chat_id,
@@ -189,6 +189,9 @@ export default {
         },
         show_chat_info: function() {
             this.chat_info_visible = true;
+        },
+        onSuccessfullInvitation: function() {
+            this.get_chat_members(this.current_chat.id);
         }
     },
     mounted() {

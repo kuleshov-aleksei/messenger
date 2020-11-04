@@ -26,6 +26,7 @@ import { api_url } from "../store"
 export default {
     props: {
         chatId: String,
+        onSuccess: Function,
     },
     data() {
         return {
@@ -40,15 +41,15 @@ export default {
                 invited_username: this.invitedUserName,
                 chat_id: this.chatId,
             })
-            .then(() => {
-                this.invitedUserName = '';
-                this.$notify({
-                    title: "Приглашение пользователя в чат",
-                    message: "Пользователь приглашен",
-                    type: 'success'
-                });
+            .then((response) => {
+                this.onSuccessfullResponse(response);
             })
             .catch((error) => {
+                if (error.response == null)
+                {
+                    return;
+                }
+
                 let notificationMessage = error.response.data != null ? error.response.data : error;
                 this.$notify.error({
                     title: "Не удалось пригласить пользователя в чат",
@@ -56,6 +57,16 @@ export default {
                 });
             });
         },
+        onSuccessfullResponse: function() {
+            this.invitedUserName = '';
+            this.$notify({
+                title: "Приглашение пользователя в чат",
+                message: "Пользователь приглашен",
+                type: 'success'
+            });
+
+            this.onSuccess();
+        }
     }
 }
 </script>
