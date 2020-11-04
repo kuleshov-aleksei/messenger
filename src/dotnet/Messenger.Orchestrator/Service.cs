@@ -57,6 +57,7 @@ namespace Messenger.Orchestrator
             catch (Exception e)
             {
                 m_logger.Error($"Failed to read status of service {Name}. {e.Message}, {e.StackTrace}");
+                LastStatus = null;
             }
 
             return LastStatus;

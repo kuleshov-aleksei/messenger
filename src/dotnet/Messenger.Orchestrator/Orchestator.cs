@@ -13,7 +13,7 @@ namespace Messenger.Orchestrator
         private List<Service> m_services;
         private Thread m_thread;
         private volatile bool m_running;
-        private TimeSpan m_interval = TimeSpan.FromSeconds(90);
+        private TimeSpan m_interval = TimeSpan.FromSeconds(20);
 
         public Orchestator()
         {
