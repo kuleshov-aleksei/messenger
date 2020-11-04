@@ -122,6 +122,13 @@ namespace Messenger.MessengerServer
             {
                 ElasticDocument document = hit.Source;
 
+                if (!users.ContainsKey(document.user_id))
+                {
+                    // This need to be fixed if user will be able to kick users from chats
+                    m_logger.Info("Got message from absent user. Should not happen");
+                    continue;
+                }
+
                 Message message = new Message
                 {
                     Text = document.text,
