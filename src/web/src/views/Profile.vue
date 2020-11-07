@@ -5,7 +5,15 @@
         <div v-if="userData != null">
             <div class="profile-info">
                 <div class="profile-container">
-                    <table class="profileTable">
+                    <table class="profileTable center-horizonally">
+                        <thead>
+                            <tr class="invisible">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td style="min-width:120px;"></td>
+                            </tr>
+                        </thead>
                         <tbody>
                             <tr>
                                 <td rowspan="4" class="picture-td">
@@ -23,29 +31,59 @@
                             </tr>
                             <tr>
                                 <td>Имя:</td>
-                                <td>
+                                <td v-if="changingName === false">
                                     {{ userData.name }}
                                 </td>
-                                <td>
-                                    <el-button type="text">Изменить</el-button>
+                                <td v-if="changingName === true">
+                                    <el-input :placeholder="userData.name" v-model="newName" @input="nameChanged"></el-input>
+                                </td>
+
+                                <td v-if="changingName === false">
+                                    <el-button type="text" @click="changingName = true">Изменить</el-button>
+                                </td>
+                                <td v-if="changingName === true">
+                                    <el-button-group>
+                                        <el-button type="success" icon="el-icon-check" @click="changeName" :disabled="!newNameValid"></el-button>
+                                        <el-button type="warning" icon="el-icon-close" @click="changingName = false"></el-button>
+                                    </el-button-group>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Фамилия:</td>
-                                <td>
+                                <td v-if="changingSurname === false">
                                     {{ userData.surname }}
                                 </td>
-                                <td>
-                                    <el-button type="text">Изменить</el-button>
+                                <td v-if="changingSurname === true">
+                                    <el-input :placeholder="userData.surname" v-model="newSurname" @input="surnameChanged"></el-input>
+                                </td>
+
+                                <td v-if="changingSurname === false">
+                                    <el-button type="text" @click="changingSurname = true">Изменить</el-button>
+                                </td>
+                                <td v-if="changingSurname === true">
+                                    <el-button-group>
+                                        <el-button type="success" icon="el-icon-check" @click="changeSurname" :disabled="!newSurnameValid"></el-button>
+                                        <el-button type="warning" icon="el-icon-close" @click="changingSurname = false"></el-button>
+                                    </el-button-group>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Почта:</td>
-                                <td>
+                                <td v-if="changingEmail === false">
                                     {{ userData.email }}
                                 </td>
-                                <td>
-                                    <el-button type="text">Изменить</el-button>
+                                <td v-if="changingEmail === true">
+                                    <el-input :placeholder="userData.email" v-model="newEmail" @input="emailChanged"></el-input>
+                                </td>
+
+                                <td v-if="changingEmail === false">
+                                    <el-button type="text" @click="changingEmail = true">Изменить</el-button>
+                                </td>
+                                <td v-if="changingEmail === true">
+                                    <el-button-group>
+                                        <el-button type="success" icon="el-icon-check" @click="changeEmail" :disabled="!newEmailValid"></el-button>
+                                        <el-button type="warning" icon="el-icon-close" @click="changingEmail = false"></el-button>
+                                    </el-button-group>
                                 </td>
                             </tr>
                         </tbody>
@@ -59,9 +97,7 @@
                                 <td>Название роли</td>
                                 <td>Описание роли</td>
                                 <td>Дата получения</td>
-                                <td>Логин назначившего пользователя</td>
-                                <td>Имя назначившего пользователя</td>
-                                <td>Фамилия назначившего пользователя</td>
+                                <td>Назначивший пользователь</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -69,9 +105,16 @@
                                 <td>{{ role.title }}</td>
                                 <td>{{ role.description }}</td>
                                 <td>{{ role.date_assigned }}</td>
-                                <td>{{ role.assigned_by_username }}</td>
-                                <td>{{ role.assigned_by_name }}</td>
-                                <td>{{ role.assigned_by_surname }}</td>
+                                <td>
+                                    <el-popover
+                                        placement="top-start"
+                                        title="Пользователь"
+                                        width="200"
+                                        trigger="hover">
+                                        <div class="popover-content">{{ join(role.assigned_by_name, role.assigned_by_surname) }}</div>
+                                        <el-button slot="reference">@{{ role.assigned_by_username }}</el-button>
+                                    </el-popover>
+                                </td>
                             </tr>
                         </tbody>
                     </div>
@@ -90,9 +133,48 @@ export default {
     data() {
         return {
             userData: null,
+            changingName: false,
+            newName: '',
+            newNameValid: false,
+            changingSurname: false,
+            newSurname: '',
+            newSurnameValid: false,
+            changingEmail: false,
+            newEmail: '',
+            newEmailValid: false,
         };
     },
     methods: {
+        changeName: function() {
+            this.changingName = false;
+            this.userData.name = this.newName;
+            //TODO: Send request
+        },
+        changeSurname: function() {
+            this.changingSurname = false;
+            this.userData.surname = this.newSurname;
+            //TODO: Send request
+        },
+        changeEmail: function() {
+            this.changingEmail = false;
+            this.userData.email = this.newEmail;
+            //TODO: Send request
+        },
+        nameChanged: function() {
+            this.newNameValid = this.validateSimple(this.newName);
+        },
+        surnameChanged: function() {
+            this.newSurnameValid = this.validateSimple(this.newSurname);
+        },
+        emailChanged: function() {
+            this.newEmailValid = this.validateEmail(this.newEmail);
+        },
+        validateSimple: function(input) {
+            return /\S/.test(input);
+        },
+        validateEmail: function(input) {
+            return /\S+@\S+\.\S+/.test(String(input).toLowerCase());
+        },
         loadUserProfile: function () {
             axios
                 .post(api_url + "/user/get_info", {
@@ -128,6 +210,14 @@ export default {
         getImgUrl(pic) {
             return require("../assets/" + pic);
         },
+        join: function (first, second) {
+            if (first == second) {
+                return first;
+            }
+            else {
+                return first + " " + second;
+            }
+        }
     },
     mounted() {
         store.commit("save_current_route", "/profile");
@@ -144,17 +234,14 @@ export default {
 }
 
 .profile-container {
-    max-width: 50%;
     margin: 0 auto 0 auto;
-    padding-right: 200px;
     text-align: left;
-    max-height: 300px;
+    max-height: 350px;
 }
 
 .profileTable {
     display: table;
     border-collapse: collapse;
-    margin: 25px 0;
     font-size: 0.9em;
     min-width: 400px;
     max-width: 700px;
@@ -163,6 +250,12 @@ export default {
     td {
         padding: 5px;
         border-bottom: 1px solid $border-color;
+    }
+
+    thead {
+        td {
+            border-bottom: none;
+        }
     }
 
     .picture-td {
@@ -187,15 +280,12 @@ export default {
     }
 }
 
-.username {
-    grid-area: username;
+.popover-content {
+    text-align: center;
+    margin: 10px 5px 5px 5px;
 }
 
-.name {
-    grid-area: name;
-}
-
-.surname {
-    grid-area: surname;
+.edit-button-group {
+    min-width: 150px;
 }
 </style>
