@@ -24,7 +24,7 @@ namespace MySql.Common
             m_connectionString = connectionString;
         }
 
-        public void ExecuteSql(string sql, Action<IDataReader> onRow = null, Dictionary<string, object> parameters = null)
+        public async Task ExecuteSqlAsync(string sql, Action<IDataReader> onRow = null, Dictionary<string, object> parameters = null)
         {
             using (DatabaseConnection dbConnection = new DatabaseConnection(m_connectionString))
             {
@@ -41,7 +41,7 @@ namespace MySql.Common
 
                 if (onRow == null)
                 {
-                    command.ExecuteNonQuery();
+                    await command.ExecuteNonQueryAsync();
                 }
                 else
                 {
@@ -54,6 +54,11 @@ namespace MySql.Common
                     }
                 }
             }
+        }
+
+        public void ExecuteSql(string sql, Action<IDataReader> onRow = null, Dictionary<string, object> parameters = null)
+        {
+            ExecuteSqlAsync(sql, onRow, parameters).Wait();
         }
 
         public void ExecuteProcedure(string procedureName, List<Tuple<string, object, ParameterDirection, MySqlDbType>> parameters, out Dictionary<string, object> returnValues)
