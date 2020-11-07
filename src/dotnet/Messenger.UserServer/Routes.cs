@@ -6,5 +6,6 @@
         public const string CHANGE_NAME = "/user/change_name";
         public const string CHANGE_SURNAME = "/user/change_surname";
         public const string CHANGE_EMAIL = "/user/change_email";
+        public const string CHANGE_PASSWORD = "/user/change_password";
     }
 }
