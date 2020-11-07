@@ -26,6 +26,9 @@ namespace Messenger.UserServer
 
             List<IWebModule> webModules = new List<IWebModule>();
             webModules.Add(new GetInfoModule(jwtHelper));
+            webModules.Add(new ChangeName.ChangeNameModule(jwtHelper));
+            webModules.Add(new ChangeSurname.ChangeSurnameModule(jwtHelper));
+            webModules.Add(new ChangeEmail.ChangeEmailModule(jwtHelper));
 
             HttpServer httpServer = new HttpServer(port, webModules);
             httpServer.Start();
