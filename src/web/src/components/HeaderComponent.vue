@@ -11,7 +11,7 @@
                 :default-active="current_route"
             >
                 <el-menu-item class="el-menu-item" index="/">
-                    <img src="@/assets/logo.png" alt="logo" width="40" height="40" class="logo-img" />Talker
+                    <img src="@/assets/logo.png" alt="logo" width="40" height="40" class="logo-img" />Calamity
                 </el-menu-item>
                 <el-submenu index="/profile">
                     <template slot="title" class="dropdown">Профиль</template>

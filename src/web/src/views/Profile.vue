@@ -148,17 +148,47 @@ export default {
         changeName: function() {
             this.changingName = false;
             this.userData.name = this.newName;
-            //TODO: Send request
+
+            axios.post(api_url + "/user/change_name", {
+                    access_token: localStorage.getItem("access_token"),
+                    new_name: this.newName
+                })
+                .then(() => {
+                    this.showSuccess("Изменение данных", "Имя пользователя успешно изменено!");
+                })
+                .catch(() => {
+                    this.showError("Изменение данных", "Не удалось изменить имя пользоваля");
+                });
         },
         changeSurname: function() {
             this.changingSurname = false;
             this.userData.surname = this.newSurname;
-            //TODO: Send request
+            
+            axios.post(api_url + "/user/change_surname", {
+                    access_token: localStorage.getItem("access_token"),
+                    new_surname: this.newSurname
+                })
+                .then(() => {
+                    this.showSuccess("Изменение данных", "Фамилия пользователя успешно изменено!");
+                })
+                .catch(() => {
+                    this.showError("Изменение данных", "Не удалось изменить фамилию пользоваля");
+                });
         },
         changeEmail: function() {
             this.changingEmail = false;
             this.userData.email = this.newEmail;
-            //TODO: Send request
+            
+            axios.post(api_url + "/user/change_email", {
+                    access_token: localStorage.getItem("access_token"),
+                    new_email: this.newEmail
+                })
+                .then(() => {
+                    this.showSuccess("Изменение данных", "Почта пользователя успешно изменена!");
+                })
+                .catch(() => {
+                    this.showError("Изменение данных", "Не удалось изменить почту пользоваля");
+                });
         },
         nameChanged: function() {
             this.newNameValid = this.validateSimple(this.newName);
@@ -176,8 +206,7 @@ export default {
             return /\S+@\S+\.\S+/.test(String(input).toLowerCase());
         },
         loadUserProfile: function () {
-            axios
-                .post(api_url + "/user/get_info", {
+            axios.post(api_url + "/user/get_info", {
                     access_token: localStorage.getItem("access_token"),
                 })
                 .then((response) => {
@@ -201,10 +230,7 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    this.$notify.error({
-                        title: "Не удалось получить информацию о пользователе",
-                        message: error,
-                    });
+                    this.showError("Не удалось получить информацию о пользователе", error);
                 });
         },
         getImgUrl(pic) {
@@ -217,6 +243,19 @@ export default {
             else {
                 return first + " " + second;
             }
+        },
+        showSuccess: function(title, message) {
+            this.$notify({
+                title: title,
+                message: message,
+                type: 'success'
+            });
+        },
+        showError: function(title, message) {
+            this.$notify.error({
+                title: title,
+                message: message,
+            });
         }
     },
     mounted() {
