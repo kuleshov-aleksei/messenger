@@ -16,7 +16,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td rowspan="4" class="picture-td">
+                                <td rowspan="5" class="picture-td">
                                     <div class="profile-picture">
                                         <el-avatar size="large" :src="getImgUrl(userData.image_large)">
                                             <img src="../assets/notfound.png" />
@@ -86,6 +86,15 @@
                                     </el-button-group>
                                 </td>
                             </tr>
+                            <tr>
+                                <td>Пароль:</td>
+                                <td>
+                                    ***********
+                                </td>
+                                <td>
+                                    <el-button type="text" @click="changingPassword = true">Изменить</el-button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -121,6 +130,32 @@
                 </div>
             </div>
         </div>
+
+        <el-dialog
+            title="Изменение пароля"
+            :visible.sync="changingPassword"
+            width="30%">
+            <table class="center-horizonally password-table">
+                <tbody>
+                    <tr>
+                        <td>Текущий пароль</td>
+                        <td><el-input placeholder="Введите текущий пароль" show-password v-model="passwordData.currentPassword" @input="validatePasswordForm"></el-input></td>
+                    </tr>
+                    <tr>
+                        <td>Новый пароль</td>
+                        <td><el-input placeholder="Введите новый пароль" show-password v-model="passwordData.newPassword" @input="validatePasswordForm"></el-input></td>
+                    </tr>
+                    <tr>
+                        <td>Повторите новый пароль</td>
+                        <td><el-input placeholder="Повторите новый пароль" show-password v-model="passwordData.repeatNewPassword" @input="validatePasswordForm"></el-input></td>
+                    </tr>
+                </tbody>
+            </table>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="changingPassword = false">Отмена</el-button>
+                <el-button type="primary" @click="changePassword" :disabled="!passwordData.validForm">Подтвердить</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -128,6 +163,7 @@
 import store from "../store";
 import axios from "axios";
 import { api_url } from "../store";
+import crypto from "crypto";
 
 export default {
     data() {
@@ -142,77 +178,152 @@ export default {
             changingEmail: false,
             newEmail: '',
             newEmailValid: false,
+            changingPassword: false,
+            passwordData: {
+                currentPassword: '',
+                newPassword: '',
+                repeatNewPassword: '',
+                validForm: false
+            }
         };
     },
     methods: {
-        changeName: function() {
+        changeName: function()
+        {
             this.changingName = false;
             this.userData.name = this.newName;
 
-            axios.post(api_url + "/user/change_name", {
+            axios.post(api_url + "/user/change_name",
+                {
                     access_token: localStorage.getItem("access_token"),
                     new_name: this.newName
                 })
-                .then(() => {
+                .then(() =>
+                {
                     this.showSuccess("Изменение данных", "Имя пользователя успешно изменено!");
                 })
-                .catch(() => {
+                .catch(() =>
+                {
                     this.showError("Изменение данных", "Не удалось изменить имя пользоваля");
                 });
         },
-        changeSurname: function() {
+        changeSurname: function()
+        {
             this.changingSurname = false;
             this.userData.surname = this.newSurname;
             
-            axios.post(api_url + "/user/change_surname", {
+            axios.post(api_url + "/user/change_surname",
+                {
                     access_token: localStorage.getItem("access_token"),
                     new_surname: this.newSurname
                 })
-                .then(() => {
+                .then(() =>
+                {
                     this.showSuccess("Изменение данных", "Фамилия пользователя успешно изменено!");
                 })
-                .catch(() => {
+                .catch(() =>
+                {
                     this.showError("Изменение данных", "Не удалось изменить фамилию пользоваля");
                 });
         },
-        changeEmail: function() {
+        changeEmail: function()
+        {
             this.changingEmail = false;
             this.userData.email = this.newEmail;
             
-            axios.post(api_url + "/user/change_email", {
+            axios.post(api_url + "/user/change_email",
+                {
                     access_token: localStorage.getItem("access_token"),
                     new_email: this.newEmail
                 })
-                .then(() => {
+                .then(() =>
+                {
                     this.showSuccess("Изменение данных", "Почта пользователя успешно изменена!");
                 })
-                .catch(() => {
+                .catch(() =>
+                {
                     this.showError("Изменение данных", "Не удалось изменить почту пользоваля");
                 });
         },
-        nameChanged: function() {
+        changePassword: function()
+        {
+            let hash = crypto.createHash('sha').update(this.passwordData.newPassword).digest('hex');
+
+            axios.post(api_url + "/user/change_password",
+                {
+                    access_token: localStorage.getItem("access_token"),
+                    current_password: this.passwordData.currentPassword,
+                    new_password: hash
+                })
+                .then(() =>
+                {
+                    this.showSuccess("Изменение данных", "Пароль успешно изменен!");
+                })
+                .catch((error) =>
+                {
+                    if (error.response == null)
+                    {
+                        this.showError("Изменение данных", "Не удалось изменить пароль");
+                        return;
+                    }
+
+                    let notificationMessage = error.response.data != null ? error.response.data : error;
+                    this.showError("Изменение данных", notificationMessage.error_message);
+                });
+
+            this.changingPassword = false;
+
+            this.passwordData.currentPassword = '';
+            this.passwordData.newPassword = '';
+            this.passwordData.repeatNewPassword = '';
+            this.passwordData.validForm = false;
+        },
+        nameChanged: function()
+        {
             this.newNameValid = this.validateSimple(this.newName);
         },
-        surnameChanged: function() {
+        surnameChanged: function()
+        {
             this.newSurnameValid = this.validateSimple(this.newSurname);
         },
-        emailChanged: function() {
+        emailChanged: function()
+        {
             this.newEmailValid = this.validateEmail(this.newEmail);
         },
-        validateSimple: function(input) {
+        validateSimple: function(input)
+        {
             return /\S/.test(input);
         },
-        validateEmail: function(input) {
+        validateEmail: function(input)
+        {
             return /\S+@\S+\.\S+/.test(String(input).toLowerCase());
         },
-        loadUserProfile: function () {
-            axios.post(api_url + "/user/get_info", {
+        validatePasswordForm: function()
+        {
+            if (this.validateSimple(this.passwordData.currentPassword) && 
+                this.validateSimple(this.passwordData.newPassword) && 
+                this.validateSimple(this.passwordData.repeatNewPassword) &&
+                this.passwordData.newPassword === this.passwordData.repeatNewPassword)
+            {
+                this.passwordData.validForm = true;
+            }
+            else
+            {
+                this.passwordData.validForm = false;
+            }
+        },
+        loadUserProfile: function ()
+        {
+            axios.post(api_url + "/user/get_info",
+                {
                     access_token: localStorage.getItem("access_token"),
                 })
-                .then((response) => {
+                .then((response) =>
+                {
                     this.userData = response.data;
 
-                    this.userData.roles.forEach(role => {
+                    this.userData.roles.forEach(role =>
+                    {
                         if (role.assigned_by_username == "SYSTEM")
                         {
                             role.assigned_by_username = "Система";
@@ -229,36 +340,46 @@ export default {
                         }
                     });
                 })
-                .catch((error) => {
+                .catch((error) =>
+                {
                     this.showError("Не удалось получить информацию о пользователе", error);
                 });
         },
-        getImgUrl(pic) {
+        getImgUrl(pic)
+        {
             return require("../assets/" + pic);
         },
-        join: function (first, second) {
-            if (first == second) {
+        join: function (first, second)
+        {
+            if (first == second)
+            {
                 return first;
             }
-            else {
+            else
+            {
                 return first + " " + second;
             }
         },
-        showSuccess: function(title, message) {
-            this.$notify({
+        showSuccess: function(title, message)
+        {
+            this.$notify(
+            {
                 title: title,
                 message: message,
                 type: 'success'
             });
         },
-        showError: function(title, message) {
-            this.$notify.error({
+        showError: function(title, message)
+        {
+            this.$notify.error(
+            {
                 title: title,
                 message: message,
             });
         }
     },
-    mounted() {
+    mounted()
+    {
         store.commit("save_current_route", "/profile");
         this.loadUserProfile();
     },
@@ -276,6 +397,14 @@ export default {
     margin: 0 auto 0 auto;
     text-align: left;
     max-height: 350px;
+}
+
+.password-table {
+    text-align: left;
+
+    td {
+        padding: 5px;
+    }
 }
 
 .profileTable {

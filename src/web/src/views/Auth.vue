@@ -19,6 +19,7 @@
 import axios from "axios";
 import { api_url } from "../store"
 import { detect } from "detect-browser";
+import crypto from "crypto";
 
 export default {
     data() {
@@ -32,15 +33,17 @@ export default {
         this.auth(this.text_input_login, this.text_input_password);
       },
       simpleAuth: function () {
-        this.auth("example_api@example.com", "my_password");
+        this.auth("testuser@example.com", "super_strong_password");
       },
       simpleAuthIgor: function() {
         this.auth("i_gor@example.com", "my_password");
       },
       auth: function(login, password) {
+        let hash = crypto.createHash('sha').update(password).digest('hex');
+
         axios.post(api_url + "/auth/auth", {
           login: login,
-          password: password,
+          password: hash,
           device_name: this.getDeviceDescription(),
         })
         .then((response) => {
