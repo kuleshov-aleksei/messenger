@@ -10,6 +10,8 @@ docker create  \
 	-e PGID=1000 \
 	-e TZ=Europe/Moscow \
 	-p 8083:15672 \
+	-p 15672:15672 \
+	-p 5672:5672 \
 	-v /home/messenger/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf \
 	--restart unless-stopped \
 	rabbitmq:3-management
