@@ -15,6 +15,21 @@ namespace Messenger.PictureService
 
         internal static bool ResizeImages(User user)
         {
+            try
+            {
+                TryResize(user);
+                return true;
+            }
+            catch (Exception e)
+            {
+                m_logger.Error($"Got error while resizing an image {e.Message} {e.StackTrace}");
+            }
+
+            return false;
+        }
+
+        private static bool TryResize(User user)
+        {
             m_logger.Trace("Starting resizing image");
 
             if (string.IsNullOrEmpty(user.ImageLargeLink))
@@ -37,6 +52,8 @@ namespace Messenger.PictureService
             user.ImageLargeLink = ResizeTo(original, LARGE_SIZE_WIDTH, AddSuffixForFile(tempName, "_large"));
             user.ImageMediumLink = ResizeTo(original, MEDIUM_SIZE_WIDTH, AddSuffixForFile(tempName, "_medium"));
             user.ImageSmallLink = ResizeTo(original, SMALL_SIZE_WIDTH, AddSuffixForFile(tempName, "_small"));
+
+            return true;
         }
 
         /// <summary>
