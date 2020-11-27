@@ -5,14 +5,16 @@ namespace Messenger.RabbitMQ.Common
 {
     public enum QueueName : int
     {
-        NewUser = 1,
+        TestQueue = 1,
+        UpdateUserPicture,
     }
 
     public static class Constants
     {
         public static Dictionary<QueueName, string> Queues = new Dictionary<QueueName, string>
         {
-            { QueueName.NewUser, "new_user" },
+            { QueueName.TestQueue, "test_queue" },
+            { QueueName.UpdateUserPicture, "update_user_picture" },
         };
     }
 }

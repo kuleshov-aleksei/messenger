@@ -12,8 +12,8 @@ namespace Messenger.RabbitMQ.Example
         {
             m_logger.Info("Starting");
 
-            using ProducerWrapper producerWrapper = new ProducerWrapper(QueueName.NewUser);
-            using ConsumerWrapper consumerWrapper = new ConsumerWrapper(QueueName.NewUser);
+            using ProducerWrapper producerWrapper = new ProducerWrapper(QueueName.TestQueue);
+            using ConsumerWrapper consumerWrapper = new ConsumerWrapper(QueueName.TestQueue);
 
             consumerWrapper.OnString += (message) =>
             {
