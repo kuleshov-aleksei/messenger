@@ -13,8 +13,9 @@ namespace Messenger.RabbitMQ.Common
         private IConnection m_mqConnection;
         private IModel m_mqChannel;
         private EventingBasicConsumer m_mqConsumer;
+        private string m_queueName;
 
-        public Action<byte[]> OnRowData;
+        public Action<byte[]> OnRawData;
         public Action<string> OnString;
 
         public ConsumerWrapper(QueueName queueName)
@@ -38,10 +39,10 @@ namespace Messenger.RabbitMQ.Common
 
             m_mqConnection = factory.CreateConnection();
             m_mqChannel = m_mqConnection.CreateModel();
-            string queueNameString = Constants.Queues[queueName];
+            m_queueName = Constants.Queues[queueName];
 
             QueueDeclareOk queueDeclareOk = m_mqChannel.QueueDeclare(
-                queue: queueNameString,
+                queue: m_queueName,
                 durable: false,
                 exclusive: false,
                 autoDelete: false,
@@ -51,8 +52,12 @@ namespace Messenger.RabbitMQ.Common
 
             m_mqConsumer = new EventingBasicConsumer(m_mqChannel);
             m_mqConsumer.Received += OnConsumerReceived;
+        }
+
+        public void Start()
+        {
             m_mqChannel.BasicConsume(
-                queue: queueNameString,
+                queue: m_queueName,
                 autoAck: true,
                 consumer: m_mqConsumer);
         }
@@ -61,9 +66,9 @@ namespace Messenger.RabbitMQ.Common
         {
             byte[] data = ea.Body.ToArray();
 
-            if (OnRowData != null)
+            if (OnRawData != null)
             {
-                OnRowData.Invoke(data);
+                OnRawData.Invoke(data);
             }
             else
             {

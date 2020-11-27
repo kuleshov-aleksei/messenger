@@ -23,11 +23,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.Orchestrator", "M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.UserServer", "Messenger.UserServer\Messenger.UserServer.csproj", "{D634E7BA-4AA5-4331-A663-0FC05DD0C48D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.RabbitMQ.Common", "Messenger.RabbitMQ.Common\Messenger.RabbitMQ.Common.csproj", "{6D2E1DE6-8771-4CC8-B39F-5A7A03792837}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.RabbitMQ.Common", "Messenger.RabbitMQ.Common\Messenger.RabbitMQ.Common.csproj", "{6D2E1DE6-8771-4CC8-B39F-5A7A03792837}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{B9DC3274-FAB9-42CB-A238-BD5B01274F26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.RabbitMQ.Example", "Messenger.RabbitMQ.Example\Messenger.RabbitMQ.Example.csproj", "{C54CAC20-405E-4AC6-9DDD-EE0291D2890D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.RabbitMQ.Example", "Messenger.RabbitMQ.Example\Messenger.RabbitMQ.Example.csproj", "{C54CAC20-405E-4AC6-9DDD-EE0291D2890D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.PictureService", "Messenger.PictureService\Messenger.PictureService.csproj", "{0FC6E635-7884-45DE-B6D3-6DC9F62DB12E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,6 +81,10 @@ Global
 		{C54CAC20-405E-4AC6-9DDD-EE0291D2890D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C54CAC20-405E-4AC6-9DDD-EE0291D2890D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C54CAC20-405E-4AC6-9DDD-EE0291D2890D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FC6E635-7884-45DE-B6D3-6DC9F62DB12E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FC6E635-7884-45DE-B6D3-6DC9F62DB12E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FC6E635-7884-45DE-B6D3-6DC9F62DB12E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FC6E635-7884-45DE-B6D3-6DC9F62DB12E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

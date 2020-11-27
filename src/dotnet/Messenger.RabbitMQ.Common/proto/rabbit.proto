@@ -1,0 +1,11 @@
+﻿syntax = "proto3";
+
+message UpdateUserPicture {
+	int32 user_id = 1;
+}
+
+message Request {
+	oneof request_case {
+		UpdateUserPicture update_user_picture = 1;
+	}
+}

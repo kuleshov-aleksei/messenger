@@ -20,6 +20,8 @@ namespace Messenger.RabbitMQ.Example
                 m_logger.Info($"Got message: \"{message}\"");
             };
 
+            consumerWrapper.Start();
+
             producerWrapper.Produce("Hello world!");
             producerWrapper.Produce("Test message");
 

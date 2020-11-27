@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5</TargetFramework>
@@ -7,11 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="proto\rabbit.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.14.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.33.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Messenger.UserServer\Messenger.UserServer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="proto\rabbit.proto" />
   </ItemGroup>
 
 </Project>
