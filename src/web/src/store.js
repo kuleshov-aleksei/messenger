@@ -9,7 +9,7 @@ Vue.config.debug = true
 
 const debug = process.env.NODE_ENV !== 'production'
 
-export const api_url = 'http://api.encamy.keenetic.pro';
+export const api_url = 'http://46.72.81.226';
 
 export default new Vuex.Store({
   plugins: [createPersistedState({ 

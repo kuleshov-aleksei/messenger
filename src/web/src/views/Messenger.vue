@@ -71,7 +71,7 @@
                 <div class="chat-members-list">
                     <ul>
                         <li v-for="member in current_chat_members" :key="member.id">
-                            <el-avatar size="large" :src="member.image_medium">
+                            <el-avatar size="large" :src="getImgUrl(member.image_medium)">
                                 <img src="../assets/notfound.png"/>
                             </el-avatar>
                             <el-button slot="reference" type="text">{{member.name}} {{member.surname}}</el-button>
@@ -131,6 +131,11 @@ export default {
             })
             .catch((error) => {
                 console.log(error);
+                if (error.response.status === 403 || error.response.status === 401)
+                {
+                    store.commit('save_current_route', '/auth');
+                    this.$router.push('/auth');
+                }
             });
         },
         create_new_chat: function() {
@@ -145,6 +150,11 @@ export default {
             })
             .catch((error) => {
                 this.notify(false, "Создание чата", "Ошибка при создании чата.<br>Код " + error.response.status + " " + error.response.statusText);
+                if (error.response.status === 403 || error.response.status === 401)
+                {
+                    store.commit('save_current_route', '/auth');
+                    this.$router.push('/auth');
+                }
             });
         },
         notify: function(success, title, message){
@@ -180,6 +190,11 @@ export default {
             })
             .catch((error) => {
                 console.log(error);
+                if (error.response.status === 403 || error.response.status === 401)
+                {
+                    store.commit('save_current_route', '/auth');
+                    this.$router.push('/auth');
+                }
             });
         },
         get_declination: function(count) {
@@ -192,7 +207,15 @@ export default {
         },
         onSuccessfullInvitation: function() {
             this.get_chat_members(this.current_chat.id);
-        }
+        },
+        getImgUrl(pic) {
+            if (pic === null)
+            {
+                return null;
+            }
+
+            return require('../assets/' + pic)
+        },
     },
     mounted() {
         store.commit('save_current_route', '/');

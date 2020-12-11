@@ -61,6 +61,7 @@
 <script>
 import axios from "axios";
 import { api_url } from "../store"
+import store from "../store";
 
 var REFRESH_INTERVAL = 20 * 1000;
 
@@ -92,6 +93,11 @@ data() {
             })
             .catch((error) => {
                 console.log(error);
+                if (error.response.status === 403 || error.response.status === 401)
+                {
+                    store.commit('save_current_route', '/auth');
+                    this.$router.push('/auth');
+                }
             });
         },
         get_declination: function(count) {

@@ -343,6 +343,11 @@ export default {
                 .catch((error) =>
                 {
                     this.showError("Не удалось получить информацию о пользователе", error);
+                    if (error.response.status === 403 || error.response.status === 401)
+                    {
+                        store.commit('save_current_route', '/auth');
+                        this.$router.push('/auth');
+                    }
                 });
         },
         getImgUrl(pic)

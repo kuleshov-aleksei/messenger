@@ -296,7 +296,7 @@ export default {
     }
 
     .box-card {
-      max-width: 60%;
+      max-width: 70%;
       margin: 5px 5px 2px auto;
     }
 
@@ -306,7 +306,7 @@ export default {
 
     .message {
       display: grid;
-      grid-template-columns: auto 1.3fr 1fr;
+      grid-template-columns: auto 1.3fr 0.8fr;
       grid-template-rows: 30px auto;
       gap: 0px 0px;
       grid-template-areas:
