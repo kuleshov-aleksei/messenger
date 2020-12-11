@@ -352,7 +352,12 @@ export default {
         },
         getImgUrl(pic)
         {
-            return require("../assets/" + pic);
+            if (pic === null || pic === '') {
+                return null;
+            }
+            else {
+                return require("../assets/" + pic);
+            }
         },
         join: function (first, second)
         {

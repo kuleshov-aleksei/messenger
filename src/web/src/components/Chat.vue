@@ -127,8 +127,11 @@ export default {
     },
     on_chat_id_changed: function() {
       this.messages = [];
-      this.load_last_messages();
-      this.subscribe_to_messages();
+
+      if (this.chat_id !== 0) {
+        this.load_last_messages();
+        this.subscribe_to_messages();
+      }
     },
     load_last_messages: function() {
       var request = new GetLastMessagesRequest();
@@ -151,10 +154,8 @@ export default {
         })
         .on("error", (error) => {
           this.on_message_received(error, null);
+          this.chat_id = 0;
         })
-        .on("end", () => {
-          console.log("end");
-        });
     },
     on_message_received: function(err, response, initial) {
       if (err != null)
@@ -174,6 +175,8 @@ export default {
             title: 'Error',
             message: response.getErrorMessage()
           });
+
+          this.chat_id = 0;
         }
         else if (response.hasMessageList())
         {
@@ -228,7 +231,12 @@ export default {
       }
     },
     getImgUrl(pic) {
-        return require('../assets/'+pic)
+      if (pic === null || pic === '') {
+        return null;
+      }
+      else {
+        return require('../assets/' + pic)
+      }
     },
     unixTimeToHumanReadable(unixTime) {
       var date = new Date(unixTime * 1000);
@@ -320,8 +328,9 @@ export default {
 
       .user_name {
         grid-area: user_name;
-        padding: 5px;
+        padding: 7px;
         text-align: left;
+        overflow: hidden;
       }
 
       .message_text {

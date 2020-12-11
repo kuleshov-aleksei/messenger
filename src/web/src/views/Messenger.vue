@@ -133,6 +133,7 @@ export default {
                 console.log(error);
                 if (error.response.status === 403 || error.response.status === 401)
                 {
+                    this.current_chat = null;
                     store.commit('save_current_route', '/auth');
                     this.$router.push('/auth');
                 }
@@ -152,6 +153,7 @@ export default {
                 this.notify(false, "Создание чата", "Ошибка при создании чата.<br>Код " + error.response.status + " " + error.response.statusText);
                 if (error.response.status === 403 || error.response.status === 401)
                 {
+                    this.current_chat = null;
                     store.commit('save_current_route', '/auth');
                     this.$router.push('/auth');
                 }
@@ -192,6 +194,7 @@ export default {
                 console.log(error);
                 if (error.response.status === 403 || error.response.status === 401)
                 {
+                    this.current_chat = null;
                     store.commit('save_current_route', '/auth');
                     this.$router.push('/auth');
                 }
