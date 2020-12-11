@@ -32,7 +32,7 @@ namespace Messenger.PictureService
 
             User user = User.ReadUserFromDb(request.UpdateUserPicture.UserId);
 
-            bool succeed = ImageManipulator.ResizeImages(user);
+            bool succeed = ImageProcessor.ResizeImages(user);
             if (succeed)
             {
                 user.UpdateLinks();

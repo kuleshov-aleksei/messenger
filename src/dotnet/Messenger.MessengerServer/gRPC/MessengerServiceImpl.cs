@@ -55,6 +55,12 @@ namespace Messenger.MessengerServer.gRPC
                 return isValid;
             }
 
+            bool unathorized = HaveAccess(userId, request.ChatId);
+            if (unathorized)
+            {
+                return CreateErrorResponse(HttpStatusCode.Unauthorized);
+            }
+
             m_logger.Info($"Returning messages of chat {request.ChatId}");
 
             MessagesResponse messagesResponse = m_esInteractor.GetLastMessagesOfChat(request.ChatId);
@@ -108,6 +114,12 @@ namespace Messenger.MessengerServer.gRPC
             if (isValid != null)
             {
                 return isValid;
+            }
+
+            bool unathorized = HaveAccess(userId, request.ChatId);
+            if (unathorized)
+            {
+                return CreateErrorResponse(HttpStatusCode.Unauthorized);
             }
 
             m_logger.Info($"Returning messages from {request.UnixTime} of chat {request.ChatId}");
@@ -172,28 +184,7 @@ namespace Messenger.MessengerServer.gRPC
 
             m_logger.Info($"Writing message from user {userId} to chat {request.ChatId}");
 
-            bool unathorized = false;
-            GlobalSettings.Instance.Database.ExecuteSql(
-                $@"SELECT COUNT(*) AS 'count'
-                FROM `v_chat_members`
-                WHERE `chat_id` = {request.ChatId}
-                AND `user_id` = {userId}",
-                reader =>
-                {
-                    int? count = reader.GetInt32("count");
-                    if (!count.HasValue)
-                    {
-                        unathorized = true;
-                        return;
-                    }
-
-                    if (count.Value == 0)
-                    {
-                        unathorized = true;
-                        return;
-                    }
-                });
-
+            bool unathorized = HaveAccess(userId, request.ChatId);
             if (unathorized)
             {
                 return CreateErrorResponse(HttpStatusCode.Unauthorized);
@@ -241,6 +232,13 @@ namespace Messenger.MessengerServer.gRPC
             if (request.ChatId <= 0)
             {
                 await responseStream.WriteAsync(CreateErrorResponse(HttpStatusCode.BadRequest).Result);
+                return;
+            }
+
+            bool unathorized = HaveAccess(userId, request.ChatId);
+            if (unathorized)
+            {
+                await responseStream.WriteAsync(CreateErrorResponse(HttpStatusCode.Unauthorized).Result);
                 return;
             }
 
@@ -309,6 +307,33 @@ namespace Messenger.MessengerServer.gRPC
             }
 
             return serverResponse;
+        }
+
+        private bool HaveAccess(int userId, int chatId)
+        {
+            bool haveAccess = false;
+            GlobalSettings.Instance.Database.ExecuteSql(
+                $@"SELECT COUNT(*) AS 'count'
+                FROM `v_chat_members`
+                WHERE `chat_id` = {chatId}
+                AND `user_id` = {userId}",
+                reader =>
+                {
+                    int? count = reader.GetInt32("count");
+                    if (!count.HasValue)
+                    {
+                        haveAccess = true;
+                        return;
+                    }
+
+                    if (count.Value == 0)
+                    {
+                        haveAccess = true;
+                        return;
+                    }
+                });
+
+            return haveAccess;
         }
 
         private Task<ServerResponse> ValidateJWT(string token, out int userId)

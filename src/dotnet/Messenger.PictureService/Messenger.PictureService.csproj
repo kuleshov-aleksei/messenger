@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Messenger.Common\Messenger.Common.csproj" />
     <ProjectReference Include="..\Messenger.RabbitMQ.Common\Messenger.RabbitMQ.Common.csproj" />
     <ProjectReference Include="..\MySql.Common\MySql.Common.csproj" />
