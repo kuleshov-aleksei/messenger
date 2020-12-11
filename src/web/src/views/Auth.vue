@@ -52,12 +52,14 @@
         </el-tabs>
       </div>
 
-      <div class="dev">
-        <el-button type="primary" v-on:click="simpleAuth">Авторизуй меня (DEV) postman rect</el-button>
-      </div>
-      <div class="dev">
-        <el-button type="primary" v-on:click="simpleAuthIgor">Авторизуй меня (DEV) И Горь</el-button>
-      </div>
+      <el-card class="box-card dev">
+        <div slot="header" class="clearfix">
+          <span>DEV</span>
+        </div>
+          <el-button type="primary" v-on:click="simpleAuth">Авторизация как "Тестовый пользователь"</el-button>
+          <el-button class="dev" type="primary" v-on:click="simpleAuthIgor">Авторизация как "И Горь"</el-button>
+      </el-card>
+
     </div>
 </template>
 
@@ -226,7 +228,7 @@ export default {
 }
 
 .dev {
-  margin-top: 40px;
+  margin-top: 20px;
 }
 
 .login-element {
