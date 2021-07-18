@@ -17,6 +17,7 @@ FROM build AS publish
 RUN dotnet publish "Messenger.AuthServer.csproj" -c Release -o /app/publish
 
 FROM base AS final
+RUN apt-get update && apt-get install procps -y
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Messenger.AuthServer.dll"]
