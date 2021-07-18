@@ -10,6 +10,7 @@
 
   <PropertyGroup>
     <PublishDir>$(SolutionDir)/build/Messenger.Orchestrator</PublishDir>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +22,10 @@
     <None Include="..\NLog\NLog.config" Link="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
   </ItemGroup>
 
 </Project>

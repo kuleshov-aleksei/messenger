@@ -152,6 +152,23 @@ services:
       - type: bind
         source: ./logs-in-local-docker/messenger-service
         target: /app/logs/
+        
+  mes-orchestrator-service:
+    image: 192.168.40.132:5000/chat-info-service:1.2.5
+    build:
+        context: ./src/dotnet
+        dockerfile: Messenger.Orchestrator/Dockerfile
+    command: dotnet Messenger.Orchestrator.dll
+    container_name: mes-orchestrator
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    ports:
+      - 23583:23583
+    volumes:
+      - type: bind
+        source: ./logs-in-local-docker/orchestrator-service
+        target: /app/logs/
       
 volumes:
   data01:
