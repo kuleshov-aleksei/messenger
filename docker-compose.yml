@@ -1,0 +1,76 @@
+version: '3.4'
+services:
+  db:
+    image: mysql/mysql-server:latest
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes:
+        - type: bind
+          source: .\mysql\dump
+          target: /docker-entrypoint-initdb.d/
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: EqxM9tuOOsocoj
+      MYSQL_DATABASE: dcsm
+      MYSQL_USER: dcsm
+      MYSQL_PASSWORD: dcsm
+      TZ: "Europe/Moscow"
+    ports:
+      - 3309:3306
+    container_name: mysql
+    
+  es01:
+    image: elasticsearch:7.9.2
+    environment:
+      - "ES_JAVA_OPTS=-Xms200m -Xmx2000m"
+      - "TZ=Europe/Moscow"
+      - discovery.type=single-node
+      - node.name=es01
+    restart: unless-stopped
+    container_name: es01
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+      
+  cerebro:
+    image: lmenezes/cerebro
+    restart: unless-stopped
+    ports:
+      - 9000:9000
+      
+  nginx-api:
+    image: arm64v8/nginx
+    container_name: nginx-api-messenger
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    ports:
+      - 80:80
+    volumes:
+      - type: bind
+        source: ./deploy\03-nginx\nginx.conf
+        target: /etc/nginx/nginx.conf
+
+  envoy:
+    image: envoyproxy/envoy-dev:affac20e5089c4725eeb0f2de486b6580a07052d
+    container_name: envoy-proxy
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    ports:
+      - 10000:10000
+    volumes:
+      - type: bind
+        source: ./deploy\04-envoy\envoy.yaml
+        target: /etc/envoy/envoy.yaml
+      
+volumes:
+  data01:
+    driver: local
+    
+networks:
+  elastic:
+    driver: bridge
