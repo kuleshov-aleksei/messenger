@@ -102,7 +102,7 @@ services:
         target: /app/logs/
         
   mes-user-service:
-    image: 192.168.40.132:5000/user-service:3.1.0
+    image: 192.168.40.132:5000/user-service:3.2.0
     build:
         context: ./src/dotnet
         dockerfile: Messenger.UserServer/Dockerfile
@@ -116,6 +116,41 @@ services:
     volumes:
       - type: bind
         source: ./logs-in-local-docker/user-service
+        target: /app/logs/
+        
+  mes-chat-info-service:
+    image: 192.168.40.132:5000/chat-info-service:3.0.0
+    build:
+        context: ./src/dotnet
+        dockerfile: Messenger.ChatInfoServer/Dockerfile
+    command: dotnet Messenger.ChatInfoServer.dll
+    container_name: mes-chat-info
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    ports:
+      - 23578:23578
+    volumes:
+      - type: bind
+        source: ./logs-in-local-docker/chat-info-service
+        target: /app/logs/
+        
+  mes-messenger-service:
+    image: 192.168.40.132:5000/chat-info-service:3.0.2
+    build:
+        context: ./src
+        dockerfile: dotnet/Messenger.MessengerServer/Dockerfile
+    command: dotnet Messenger.MessengerServer.dll
+    container_name: mes-messenger-info
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    ports:
+      - 23579:23579
+      - 7813:7813
+    volumes:
+      - type: bind
+        source: ./logs-in-local-docker/messenger-service
         target: /app/logs/
       
 volumes:
