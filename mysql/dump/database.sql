@@ -286,15 +286,17 @@ CREATE TABLE IF NOT EXISTS `services` (
   PRIMARY KEY (`id`),
   KEY `settings_port_fk_idx` (`settings_port_id`),
   CONSTRAINT `settings_port_fk` FOREIGN KEY (`settings_port_id`) REFERENCES `settings` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Дамп данных таблицы dcsm.services: ~4 rows (приблизительно)
+-- Дамп данных таблицы dcsm.services: ~5 rows (приблизительно)
 /*!40000 ALTER TABLE `services` DISABLE KEYS */;
 INSERT INTO `services` (`id`, `title`, `description`, `address`, `settings_port_id`) VALUES
-	(1, 'Registration serivce', 'Сервис регистрации', '192.168.40.76', 4),
-	(2, 'Auth service', 'Сервис авторизации', '192.168.40.76', 5),
-	(3, 'Chat service', 'Сервис информации о чатах', '192.168.40.76', 2),
-	(4, 'Messenger service', 'Мессенджер - сервис', '192.168.40.43', 3);
+	(1, 'Registration serivce', 'Сервис регистрации', 'mes-registration-service', 4),
+	(2, 'Auth service', 'Сервис авторизации', 'mes-auth-service', 5),
+	(3, 'Chat service', 'Сервис информации о чатах', 'mes-chat-info-service', 2),
+	(4, 'Messenger service', 'Мессенджер - сервис', 'mes-messenger-service', 3),
+	(5, 'User service', 'Сервис информации о пользователях', 'mes-user-service', 11),
+	(6, 'Orchestrator', 'Оркестратор', 'mes-orchestrator-service', 12);
 /*!40000 ALTER TABLE `services` ENABLE KEYS */;
 
 -- Дамп структуры для таблица dcsm.session
@@ -311,6 +313,10 @@ CREATE TABLE IF NOT EXISTS `session` (
 
 -- Дамп данных таблицы dcsm.session: ~0 rows (приблизительно)
 /*!40000 ALTER TABLE `session` DISABLE KEYS */;
+INSERT INTO `session` (`session_id`, `user_id`, `device_name`, `token`, `sign_out`) VALUES
+	(1, 5, 'insomnia', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1Iiwicm9sZSI6InJlZ3VsYXIiLCJuYmYiOjE2MjY2MjI0NTAsImV4cCI6MTYyOTIxNDQ1MCwiaWF0IjoxNjI2NjIyNDUwLCJpc3MiOiJBdXRoU2VydmVyIiwiYXVkIjoiV2ViQ2xpZW50In0.j5zWtHm2NsmS7MccLkbwpKwR3OLtlWOmgrL_B7WbNjQ', 0),
+	(2, 5, 'insomnia', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1Iiwicm9sZSI6ImFkbWluIiwibmJmIjoxNjI2NjIyNDk1LCJleHAiOjE2MjkyMTQ0OTUsImlhdCI6MTYyNjYyMjQ5NSwiaXNzIjoiQXV0aFNlcnZlciIsImF1ZCI6IldlYkNsaWVudCJ9.9g4zjLuk40dBDpf9PsuxvDdWDRspESlNmXmkXyF06Yc', 0),
+	(3, 6, 'insomnia', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI2Iiwicm9sZSI6InJlZ3VsYXIiLCJuYmYiOjE2MjY2MjI3MjYsImV4cCI6MTYyOTIxNDcyNiwiaWF0IjoxNjI2NjIyNzI2LCJpc3MiOiJBdXRoU2VydmVyIiwiYXVkIjoiV2ViQ2xpZW50In0.I8UpWOAFW2k0yQi5139RRC-F9HUU-rR59jPuhI9T5KA', 0);
 /*!40000 ALTER TABLE `session` ENABLE KEYS */;
 
 -- Дамп структуры для таблица dcsm.settings
@@ -320,9 +326,9 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `value` varchar(512) NOT NULL,
   `description` varchar(512) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Дамп данных таблицы dcsm.settings: ~8 rows (приблизительно)
+-- Дамп данных таблицы dcsm.settings: ~10 rows (приблизительно)
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
 INSERT INTO `settings` (`id`, `name`, `value`, `description`) VALUES
 	(1, 'es_address', 'http://192.168.40.76:9200', 'Elasic search address'),
@@ -333,7 +339,8 @@ INSERT INTO `settings` (`id`, `name`, `value`, `description`) VALUES
 	(8, 'rabbit_mq_address', '192.168.40.76', 'Rabbit MQ address'),
 	(9, 'rabbit_mq_user', 'services', 'Rabbit MQ username'),
 	(10, 'rabbit_mq_password', 'l9MqLHC6ca', 'Rabbit MQ password'),
-	(11, 'service_userinfo_port', '23582', 'Port for user info service');
+	(11, 'service_userinfo_port', '23582', 'Port for user info service'),
+	(12, 'service_orchestrator_port', '23583', 'Port for orchestrator service');
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 
 -- Дамп структуры для таблица dcsm.user
@@ -351,11 +358,13 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Дамп данных таблицы dcsm.user: ~0 rows (приблизительно)
+-- Дамп данных таблицы dcsm.user: ~2 rows (приблизительно)
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 INSERT INTO `user` (`id`, `username`, `name`, `surname`, `email`, `password_hash`, `image_large`, `image_medium`, `image_small`, `salt`) VALUES
 	(2, 'SYSTEM', 'SYSTEM', 'SYSTEM', NULL, 'SYSTEM', NULL, NULL, NULL, ''),
-	(4, 'test', 'from', 'docker', 'docker@example.com', 'f9d45d4094cb7a0ca3e74038b84d7e353e4128d9de0b3955f897d4f71469f59f', NULL, NULL, NULL, 'c0bf3f4e047932d52bb610ad235b5b1d40295047');
+	(4, 'test', 'from', 'docker', 'docker@example.com', 'f9d45d4094cb7a0ca3e74038b84d7e353e4128d9de0b3955f897d4f71469f59f', NULL, NULL, NULL, 'c0bf3f4e047932d52bb610ad235b5b1d40295047'),
+	(5, 'igor', 'И', 'Горь', 'i_gor@example.com', 'ed35a7e1411424a71a2b72717e901798812648055e4f863af4d32a9547f3d018', NULL, NULL, NULL, '307953995f0c129c99d9d866a22ca7dc9008f253'),
+	(6, 'vladislav', 'Vlad и', 'Слав', 'vlad_i_slav@example.com', '376a9ad41e0a4fafe2fa39dcb9cf04f65c3eefdaac572c837f3b836355361038', NULL, NULL, NULL, 'd37b70d5d3c61fe292cc1ea1fe3800a018964b0a');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
 -- Дамп структуры для таблица dcsm.user_role
@@ -366,7 +375,7 @@ CREATE TABLE IF NOT EXISTS `user_role` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Дамп данных таблицы dcsm.user_role: ~0 rows (приблизительно)
+-- Дамп данных таблицы dcsm.user_role: ~3 rows (приблизительно)
 /*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
 INSERT INTO `user_role` (`id`, `role`, `description`) VALUES
 	(1, 'SYSTEM', 'Система'),
@@ -388,10 +397,12 @@ CREATE TABLE IF NOT EXISTS `user_roles` (
   CONSTRAINT `user_id_fk2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Дамп данных таблицы dcsm.user_roles: ~0 rows (приблизительно)
+-- Дамп данных таблицы dcsm.user_roles: ~1 rows (приблизительно)
 /*!40000 ALTER TABLE `user_roles` DISABLE KEYS */;
 INSERT INTO `user_roles` (`user_id`, `role_id`, `assigned_by`, `date_assigned`) VALUES
-	(4, 3, 2, '2021-07-18 17:19:32');
+	(4, 3, 2, '2021-07-18 17:19:32'),
+	(5, 2, 2, '2021-07-18 18:34:08'),
+	(6, 3, 2, '2021-07-18 18:38:40');
 /*!40000 ALTER TABLE `user_roles` ENABLE KEYS */;
 
 -- Дамп структуры для таблица dcsm.v_chat_members

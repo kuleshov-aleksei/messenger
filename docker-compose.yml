@@ -136,7 +136,7 @@ services:
         target: /app/logs/
         
   mes-messenger-service:
-    image: 192.168.40.132:5000/chat-info-service:3.0.3
+    image: 192.168.40.132:5000/mes-messenger-service:3.0.3
     build:
         context: ./src
         dockerfile: dotnet/Messenger.MessengerServer/Dockerfile
@@ -154,7 +154,7 @@ services:
         target: /app/logs/
         
   mes-orchestrator-service:
-    image: 192.168.40.132:5000/chat-info-service:1.2.6
+    image: 192.168.40.132:5000/mes-orchestrator-service:1.2.7
     build:
         context: ./src/dotnet
         dockerfile: Messenger.Orchestrator/Dockerfile
