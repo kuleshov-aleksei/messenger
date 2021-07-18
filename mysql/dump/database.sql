@@ -320,7 +320,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `value` varchar(512) NOT NULL,
   `description` varchar(512) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Дамп данных таблицы dcsm.settings: ~8 rows (приблизительно)
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
@@ -332,7 +332,8 @@ INSERT INTO `settings` (`id`, `name`, `value`, `description`) VALUES
 	(5, 'service_authorization_port', '23581', 'Port for authorization service'),
 	(8, 'rabbit_mq_address', '192.168.40.76', 'Rabbit MQ address'),
 	(9, 'rabbit_mq_user', 'services', 'Rabbit MQ username'),
-	(10, 'rabbit_mq_password', 'l9MqLHC6ca', 'Rabbit MQ password');
+	(10, 'rabbit_mq_password', 'l9MqLHC6ca', 'Rabbit MQ password'),
+	(11, 'service_userinfo_port', '23582', 'Port for user info service');
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 
 -- Дамп структуры для таблица dcsm.user
@@ -348,12 +349,13 @@ CREATE TABLE IF NOT EXISTS `user` (
   `image_small` varchar(255) DEFAULT NULL,
   `salt` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Дамп данных таблицы dcsm.user: ~0 rows (приблизительно)
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 INSERT INTO `user` (`id`, `username`, `name`, `surname`, `email`, `password_hash`, `image_large`, `image_medium`, `image_small`, `salt`) VALUES
-	(2, 'SYSTEM', 'SYSTEM', 'SYSTEM', NULL, 'SYSTEM', NULL, NULL, NULL, '');
+	(2, 'SYSTEM', 'SYSTEM', 'SYSTEM', NULL, 'SYSTEM', NULL, NULL, NULL, ''),
+	(4, 'test', 'from', 'docker', 'docker@example.com', 'f9d45d4094cb7a0ca3e74038b84d7e353e4128d9de0b3955f897d4f71469f59f', NULL, NULL, NULL, 'c0bf3f4e047932d52bb610ad235b5b1d40295047');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
 -- Дамп структуры для таблица dcsm.user_role
@@ -388,6 +390,8 @@ CREATE TABLE IF NOT EXISTS `user_roles` (
 
 -- Дамп данных таблицы dcsm.user_roles: ~0 rows (приблизительно)
 /*!40000 ALTER TABLE `user_roles` DISABLE KEYS */;
+INSERT INTO `user_roles` (`user_id`, `role_id`, `assigned_by`, `date_assigned`) VALUES
+	(4, 3, 2, '2021-07-18 17:19:32');
 /*!40000 ALTER TABLE `user_roles` ENABLE KEYS */;
 
 -- Дамп структуры для таблица dcsm.v_chat_members

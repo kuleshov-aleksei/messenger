@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Messenger.UserServer": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

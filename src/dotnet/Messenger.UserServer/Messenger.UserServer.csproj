@@ -15,6 +15,7 @@
 
   <PropertyGroup>
     <PublishDir>$(SolutionDir)/build/Messenger.UserServer</PublishDir>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
 
@@ -22,6 +23,11 @@
     <None Include="..\NLog\NLog.config" Link="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
   </ItemGroup>
 
 </Project>

@@ -81,7 +81,41 @@ services:
       - 23580:23580
     volumes:
       - type: bind
-        source: ./logs-in-local-docker
+        source: ./logs-in-local-docker/registration-service
+        target: /app/logs/
+        
+  mes-auth-service:
+    image: 192.168.40.132:5000/auth-service:3.1.0
+    build:
+        context: ./src/dotnet
+        dockerfile: Messenger.AuthServer/Dockerfile
+    command: dotnet Messenger.AuthServer.dll
+    container_name: mes-auth
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    ports:
+      - 23581:23581
+    volumes:
+      - type: bind
+        source: ./logs-in-local-docker/auth-service
+        target: /app/logs/
+        
+  mes-user-service:
+    image: 192.168.40.132:5000/user-service:3.1.0
+    build:
+        context: ./src/dotnet
+        dockerfile: Messenger.UserServer/Dockerfile
+    command: dotnet Messenger.UserServer.dll
+    container_name: mes-user
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    ports:
+      - 23582:23582
+    volumes:
+      - type: bind
+        source: ./logs-in-local-docker/user-service
         target: /app/logs/
       
 volumes:
