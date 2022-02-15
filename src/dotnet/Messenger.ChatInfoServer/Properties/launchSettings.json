@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Messenger.ChatInfoServer": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

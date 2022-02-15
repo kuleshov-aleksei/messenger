@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Messenger.AuthServer": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

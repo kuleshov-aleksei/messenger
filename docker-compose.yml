@@ -1,0 +1,179 @@
+version: '3.4'
+services:
+  db:
+    image: mysql/mysql-server:latest
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes:
+        - type: bind
+          source: .\mysql\dump
+          target: /docker-entrypoint-initdb.d/
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: EqxM9tuOOsocoj
+      MYSQL_DATABASE: dcsm
+      MYSQL_USER: dcsm
+      MYSQL_PASSWORD: dcsm
+      TZ: "Europe/Moscow"
+    ports:
+      - 3309:3306
+    container_name: mysql
+    
+  es01:
+    image: elasticsearch:7.9.2
+    environment:
+      - "ES_JAVA_OPTS=-Xms200m -Xmx2000m"
+      - "TZ=Europe/Moscow"
+      - discovery.type=single-node
+      - node.name=es01
+    restart: unless-stopped
+    container_name: es01
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+      
+  cerebro:
+    image: lmenezes/cerebro
+    restart: unless-stopped
+    ports:
+      - 9000:9000
+      
+  nginx-api:
+    image: arm64v8/nginx
+    container_name: nginx-api-messenger
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    ports:
+      - 80:80
+    volumes:
+      - type: bind
+        source: ./deploy\03-nginx\nginx.conf
+        target: /etc/nginx/nginx.conf
+
+  envoy:
+    image: envoyproxy/envoy-dev:affac20e5089c4725eeb0f2de486b6580a07052d
+    container_name: envoy-proxy
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    ports:
+      - 10000:10000
+    volumes:
+      - type: bind
+        source: ./deploy\04-envoy\envoy.yaml
+        target: /etc/envoy/envoy.yaml
+        
+  mes-registration-service:
+    image: 192.168.40.132:5000/registration-service:2.1.4
+    build:
+        context: ./src/dotnet
+        dockerfile: Messenger.RegistrationServer/Dockerfile
+    command: dotnet Messenger.RegistrationServer.dll
+    container_name: mes-registration
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    ports:
+      - 23580:23580
+    volumes:
+      - type: bind
+        source: ./logs-in-local-docker/registration-service
+        target: /app/logs/
+        
+  mes-auth-service:
+    image: 192.168.40.132:5000/auth-service:3.1.1
+    build:
+        context: ./src/dotnet
+        dockerfile: Messenger.AuthServer/Dockerfile
+    command: dotnet Messenger.AuthServer.dll
+    container_name: mes-auth
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    ports:
+      - 23581:23581
+    volumes:
+      - type: bind
+        source: ./logs-in-local-docker/auth-service
+        target: /app/logs/
+        
+  mes-user-service:
+    image: 192.168.40.132:5000/user-service:3.2.1
+    build:
+        context: ./src/dotnet
+        dockerfile: Messenger.UserServer/Dockerfile
+    command: dotnet Messenger.UserServer.dll
+    container_name: mes-user
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    ports:
+      - 23582:23582
+    volumes:
+      - type: bind
+        source: ./logs-in-local-docker/user-service
+        target: /app/logs/
+        
+  mes-chat-info-service:
+    image: 192.168.40.132:5000/chat-info-service:3.0.1
+    build:
+        context: ./src/dotnet
+        dockerfile: Messenger.ChatInfoServer/Dockerfile
+    command: dotnet Messenger.ChatInfoServer.dll
+    container_name: mes-chat-info
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    ports:
+      - 23578:23578
+    volumes:
+      - type: bind
+        source: ./logs-in-local-docker/chat-info-service
+        target: /app/logs/
+        
+  mes-messenger-service:
+    image: 192.168.40.132:5000/mes-messenger-service:3.0.3
+    build:
+        context: ./src
+        dockerfile: dotnet/Messenger.MessengerServer/Dockerfile
+    command: dotnet Messenger.MessengerServer.dll
+    container_name: mes-messenger-info
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    ports:
+      - 23579:23579
+      - 7813:7813
+    volumes:
+      - type: bind
+        source: ./logs-in-local-docker/messenger-service
+        target: /app/logs/
+        
+  mes-orchestrator-service:
+    image: 192.168.40.132:5000/mes-orchestrator-service:1.2.7
+    build:
+        context: ./src/dotnet
+        dockerfile: Messenger.Orchestrator/Dockerfile
+    command: dotnet Messenger.Orchestrator.dll
+    container_name: mes-orchestrator
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    ports:
+      - 23583:23583
+    volumes:
+      - type: bind
+        source: ./logs-in-local-docker/orchestrator-service
+        target: /app/logs/
+      
+volumes:
+  data01:
+    driver: local
+    
+networks:
+  elastic:
+    driver: bridge
