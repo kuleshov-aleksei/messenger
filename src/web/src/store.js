@@ -9,7 +9,7 @@ Vue.config.debug = true
 
 const debug = process.env.NODE_ENV !== 'production'
 
-export const api_url = 'http://46.72.81.226';
+export const api_url = 'https://messenger.local.encamy.com';
 
 export default new Vuex.Store({
   plugins: [createPersistedState({ 
