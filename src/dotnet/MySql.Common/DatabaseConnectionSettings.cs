@@ -30,5 +30,10 @@ namespace MySql.Common
 
             return JsonConvert.DeserializeObject<DatabaseConnectionSettings>(File.ReadAllText(jsonFilename));
         }
+
+        public override string ToString()
+        {
+            return $"{Host}:{Port}; db {DatabaseName} as {User}";
+        }
     }
 }

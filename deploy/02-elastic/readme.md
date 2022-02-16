@@ -31,13 +31,13 @@ docker start cerebro
 ### Copy es dictionaries into container:
 
 ```bash 
-docker exec -t -i elasticsearch /bin/bash
+docker exec -it es01 /bin/bash
 mkdir -p config/analysis/ru_RU
 mkdir -p config/hunspell/ru_RU
 exit
-docker cp stopwords-ru.txt elasticsearch:/usr/share/elasticsearch/config/analysis/ru_RU/
-docker cp ru_RU.aff elasticsearch:/usr/share/elasticsearch/config/hunspell/ru_RU
-docker cp ru_RU.dic elasticsearch:/usr/share/elasticsearch/config/hunspell/ru_RU
+docker cp stopwords-ru.txt es01:/usr/share/elasticsearch/config/analysis/ru_RU/
+docker cp ru_RU.aff es01:/usr/share/elasticsearch/config/hunspell/ru_RU
+docker cp ru_RU.dic es01:/usr/share/elasticsearch/config/hunspell/ru_RU
 ```
 
 ### Create mapping

@@ -58,6 +58,7 @@ namespace Messenger.MessengerServer.gRPC
             bool unathorized = HaveAccess(userId, request.ChatId);
             if (unathorized)
             {
+                m_logger.Info($"User {userId} does not have access to chat {request.ChatId}");
                 return CreateErrorResponse(HttpStatusCode.Unauthorized);
             }
 
@@ -168,6 +169,7 @@ namespace Messenger.MessengerServer.gRPC
 
             if (request.ChatId <= 0)
             {
+                m_logger.Info($"Chat id is {request.ChatId}. It should be greater than 0");
                 return CreateErrorResponse(HttpStatusCode.BadRequest);
             }
 

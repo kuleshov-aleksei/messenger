@@ -1,10 +1,12 @@
 ﻿using MySql.Common;
+using NLog;
 using System;
 
 namespace Messenger.Common
 {
     public class GlobalSettings
     {
+        private readonly Logger m_logger = LogManager.GetCurrentClassLogger();
         private static Lazy<GlobalSettings> m_instance = new Lazy<GlobalSettings>(() => new GlobalSettings());
         public static GlobalSettings Instance => m_instance.Value;
 
@@ -21,6 +23,7 @@ namespace Messenger.Common
         private GlobalSettings()
         {
             DatabaseConnectionSettings databaseConnectionSettings = DatabaseConnectionSettings.ReadFromFile("mysql_secrets.json");
+            m_logger.Info($"Connecting to {databaseConnectionSettings}");
             Database = new Database(databaseConnectionSettings);
         }
     }
