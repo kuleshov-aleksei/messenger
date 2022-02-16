@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30320.27
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.Common", "Messenger.Common\Messenger.Common.csproj", "{BBF2E7F0-83E3-4CFE-BACB-4111CD4B3D57}"
 EndProject
@@ -22,14 +22,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.Orchestrator", "Messenger.Orchestrator\Messenger.Orchestrator.csproj", "{09E1C959-4616-45C0-A1B9-D765C60084A7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.UserServer", "Messenger.UserServer\Messenger.UserServer.csproj", "{D634E7BA-4AA5-4331-A663-0FC05DD0C48D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.RabbitMQ.Common", "Messenger.RabbitMQ.Common\Messenger.RabbitMQ.Common.csproj", "{6D2E1DE6-8771-4CC8-B39F-5A7A03792837}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{B9DC3274-FAB9-42CB-A238-BD5B01274F26}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.RabbitMQ.Example", "Messenger.RabbitMQ.Example\Messenger.RabbitMQ.Example.csproj", "{C54CAC20-405E-4AC6-9DDD-EE0291D2890D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.PictureService", "Messenger.PictureService\Messenger.PictureService.csproj", "{0FC6E635-7884-45DE-B6D3-6DC9F62DB12E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,18 +65,6 @@ Global
 		{D634E7BA-4AA5-4331-A663-0FC05DD0C48D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D634E7BA-4AA5-4331-A663-0FC05DD0C48D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D634E7BA-4AA5-4331-A663-0FC05DD0C48D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6D2E1DE6-8771-4CC8-B39F-5A7A03792837}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6D2E1DE6-8771-4CC8-B39F-5A7A03792837}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6D2E1DE6-8771-4CC8-B39F-5A7A03792837}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6D2E1DE6-8771-4CC8-B39F-5A7A03792837}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C54CAC20-405E-4AC6-9DDD-EE0291D2890D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C54CAC20-405E-4AC6-9DDD-EE0291D2890D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C54CAC20-405E-4AC6-9DDD-EE0291D2890D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C54CAC20-405E-4AC6-9DDD-EE0291D2890D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0FC6E635-7884-45DE-B6D3-6DC9F62DB12E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0FC6E635-7884-45DE-B6D3-6DC9F62DB12E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0FC6E635-7884-45DE-B6D3-6DC9F62DB12E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0FC6E635-7884-45DE-B6D3-6DC9F62DB12E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,8 +72,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{BBF2E7F0-83E3-4CFE-BACB-4111CD4B3D57} = {C34F7731-953A-44D6-A266-2CCB58669D41}
 		{B0EE5352-4D37-49D3-8A67-DB08D71E49EC} = {C34F7731-953A-44D6-A266-2CCB58669D41}
-		{6D2E1DE6-8771-4CC8-B39F-5A7A03792837} = {C34F7731-953A-44D6-A266-2CCB58669D41}
-		{C54CAC20-405E-4AC6-9DDD-EE0291D2890D} = {B9DC3274-FAB9-42CB-A238-BD5B01274F26}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EDA22F40-0A48-4581-B45C-CE6432FB5A99}
