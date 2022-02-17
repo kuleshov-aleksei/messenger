@@ -1,5 +1,4 @@
 ﻿using EmbedIO;
-using Messenger.Common;
 using Messenger.Common.Http;
 using Messenger.Common.JWT;
 using System.Threading.Tasks;
@@ -7,6 +6,7 @@ using MySql.Common;
 using Nest;
 using System.Net;
 using System.Collections.Generic;
+using Messenger.Common.Settings;
 
 namespace Messenger.UserServer.GetInfo
 {

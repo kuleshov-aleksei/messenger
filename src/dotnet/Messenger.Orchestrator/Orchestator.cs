@@ -1,4 +1,4 @@
-﻿using Messenger.Common;
+﻿using Messenger.Common.Settings;
 using MySql.Common;
 using NLog;
 using System;

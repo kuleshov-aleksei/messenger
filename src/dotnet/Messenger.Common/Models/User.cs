@@ -2,9 +2,9 @@
 using MySql.Common;
 using Messenger.Common.Settings;
 
-namespace Messenger.MessengerServer
+namespace Messenger.Common.Models
 {
-    internal class User
+    public class User
     {
         public string Name { get; set; }
         public string Surname { get; set; }
@@ -12,7 +12,7 @@ namespace Messenger.MessengerServer
         public string ImageMedium { get; set; }
         public string ImageLarge { get; set; }
 
-        internal static Dictionary<int, User> GetUsers(int chatId)
+        public static Dictionary<int, User> GetUsersForChat(int chatId)
         {
             string sql = $@"SELECT `user_id`, `name`, `surname`, `image_small`, `image_large`, `image_medium`
                         FROM `v_chat_members`

@@ -2,7 +2,7 @@
 using NLog;
 using System;
 
-namespace Messenger.Common
+namespace Messenger.Common.Settings
 {
     public class GlobalSettings
     {

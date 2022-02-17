@@ -1,6 +1,6 @@
 ﻿using EmbedIO;
-using Messenger.Common;
 using Messenger.Common.Http;
+using Messenger.Common.Settings;
 using System.Collections.Generic;
 using System.Net;
 using System.Security.Claims;

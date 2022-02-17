@@ -1,12 +1,16 @@
 ﻿using Messenger.Common.Elastic;
+using Messenger.Common.Elastic.Models;
+using Messenger.Common.Models;
 using Messenger.Common.Settings;
 using Messenger.Common.Tools;
+using Messenger.HistoricalMessagesService.Models;
 using Nest;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Messenger.MessengerServer
+namespace Messenger.HistoricalMessagesService.Services
 {
     public class EsInteractor
     {
@@ -27,7 +31,7 @@ namespace Messenger.MessengerServer
             m_idGenerator = idGenerator;
         }
 
-        public MessagesResponse GetLastMessagesOfChat(int chatId)
+        public async Task<MessagesResponse> GetLastMessagesOfChatAsync(int chatId)
         {
             SearchRequest searchRequest = new SearchRequest(GlobalSettings.EsIndexName)
             {
@@ -58,10 +62,10 @@ namespace Messenger.MessengerServer
                 }
             };
 
-            return GetMessages(searchRequest, chatId);
+            return await GetMessagesAsync(searchRequest, chatId);
         }
 
-        public MessagesResponse GetMessagesBefore(long unixTime, int chatId)
+        public async Task<MessagesResponse> GetMessagesBeforeAsync(long unixTime, int chatId)
         {
             SearchRequest searchRequest = new SearchRequest(GlobalSettings.EsIndexName)
             {
@@ -97,10 +101,10 @@ namespace Messenger.MessengerServer
                 }
             };
 
-            return GetMessages(searchRequest, chatId);
+            return await GetMessagesAsync(searchRequest, chatId);
         }
 
-        public MessagesResponse GetMessagesFrom(long unixTime, int chatId)
+        public async Task<MessagesResponse> GetMessagesFromAsync(long unixTime, int chatId)
         {
             SearchRequest searchRequest = new SearchRequest(GlobalSettings.EsIndexName)
             {
@@ -136,16 +140,21 @@ namespace Messenger.MessengerServer
                 }
             };
 
-            return GetMessages(searchRequest, chatId);
+            return await GetMessagesAsync(searchRequest, chatId);
         }
 
-        private MessagesResponse GetMessages(SearchRequest searchRequest, int chatId)
+        private async Task<MessagesResponse> GetMessagesAsync(SearchRequest searchRequest, int chatId)
         {
 #if DEBUG
             string queryString = ESClient.RequestToReadableString(m_elasticClient, searchRequest);
 #endif
 
-            ISearchResponse<ElasticDocument> searchResponse = m_elasticClient.Search<ElasticDocument>(searchRequest);
+            ISearchResponse<ElasticDocument> searchResponse = await m_elasticClient.SearchAsync<ElasticDocument>(searchRequest);
+
+            if (!searchResponse.IsValid)
+            {
+                return null;
+            }
 
             if (searchResponse.Hits.Count == 0)
             {
@@ -155,7 +164,7 @@ namespace Messenger.MessengerServer
             MessagesResponse response = new MessagesResponse();
             response.ChatId = chatId;
 
-            Dictionary<int, User> users = User.GetUsers(chatId);
+            Dictionary<int, User> users = User.GetUsersForChat(chatId);
 
             foreach (IHit<ElasticDocument> hit in searchResponse.Hits)
             {
@@ -204,7 +213,7 @@ namespace Messenger.MessengerServer
                 RetryOnConflict = 10
             };
 
-            IUpdateResponse<object> response = m_elasticClient.Update<object, object>(updateRequest);
+            IUpdateResponse<object> response = m_elasticClient.Update(updateRequest);
             if (response.ServerError != null)
             {
                 m_logger.Error($"Error saving message {messageId}. Error: {response.ServerError}");

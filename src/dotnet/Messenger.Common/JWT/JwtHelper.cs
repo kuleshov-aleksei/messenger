@@ -7,6 +7,7 @@ using System.IO;
 using System.Security.Claims;
 using MySql.Common;
 using System.Linq;
+using Messenger.Common.Settings;
 
 namespace Messenger.Common.JWT
 {

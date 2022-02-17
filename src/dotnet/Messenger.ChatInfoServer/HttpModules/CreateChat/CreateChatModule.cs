@@ -5,8 +5,8 @@ using NLog;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Messenger.Common;
 using Messenger.Common.JWT;
+using Messenger.Common.Settings;
 
 namespace Messenger.ChatInfoServer.HttpModules.CreateChat
 {

@@ -1,6 +1,6 @@
 ﻿using Grpc.Core;
-using Messenger.Common;
 using Messenger.Common.JWT;
+using Messenger.Common.Settings;
 using Messenger.Common.Tools;
 using MySql.Common;
 using NLog;
