@@ -16,7 +16,7 @@ services:
       - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
       - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
     networks:
-      - messenger_mes-network
+      - messenger_network
         
   mes-auth-service:
     build:
@@ -34,7 +34,7 @@ services:
       - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
       - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
     networks:
-      - messenger_mes-network
+      - messenger_network
         
   mes-user-service:
     build:
@@ -52,7 +52,7 @@ services:
       - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
       - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
     networks:
-      - messenger_mes-network
+      - messenger_network
         
   mes-chat-info-service:
     build:
@@ -70,7 +70,7 @@ services:
       - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
       - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
     networks:
-      - messenger_mes-network
+      - messenger_network
         
   mes-messenger-service:
     build:
@@ -89,7 +89,7 @@ services:
       - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
       - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
     networks:
-      - messenger_mes-network
+      - messenger_network
         
   mes-orchestrator-service:
     build:
@@ -107,8 +107,8 @@ services:
       - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
       - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
     networks:
-      - messenger_mes-network
+      - messenger_network
 
 networks:
-  messenger_mes-network:
+  messenger_network:
     external: true

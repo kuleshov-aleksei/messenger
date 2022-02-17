@@ -19,7 +19,7 @@ services:
       - 3309:3306
     container_name: mysql
     networks:
-      - mes-network
+      - messenger_network
     
   es01:
     image: elasticsearch:7.9.2
@@ -35,15 +35,30 @@ services:
     ports:
       - 9200:9200
     networks:
-      - mes-network
+      - messenger_network
       
   cerebro:
     image: lmenezes/cerebro
+    container_name: cerebro
     restart: unless-stopped
     ports:
       - 9000:9000
     networks:
-      - mes-network
+      - messenger_network
+      
+  rabbit:
+    image: rabbitmq:3.9.8-management-alpine
+    # Actually, we do not need hostname here, but rabbit configuration is linked to specific filename that contains hostname
+    hostname: mes-rabbitmq
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./docker-data/rabbitmq/data/:/var/lib/rabbitmq/mnesia/
+    networks:
+      - messenger_network
       
   nginx-api:
     image: nginx:1.21.3
@@ -57,7 +72,7 @@ services:
     volumes:
       - ./deploy/03-nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
-      - mes-network
+      - messenger_network
 
   envoy:
     image: envoyproxy/envoy-dev:affac20e5089c4725eeb0f2de486b6580a07052d
@@ -70,7 +85,8 @@ services:
     volumes:
       - ./deploy/04-envoy/envoy.yaml:/etc/envoy/envoy.yaml
     networks:
-      - mes-network
+      - messenger_network
 
 networks:
-  mes-network:
+  messenger_network:
+    external: true
