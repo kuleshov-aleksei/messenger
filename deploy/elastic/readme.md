@@ -42,6 +42,10 @@ docker cp ru_RU.dic es01:/usr/share/elasticsearch/config/hunspell/ru_RU
 
 ### Create mapping
 
+Paste content of es_mapping.json into cerebro
+
+### Transfer mapping
+
 You can transfer data using [elasticdump](https://stackoverflow.com/questions/26547560/how-to-move-elasticsearch-data-from-one-server-to-another):
 
 ```
