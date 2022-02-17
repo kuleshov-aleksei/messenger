@@ -1,6 +1,6 @@
 # Messenger
 
-# Deployment:
+## Deployment:
 
 1. Create network
 
@@ -19,4 +19,20 @@ docker-compose --env-file .\.env.environment -f .\docker-compose.environment.yml
 ```
 docker-compose --env-file .\.env.services -f .\docker-compose.yml up -d
 ```
+
+## Stop all
+
+1. Stop services
+
+```
+docker-compose --env-file .\.env.services -f .\docker-compose.yml stop
+```
+
+2. Stop environment
+
+```
+docker-compose --env-file .\.env.environment -f .\docker-compose.environment.yml stop
+```
+
+
 
