@@ -11,6 +11,9 @@
     <PackageReference Include="EmbedIO" Version="3.4.3" />
     <PackageReference Include="Humanizer.Core" Version="2.8.26" />
     <PackageReference Include="Humanizer.Core.ru" Version="2.8.26" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="NEST" Version="7.9.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="NLog" Version="4.7.5" />

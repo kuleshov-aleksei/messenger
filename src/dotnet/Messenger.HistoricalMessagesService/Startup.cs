@@ -1,21 +1,19 @@
 using Messenger.Common.Elastic;
+using Messenger.Common.JWT;
 using Messenger.Common.Tools;
 using Messenger.HistoricalMessagesService.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Nest;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Messenger.HistoricalMessagesService
 {
@@ -34,6 +32,31 @@ namespace Messenger.HistoricalMessagesService
             services.AddSingleton<IdGenerator>();
             services.AddSingleton(ESClient.CreateElasticClient());
             services.AddSingleton<EsInteractor>();
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.MapInboundClaims = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = JwtHelper.LoadSecurityKey(),
+                    ValidateIssuer = true,
+                    ValidIssuer = JwtHelper.JWT_ISSUER,
+                    ValidateAudience = true,
+                    ValidAudiences = new List<string>
+                    {
+                        JwtHelper.JWT_WEB_AUDIENCE,
+                    },
+                    ClockSkew = TimeSpan.FromMinutes(1),
+                };
+            });
 
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
@@ -66,6 +89,7 @@ namespace Messenger.HistoricalMessagesService
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

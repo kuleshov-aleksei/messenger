@@ -27,6 +27,30 @@ namespace Template.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.MapInboundClaims = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = JwtHelper.LoadSecurityKey(),
+                    ValidateIssuer = true,
+                    ValidIssuer = JwtHelper.JWT_ISSUER,
+                    ValidateAudience = true,
+                    ValidAudiences = new List<string>
+                    {
+                        JwtHelper.JWT_WEB_AUDIENCE,
+                    },
+                    ClockSkew = TimeSpan.FromMinutes(1),
+                };
+            });
 
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
@@ -58,6 +82,7 @@ namespace Template.WebAPI
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

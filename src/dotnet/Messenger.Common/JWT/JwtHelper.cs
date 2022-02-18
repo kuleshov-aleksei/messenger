@@ -14,13 +14,19 @@ namespace Messenger.Common.JWT
     public class JwtHelper
     {
         private Logger m_logger = LogManager.GetCurrentClassLogger();
-        private string m_issuer = "AuthServer";
+        public const string JWT_ISSUER = "AuthServer";
+        public const string JWT_WEB_AUDIENCE = "WebClient";
         private SymmetricSecurityKey m_securityKey;
 
         public const string AccessTokenName = "access_token";
         public const string RefreshTokenName = "refresh_token";
 
-        public JwtHelper(string secretKeyPath)
+        public JwtHelper(string secretKeyPath = "jwt_secret.secret")
+        {
+            m_securityKey = LoadSecurityKey(secretKeyPath);
+        }
+
+        public static SymmetricSecurityKey LoadSecurityKey(string secretKeyPath = "jwt_secret.secret")
         {
             if (!File.Exists(secretKeyPath))
             {
@@ -28,7 +34,7 @@ namespace Messenger.Common.JWT
             }
 
             byte[] secret = File.ReadAllBytes(secretKeyPath);
-            m_securityKey = new SymmetricSecurityKey(secret);
+            return new SymmetricSecurityKey(secret);
         }
 
         public List<string> GetRoles(string accessToken)
@@ -160,6 +166,10 @@ namespace Messenger.Common.JWT
                 {
                     return int.Parse(claim.Value);
                 }
+                if (claim.Type == "user_id")
+                {
+                    return int.Parse(claim.Value);
+                }
             }
 
             return 0;
@@ -169,7 +179,7 @@ namespace Messenger.Common.JWT
         /// Should be executed on authorization
         /// </summary>
         /// <returns>Refresh token</returns>
-        public string CreateSession(string deviceName, int userId, string audience = "WebClient")
+        public string CreateSession(string deviceName, int userId, string audience = JWT_WEB_AUDIENCE)
         {
             m_logger.Info($"Creating new session for user {userId}");
             string refreshToken = CreateRefreshJWT(userId, audience);
@@ -189,12 +199,12 @@ namespace Messenger.Common.JWT
             return refreshToken;
         }
 
-        private string CreateRefreshJWT(int userId, string audience = "WebClient")
+        private string CreateRefreshJWT(int userId, string audience = JWT_WEB_AUDIENCE)
         {
             return CreateJWT(userId, TimeSpan.FromDays(30), audience);
         }
 
-        public string CreateJWT(int userId, TimeSpan duration, string audience = "WebClient")
+        public string CreateJWT(int userId, TimeSpan duration, string audience = JWT_WEB_AUDIENCE)
         {
             m_logger.Info($"Generating JWT for user {userId}");
 
@@ -204,14 +214,14 @@ namespace Messenger.Common.JWT
 
             SecurityToken token = handler.CreateToken(new SecurityTokenDescriptor
             {
-                Issuer = m_issuer,
+                Issuer = JWT_ISSUER,
                 Audience = audience,
                 NotBefore = DateTime.UtcNow,
                 IssuedAt = DateTime.UtcNow,
                 Expires = DateTime.UtcNow.Add(duration),
                 Subject = new ClaimsIdentity(new[] {
-                    new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
                     new Claim(ClaimTypes.Role, roles),
+                    new Claim("user_id", userId.ToString())
                 }),
                 SigningCredentials = new SigningCredentials(m_securityKey, SecurityAlgorithms.HmacSha256Signature, SecurityAlgorithms.Sha512Digest),
             });
@@ -236,7 +246,7 @@ namespace Messenger.Common.JWT
             return roles.TrimEnd(',');
         }
 
-        public bool Validate(string token, out int userId, string audience = "WebClient")
+        public bool Validate(string token, out int userId, string audience = JWT_WEB_AUDIENCE)
         {
             m_logger.Info($"Validating token");
 
@@ -245,7 +255,7 @@ namespace Messenger.Common.JWT
             TokenValidationParameters validationParameters = new TokenValidationParameters
             {
                 ClockSkew = TimeSpan.FromMinutes(1),
-                ValidIssuer = m_issuer,
+                ValidIssuer = JWT_ISSUER,
                 ValidAudience = audience,
                 IssuerSigningKey = m_securityKey,
             };
