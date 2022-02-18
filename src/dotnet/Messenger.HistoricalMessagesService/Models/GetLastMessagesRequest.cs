@@ -3,14 +3,9 @@ using Newtonsoft.Json;
 
 namespace Messenger.HistoricalMessagesService.Models
 {
-    public class GetLastMessagesRequest : RequestBase
+    public class GetLastMessagesRequest
     {
         [JsonProperty("chat_id")]
         public int ChatId { get; set; }
-
-        public override bool Validate()
-        {
-            return ChatId > 0;
-        }
     }
 }
