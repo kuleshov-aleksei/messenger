@@ -1,4 +1,5 @@
-﻿using Messenger.Common.JWT;
+﻿using MassTransit;
+using Messenger.Common.JWT;
 using Messenger.Common.Settings;
 using Messenger.InstantMessagingService.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +9,6 @@ using NLog;
 using StackExchange.Redis.Extensions.Core.Abstractions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -21,10 +21,12 @@ namespace Messenger.InstantMessagingService.Controllers
     {
         private readonly Logger m_logger = LogManager.GetCurrentClassLogger();
         private readonly IRedisDatabase m_redis;
+        private readonly ISendEndpointProvider m_sendEndpointProvider;
 
-        public InstantMessagesController(IRedisDatabase redisDatabase)
+        public InstantMessagesController(IRedisDatabase redisDatabase, ISendEndpointProvider sendEndpointProvider)
         {
             m_redis = redisDatabase;
+            m_sendEndpointProvider = sendEndpointProvider;
         }
 
         [HttpPost("send")]
@@ -47,7 +49,10 @@ namespace Messenger.InstantMessagingService.Controllers
                 return;
             }
 
-            m_logger.Trace($"TEMP: {request.Message}");
+            ISendEndpoint endpoint = await m_sendEndpointProvider.GetSendEndpoint(new Uri("queue:incoming_messages"));
+
+            m_logger.Trace($"Sending message to RMQ");
+            await endpoint.Send(request);
         }
     }
 }

@@ -1,5 +1,6 @@
 using Messenger.Common.Elastic;
 using Messenger.Common.JWT;
+using Messenger.Common.MassTransit;
 using Messenger.Common.Redis;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -30,6 +31,7 @@ namespace Messenger.InstantMessagingService
         {
             services.AddElasticConnection();
             services.AddRedisConnection();
+            services.AddMassTransitConnection();
 
             services.AddAuthentication(x =>
             {
