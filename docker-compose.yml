@@ -125,7 +125,41 @@ services:
       - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
       - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
     networks:
-      - messenger_network  
+      - messenger_network
+
+  instant-messages-service:
+    build:
+      context: ./src/dotnet
+      dockerfile: Messenger.InstantMessagingService/Dockerfile
+    command: dotnet Messenger.InstantMessagingService.dll
+    container_name: instant-messages-service
+    restart: unless-stopped
+    ports:
+      - 23585:80
+    environment:
+      TZ: "Europe/Moscow"
+    volumes:
+      - ./docker-data/logs/instant-messages-service:/app/logs/
+      - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
+      - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
+    networks:
+      - messenger_network
+
+  message-service:
+    build:
+      context: ./src/dotnet
+      dockerfile: Messenger.MessageService/Dockerfile
+    command: dotnet Messenger.MessageService.dll
+    container_name: message-service
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    volumes:
+      - ./docker-data/logs/message-service:/app/logs/
+      - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
+      - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
+    networks:
+      - messenger_network
 
 networks:
   messenger_network:
