@@ -1,3 +1,4 @@
+using Invio.Extensions.Authentication.JwtBearer;
 using Messenger.Common.JWT;
 using Messenger.Common.MassTransit;
 using Messenger.Common.Redis;
@@ -38,6 +39,8 @@ namespace Messenger.SubscribingService
             })
             .AddJwtBearer(x =>
             {
+                x.AddQueryStringAuthentication();
+
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
                 x.MapInboundClaims = true;
@@ -55,6 +58,7 @@ namespace Messenger.SubscribingService
                     ClockSkew = TimeSpan.FromMinutes(1),
                 };
             });
+
 
             services.AddControllers()
                 .AddNewtonsoftJson(options =>

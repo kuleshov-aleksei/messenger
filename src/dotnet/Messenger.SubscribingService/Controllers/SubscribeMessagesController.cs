@@ -1,4 +1,5 @@
-﻿using Messenger.SubscribingService;
+﻿using Messenger.Common.JWT;
+using Messenger.SubscribingService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Messenger.SubscribingService.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("/messenger/subscribe")]
     public class SubscribeMessagesController : ControllerBase
@@ -27,7 +28,8 @@ namespace Messenger.SubscribingService.Controllers
         {
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
-                m_logger.Info($"Client connected over websockets");
+                int userId = JwtHelper.GetUserId(User.Claims);
+                m_logger.Info($"Client {userId} connected over websockets");
                 using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
                 await Echo(webSocket);
             }
