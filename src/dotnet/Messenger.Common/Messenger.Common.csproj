@@ -15,8 +15,12 @@
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="NEST" Version="7.9.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NLog" Version="4.7.5" />
+    <PackageReference Include="StackExchange.Redis" Version="2.2.88" />
+    <PackageReference Include="StackExchange.Redis.Extensions.AspNetCore" Version="8.0.4" />
+    <PackageReference Include="StackExchange.Redis.Extensions.Core" Version="8.0.4" />
+    <PackageReference Include="StackExchange.Redis.Extensions.Newtonsoft" Version="8.0.4" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
   </ItemGroup>
 

@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Messenger.Common.Redis;
 using System;
 using System.Collections.Generic;
 
@@ -32,6 +33,8 @@ namespace Messenger.HistoricalMessagesService
             services.AddSingleton<IdGenerator>();
             services.AddSingleton(ESClient.CreateElasticClient());
             services.AddSingleton<EsInteractor>();
+
+            services.AddRedisConnection();
 
             services.AddAuthentication(x =>
             {

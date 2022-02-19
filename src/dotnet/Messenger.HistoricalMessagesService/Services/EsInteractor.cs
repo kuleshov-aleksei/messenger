@@ -6,6 +6,8 @@ using Messenger.Common.Tools;
 using Messenger.HistoricalMessagesService.Models;
 using Nest;
 using NLog;
+using StackExchange.Redis;
+using StackExchange.Redis.Extensions.Core.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,8 +17,8 @@ namespace Messenger.HistoricalMessagesService.Services
     public class EsInteractor
     {
         private Logger m_logger = LogManager.GetCurrentClassLogger();
-        private ElasticClient m_elasticClient;
-        private IdGenerator m_idGenerator;
+        private readonly ElasticClient m_elasticClient;
+        private readonly IdGenerator m_idGenerator;
 
         private Fields m_includeFields = new Field[] {
             GlobalSettings.EsFieldChatId,

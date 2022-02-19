@@ -1,4 +1,5 @@
 ﻿using MySql.Common;
+using System;
 
 namespace Messenger.Common.Settings
 {
@@ -17,6 +18,13 @@ namespace Messenger.Common.Settings
                 });
 
             return value;
+        }
+
+        public static T ReadSettings<T>(string name)
+        {
+            string value = ReadSettings(name);
+            T convertedValue = (T)Convert.ChangeType(value, typeof(T));
+            return convertedValue;
         }
     }
 }
