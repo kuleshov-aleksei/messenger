@@ -10,6 +10,7 @@ Vue.config.debug = true
 const debug = process.env.NODE_ENV !== 'production'
 
 export const api_url = 'https://messenger.local.encamy.com';
+export const API_HOSTNAME = '192.168.40.43';
 
 export default new Vuex.Store({
   plugins: [createPersistedState({ 
@@ -23,6 +24,7 @@ export default new Vuex.Store({
   state: {
     selected_chat_id: '',
     current_route: '',
+    ws_connected: false,
   },
   mutations: {
     set_chat_id(state, chat_id)
@@ -32,6 +34,10 @@ export default new Vuex.Store({
     save_current_route(state, route)
     {
       state.current_route = route;
+    },
+    save_ws_state(state, wsState)
+    {
+      state.ws_connected = wsState;
     }
   }
 });
