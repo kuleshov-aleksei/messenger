@@ -1,22 +1,25 @@
 <template>
   <div id="app">
     <HeaderComponent />
-    
+    <IncomingMessagesConsumer />
     <router-view />
   </div>
 </template>
 
 <script>
 import HeaderComponent from "./components/HeaderComponent.vue";
+import IncomingMessagesConsumer from "./components/IncomingMessagesConsumer.vue";
 import axios from "axios";
-import { api_url } from "./store"
+import { api_url } from "./store";
+import jwt from "jsonwebtoken";
 
-var REFRESH_INTERVAL = 10 * 60 * 1000;
+var REFRESH_INTERVAL = 1 * 60 * 1000;
 
 export default {
     name: "App",
     components: {
         HeaderComponent,
+        IncomingMessagesConsumer
     },
     data() {
       return {
@@ -45,15 +48,37 @@ export default {
         });
       },
       createRefreshTimer: function() {
-        this.refreshTimer = setInterval(this.refreshToken, REFRESH_INTERVAL);
+        this.refreshTimer = setInterval(this.checkAuthorization, REFRESH_INTERVAL);
+      },
+      checkAuthorization: function() {
+        var decoded = jwt.decode(localStorage.getItem("access_token"));
+        var expireAt = decoded.exp - 120; // refresh 2 minutes before expiration
+        var currentTime = Math.floor(Date.now() / 1000);
+        if (currentTime > expireAt)
+        {
+          console.log("Token expired");
+          this.refreshToken();
+        }
+        else
+        {
+          console.log("Token valid");
+          this.$root.$emit('token_valid');
+        }
       }
     },
     mounted: function() {
       this.$root.$on('authorized', this.createRefreshTimer);
 
+      // check token in background
       if (localStorage.getItem("refresh_token") !== null)
       {
         this.createRefreshTimer();
+      }
+
+      // check token at page load
+      if (localStorage.getItem("access_token") !== null)
+      {
+        this.checkAuthorization();  
       }
     }
 };
