@@ -108,6 +108,24 @@ services:
       - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
     networks:
       - messenger_network
+      
+  historical-messages-service:
+    build:
+      context: ./src/dotnet
+      dockerfile: Messenger.HistoricalMessagesService/Dockerfile
+    command: dotnet Messenger.HistoricalMessagesService.dll
+    container_name: historical-messages-service
+    restart: unless-stopped
+    ports:
+      - 23584:80
+    environment:
+      TZ: "Europe/Moscow"
+    volumes:
+      - ./docker-data/logs/historical-messages-service:/app/logs/
+      - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
+      - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
+    networks:
+      - messenger_network  
 
 networks:
   messenger_network:

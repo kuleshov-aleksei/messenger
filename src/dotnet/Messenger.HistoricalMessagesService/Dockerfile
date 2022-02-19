@@ -5,11 +5,13 @@ WORKDIR /app
 EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
+WORKDIR /src/dotnet
+COPY ["MySql.Common/MySql.Common.csproj", "MySql.Common/"]
+COPY ["Messenger.Common/Messenger.Common.csproj", "Messenger.Common/"]
 COPY ["Messenger.HistoricalMessagesService/Messenger.HistoricalMessagesService.csproj", "Messenger.HistoricalMessagesService/"]
 RUN dotnet restore "Messenger.HistoricalMessagesService/Messenger.HistoricalMessagesService.csproj"
 COPY . .
-WORKDIR "/src/Messenger.HistoricalMessagesService"
+WORKDIR "/src/dotnet/Messenger.HistoricalMessagesService"
 RUN dotnet build "Messenger.HistoricalMessagesService.csproj" -c Release -o /app/build
 
 FROM build AS publish
