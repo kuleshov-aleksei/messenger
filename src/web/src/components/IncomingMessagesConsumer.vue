@@ -27,7 +27,6 @@ export default {
           }
       },
       subscribeToEvents: function() {
-        //if (localStorage.getItem("refresh_token") === null)
         console.log("wanted to subscribe to events");
       }
   },
