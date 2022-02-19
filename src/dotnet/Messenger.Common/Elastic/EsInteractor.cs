@@ -1,18 +1,14 @@
-﻿using Messenger.Common.Elastic;
-using Messenger.Common.Elastic.Models;
+﻿using Messenger.Common.Elastic.Models;
 using Messenger.Common.Models;
 using Messenger.Common.Settings;
 using Messenger.Common.Tools;
-using Messenger.HistoricalMessagesService.Models;
 using Nest;
 using NLog;
-using StackExchange.Redis;
-using StackExchange.Redis.Extensions.Core.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Messenger.HistoricalMessagesService.Services
+namespace Messenger.Common.Elastic
 {
     public class EsInteractor
     {
@@ -33,7 +29,7 @@ namespace Messenger.HistoricalMessagesService.Services
             m_idGenerator = idGenerator;
         }
 
-        public async Task<MessagesResponse> GetLastMessagesOfChatAsync(int chatId)
+        public async Task<ChatMessages> GetLastMessagesOfChatAsync(int chatId)
         {
             SearchRequest searchRequest = new SearchRequest(GlobalSettings.EsIndexName)
             {
@@ -67,7 +63,7 @@ namespace Messenger.HistoricalMessagesService.Services
             return await GetMessagesAsync(searchRequest, chatId);
         }
 
-        public async Task<MessagesResponse> GetMessagesBeforeAsync(long unixTime, int chatId)
+        public async Task<ChatMessages> GetMessagesBeforeAsync(long unixTime, int chatId)
         {
             SearchRequest searchRequest = new SearchRequest(GlobalSettings.EsIndexName)
             {
@@ -106,7 +102,7 @@ namespace Messenger.HistoricalMessagesService.Services
             return await GetMessagesAsync(searchRequest, chatId);
         }
 
-        public async Task<MessagesResponse> GetMessagesFromAsync(long unixTime, int chatId)
+        public async Task<ChatMessages> GetMessagesFromAsync(long unixTime, int chatId)
         {
             SearchRequest searchRequest = new SearchRequest(GlobalSettings.EsIndexName)
             {
@@ -145,7 +141,7 @@ namespace Messenger.HistoricalMessagesService.Services
             return await GetMessagesAsync(searchRequest, chatId);
         }
 
-        private async Task<MessagesResponse> GetMessagesAsync(SearchRequest searchRequest, int chatId)
+        private async Task<ChatMessages> GetMessagesAsync(SearchRequest searchRequest, int chatId)
         {
 #if DEBUG
             string queryString = ESClient.RequestToReadableString(m_elasticClient, searchRequest);
@@ -163,7 +159,7 @@ namespace Messenger.HistoricalMessagesService.Services
                 return null;
             }
 
-            MessagesResponse response = new MessagesResponse();
+            ChatMessages response = new ChatMessages();
             response.ChatId = chatId;
 
             Dictionary<int, User> users = User.GetUsersForChat(chatId);

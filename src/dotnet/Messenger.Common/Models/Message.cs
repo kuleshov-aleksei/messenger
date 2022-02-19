@@ -1,17 +1,7 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
 
-namespace Messenger.HistoricalMessagesService.Models
+namespace Messenger.Common.Models
 {
-    public class MessagesResponse
-    {
-        [JsonProperty("messages")]
-        public List<Message> Messages { get; set; } = new List<Message>();
-
-        [JsonProperty("chat_id")]
-        public int ChatId { get; set; }
-    }
-
     public class Message
     {
         [JsonProperty("unix_time")]

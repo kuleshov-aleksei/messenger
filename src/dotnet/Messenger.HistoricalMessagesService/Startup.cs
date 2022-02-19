@@ -1,7 +1,6 @@
 using Messenger.Common.Elastic;
 using Messenger.Common.JWT;
 using Messenger.Common.Tools;
-using Messenger.HistoricalMessagesService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,10 +29,7 @@ namespace Messenger.HistoricalMessagesService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IdGenerator>();
-            services.AddSingleton(ESClient.CreateElasticClient());
-            services.AddSingleton<EsInteractor>();
-
+            services.AddElasticConnection();
             services.AddRedisConnection();
 
             services.AddAuthentication(x =>

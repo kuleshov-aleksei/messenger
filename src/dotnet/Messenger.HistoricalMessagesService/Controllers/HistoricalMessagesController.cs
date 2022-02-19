@@ -1,7 +1,8 @@
-﻿using Messenger.Common.JWT;
+﻿using Messenger.Common.Elastic;
+using Messenger.Common.JWT;
+using Messenger.Common.Models;
 using Messenger.Common.Settings;
 using Messenger.HistoricalMessagesService.Models;
-using Messenger.HistoricalMessagesService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Common;
@@ -33,7 +34,7 @@ namespace Messenger.HistoricalMessagesService.Controllers
         // Add [AllowAnonymous] to skip authorization
         [HttpPost("get_last_messages")]
         [Produces("application/json")]
-        public async Task<MessagesResponse> GetLastMessages(GetLastMessagesRequest request)
+        public async Task<ChatMessages> GetLastMessages(GetLastMessagesRequest request)
         {
             int userId = JwtHelper.GetUserId(User.Claims);
             m_logger.Trace($"User {userId} requested messages of chat {request.ChatId}");
@@ -45,7 +46,7 @@ namespace Messenger.HistoricalMessagesService.Controllers
                 return null;
             }
 
-            MessagesResponse messagesResponse = await m_esInteractor.GetLastMessagesOfChatAsync(request.ChatId);
+            ChatMessages messagesResponse = await m_esInteractor.GetLastMessagesOfChatAsync(request.ChatId);
             return messagesResponse;
         }
     }
