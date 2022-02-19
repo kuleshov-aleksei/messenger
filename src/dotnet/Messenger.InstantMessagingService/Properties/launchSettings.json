@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Template.WebAPI": {
+    "Messenger.InstantMessagingService": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
