@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Template.WebAPI", "Template
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.InstantMessagingService", "Messenger.InstantMessagingService\Messenger.InstantMessagingService.csproj", "{B2C564A5-4ACF-4BA2-8971-2E8ABA47A788}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.MessageService", "Messenger.MessageService\Messenger.MessageService.csproj", "{FDBE2935-79F0-43FE-8CB9-68BADF6B2B6F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,10 @@ Global
 		{B2C564A5-4ACF-4BA2-8971-2E8ABA47A788}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2C564A5-4ACF-4BA2-8971-2E8ABA47A788}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2C564A5-4ACF-4BA2-8971-2E8ABA47A788}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDBE2935-79F0-43FE-8CB9-68BADF6B2B6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDBE2935-79F0-43FE-8CB9-68BADF6B2B6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDBE2935-79F0-43FE-8CB9-68BADF6B2B6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDBE2935-79F0-43FE-8CB9-68BADF6B2B6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

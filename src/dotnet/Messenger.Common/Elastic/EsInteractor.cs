@@ -191,7 +191,7 @@ namespace Messenger.Common.Elastic
             return response;
         }
 
-        internal bool PutMessage(EsMessage message)
+        public async Task<bool> PutMessageAsync(EsMessage message)
         {
             string messageId = $"{m_idGenerator.GenerateUniqueId()}";
 
@@ -208,10 +208,10 @@ namespace Messenger.Common.Elastic
             {
                 Doc = requestDoc,
                 DocAsUpsert = true,
-                RetryOnConflict = 10
+                RetryOnConflict = 3
             };
 
-            IUpdateResponse<object> response = m_elasticClient.Update(updateRequest);
+            IUpdateResponse<object> response = await m_elasticClient.UpdateAsync(updateRequest);
             if (response.ServerError != null)
             {
                 m_logger.Error($"Error saving message {messageId}. Error: {response.ServerError}");

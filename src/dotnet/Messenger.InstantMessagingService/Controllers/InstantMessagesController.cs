@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using Messenger.Common.JWT;
+using Messenger.Common.MassTransit.Models;
 using Messenger.Common.Settings;
 using Messenger.InstantMessagingService.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -49,10 +50,15 @@ namespace Messenger.InstantMessagingService.Controllers
                 return;
             }
 
-            ISendEndpoint endpoint = await m_sendEndpointProvider.GetSendEndpoint(new Uri("queue:incoming_messages"));
+            ISendEndpoint endpoint = await m_sendEndpointProvider.GetSendEndpoint(new Uri("queue:incoming-messages"));
 
             m_logger.Trace($"Sending message to RMQ");
-            await endpoint.Send(request);
+            await endpoint.Send(new NewMessage
+            {
+                ChatId = request.ChatId,
+                Message = request.Message,
+                UserId = userId,
+            });
         }
     }
 }
