@@ -12,5 +12,8 @@ namespace Messenger.SubscribingService.Models
 
         [JsonProperty("incoming_messages")]
         public MessageContainter MessageContainter { get; set; }
+
+        [JsonProperty("system_message")]
+        public string SystemMessage { get; set; }
     }
 }

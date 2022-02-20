@@ -97,7 +97,7 @@ namespace Messenger.SubscribingService
 
             WebSocketOptions websocketOptions = new WebSocketOptions()
             {
-                KeepAliveInterval = TimeSpan.FromMinutes(2),
+                KeepAliveInterval = TimeSpan.FromSeconds(2),
             };
             websocketOptions.AllowedOrigins.Add("*");
 
