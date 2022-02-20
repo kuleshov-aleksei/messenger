@@ -2,6 +2,7 @@
 using Messenger.Common.JWT;
 using Messenger.Common.MassTransit.Models;
 using Messenger.Common.Settings;
+using Messenger.Common.Tools;
 using Messenger.InstantMessagingService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +59,7 @@ namespace Messenger.InstantMessagingService.Controllers
                 ChatId = request.ChatId,
                 Message = request.Message,
                 UserId = userId,
+                MessageTime = UnixEpochTools.ToEpoch(DateTime.UtcNow),
             });
         }
     }

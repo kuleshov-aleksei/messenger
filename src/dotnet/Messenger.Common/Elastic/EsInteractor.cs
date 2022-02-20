@@ -201,7 +201,7 @@ namespace Messenger.Common.Elastic
                 { GlobalSettings.EsFieldMessageId, messageId },
                 { GlobalSettings.EsFieldText, message.Message },
                 { GlobalSettings.EsFieldUserId, message.UserId },
-                { GlobalSettings.EsFieldMessageTime, UnixEpochTools.ToEpoch(DateTime.UtcNow) },
+                { GlobalSettings.EsFieldMessageTime, message.MessageTime },
             };
 
             IUpdateRequest<object, object> updateRequest = new UpdateRequest<object, object>(GlobalSettings.EsIndexName, messageId)

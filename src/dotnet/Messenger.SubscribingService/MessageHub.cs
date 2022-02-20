@@ -43,6 +43,7 @@ namespace Messenger.SubscribingService
                                 {
                                     AuthorId = message.UserId,
                                     Text = message.Message,
+                                    UnixTime = message.MessageTime,
                                 }
                             }
                         });

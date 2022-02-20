@@ -26,6 +26,7 @@ namespace Messenger.MessageService.Consumers
                 Message = context.Message.Message,
                 ChatId = context.Message.ChatId,
                 UserId = context.Message.UserId,
+                MessageTime = context.Message.MessageTime,
             });
         }
     }
