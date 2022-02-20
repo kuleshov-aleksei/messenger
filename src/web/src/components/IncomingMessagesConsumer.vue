@@ -24,6 +24,7 @@ export default {
     data() {
         return {
             alreadySubscribed: false,
+            stopConnecting: false,
         };
     },
     mounted: function() {
@@ -43,37 +44,57 @@ export default {
     methods: {
         handleAuthorized: function()
         {
-            if (!this.alreadySubscribed)
-            {
-                this.subscribeToEvents();
-                this.alreadySubscribed = true;
-            }
+            this.subscribeToEvents();
         },
         subscribeToEvents: function()
         {
+            if (this.alreadySubscribed)
+            {
+                return;
+            }
+            if (this.stopConnecting)
+            {
+                console.log('There will be no attempts to connect due to error code');
+                return;
+            }
+
             var accessToken = localStorage.getItem("access_token");
             var url = 'ws://' + API_HOSTNAME + ':5000/messenger/subscribe/ws?access_token=' + accessToken;
             console.log("Connecting to notification server");
-            this.connection = new WebSocket(url)
-
+            this.connection = new WebSocket(url);
             this.connection.onmessage = this.wsMessageReceived;
             this.connection.onopen = this.wsConnected;
             this.connection.onclose = this.wsDisconnected;
         },
+        handleError: function(errorCode, errorMessage)
+        {
+            console.log('Received error ' + errorCode  + ': ' + errorMessage);
+            if (errorCode === 1)
+            {
+                this.stopConnecting = true;
+            }
+        },
         wsMessageReceived: function(event)
         {
-            console.log(event);
+            console.log('WS Server: ' + event.data);
+            var jsObject = JSON.parse(event.data);
+            if (jsObject.error_code > 0)
+            {
+                this.handleError(jsObject.error_code, jsObject.error_message);
+            }
         },
         wsConnected: function(event)
         {
             console.log(event)
             console.log("Successfully connected to the echo websocket server...")
             this.connected = true;
+            this.alreadySubscribed = true;
         },
         wsDisconnected: function()
         {
-            console.log('Disconnected! Trying to connect again in 3 second');
+            this.alreadySubscribed = false;
             this.connected = false;
+            console.log('Disconnected! Trying to connect again in 3 second');
             setTimeout(() => {
                 this.subscribeToEvents();
             }, 3000);
