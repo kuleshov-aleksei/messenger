@@ -31,6 +31,8 @@ namespace Messenger.SubscribingService
         {
             services.AddRedisConnection();
             services.AddMassTransitConnection();
+            services.AddScoped<WebsocketConnectionHandler>();
+            services.AddSingleton<MessageHub>();
 
             services.AddAuthentication(x =>
             {

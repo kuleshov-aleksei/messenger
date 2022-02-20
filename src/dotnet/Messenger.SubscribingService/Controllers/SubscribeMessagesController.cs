@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
@@ -18,9 +19,11 @@ namespace Messenger.SubscribingService.Controllers
     public class SubscribeMessagesController : ControllerBase
     {
         private readonly Logger m_logger = LogManager.GetCurrentClassLogger();
+        private readonly WebsocketConnectionHandler m_websocketConnectionHandler;
 
-        public SubscribeMessagesController()
+        public SubscribeMessagesController(WebsocketConnectionHandler websocketConnectionHandler)
         {
+            m_websocketConnectionHandler = websocketConnectionHandler;
         }
 
         [HttpGet("ws")]
@@ -30,38 +33,16 @@ namespace Messenger.SubscribingService.Controllers
             {
                 int userId = JwtHelper.GetUserId(User.Claims);
                 m_logger.Info($"Client {userId} connected over websockets");
-                using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-                await Echo(webSocket);
+                using (WebSocket webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync())
+                {
+                    await m_websocketConnectionHandler.Handle(webSocket, userId);
+                }
             }
             else
             {
                 m_logger.Info($"Client tried to connect to ws endpoint, but connection isn't websocket");
                 HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
             }
-        }
-
-        private static async Task Echo(WebSocket webSocket)
-        {
-            var buffer = new byte[1024 * 4];
-            var receiveResult = await webSocket.ReceiveAsync(
-                new ArraySegment<byte>(buffer), CancellationToken.None);
-
-            while (!receiveResult.CloseStatus.HasValue)
-            {
-                await webSocket.SendAsync(
-                    new ArraySegment<byte>(buffer, 0, receiveResult.Count),
-                    receiveResult.MessageType,
-                    receiveResult.EndOfMessage,
-                    CancellationToken.None);
-
-                receiveResult = await webSocket.ReceiveAsync(
-                    new ArraySegment<byte>(buffer), CancellationToken.None);
-            }
-
-            await webSocket.CloseAsync(
-                receiveResult.CloseStatus.Value,
-                receiveResult.CloseStatusDescription,
-                CancellationToken.None);
         }
     }
 }
