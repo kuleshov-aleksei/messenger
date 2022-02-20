@@ -56,13 +56,13 @@ export default {
             console.log("Connecting to notification server");
             this.connection = new WebSocket(url)
 
-            this.connection.onmessage = function(event)
-            {
-                console.log(event);
-            }
-
+            this.connection.onmessage = this.wsMessageReceived;
             this.connection.onopen = this.wsConnected;
             this.connection.onclose = this.wsDisconnected;
+        },
+        wsMessageReceived: function(event)
+        {
+            console.log(event);
         },
         wsConnected: function(event)
         {
