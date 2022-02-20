@@ -1,8 +1,8 @@
 ﻿using EmbedIO;
 using Messenger.Common.Http;
 using Messenger.Common.JWT;
+using Messenger.Common.MySql;
 using Messenger.Common.Settings;
-using MySql.Common;
 using Newtonsoft.Json;
 using NLog;
 using System.Net;

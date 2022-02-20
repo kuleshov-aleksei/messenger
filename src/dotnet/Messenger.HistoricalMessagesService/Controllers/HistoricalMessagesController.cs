@@ -1,15 +1,13 @@
 ﻿using Messenger.Common.Elastic;
 using Messenger.Common.JWT;
 using Messenger.Common.Models;
+using Messenger.Common.MySql;
 using Messenger.Common.Settings;
 using Messenger.HistoricalMessagesService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MySql.Common;
 using NLog;
-using StackExchange.Redis;
 using StackExchange.Redis.Extensions.Core.Abstractions;
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;

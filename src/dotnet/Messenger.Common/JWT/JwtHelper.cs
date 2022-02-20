@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Security.Claims;
-using MySql.Common;
 using System.Linq;
 using Messenger.Common.Settings;
+using Messenger.Common.MySql;
 
 namespace Messenger.Common.JWT
 {

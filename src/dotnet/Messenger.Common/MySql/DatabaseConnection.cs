@@ -3,7 +3,7 @@ using NLog;
 using System;
 using System.Data;
 
-namespace MySql.Common
+namespace Messenger.Common.MySql
 {
     public class DatabaseConnection : IDisposable
     {

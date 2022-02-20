@@ -6,7 +6,6 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["Messenger.ChatInfoServer/Messenger.ChatInfoServer.csproj", "Messenger.ChatInfoServer/"]
-COPY ["MySql.Common/MySql.Common.csproj", "MySql.Common/"]
 COPY ["Messenger.Common/Messenger.Common.csproj", "Messenger.Common/"]
 RUN dotnet restore "Messenger.ChatInfoServer/Messenger.ChatInfoServer.csproj"
 COPY . .

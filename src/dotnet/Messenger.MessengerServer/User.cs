@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using MySql.Common;
 using Messenger.Common.Settings;
+using Messenger.Common.MySql;
 
 namespace Messenger.MessengerServer
 {

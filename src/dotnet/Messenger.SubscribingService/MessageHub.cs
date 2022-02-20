@@ -1,7 +1,7 @@
 ﻿using Messenger.Common.MassTransit.Models;
+using Messenger.Common.MySql;
 using Messenger.Common.Settings;
 using Messenger.SubscribingService.Models;
-using MySql.Common;
 using NLog;
 using StackExchange.Redis.Extensions.Core.Abstractions;
 using System;
@@ -28,6 +28,8 @@ namespace Messenger.SubscribingService
 
         internal async Task HandleMessage(int chatId, NewMessage message)
         {
+            //User user = GlobalSettings.Instance.Database.GetUser(m_redisDatabase, message.UserId);
+
             foreach (KeyValuePair<int, ConcurrentDictionary<Guid, WebsocketConnectionHandler>> userConnections in m_connectedUsers)
             {
                 List<int> userChats = await GlobalSettings.Instance.Database.GetUserChatListAsync(m_redisDatabase, userConnections.Key);

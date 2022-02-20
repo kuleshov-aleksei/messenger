@@ -1,5 +1,5 @@
-﻿using Messenger.Common.Settings;
-using MySql.Common;
+﻿using Messenger.Common.MySql;
+using Messenger.Common.Settings;
 using NLog;
 using System;
 using System.Collections.Generic;

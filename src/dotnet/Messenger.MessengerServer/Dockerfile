@@ -9,7 +9,6 @@ COPY ["common/gRPC", "common/gRPC"]
 
 WORKDIR /src/dotnet
 COPY ["dotnet/Messenger.MessengerServer/Messenger.MessengerServer.csproj", "Messenger.MessengerServer/"]
-COPY ["dotnet/MySql.Common/MySql.Common.csproj", "MySql.Common/"]
 COPY ["dotnet/Messenger.Common/Messenger.Common.csproj", "Messenger.Common/"]
 RUN dotnet restore "Messenger.MessengerServer/Messenger.MessengerServer.csproj"
 COPY dotnet .

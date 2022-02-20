@@ -24,14 +24,15 @@
     <PackageReference Include="StackExchange.Redis.Extensions.Core" Version="8.0.4" />
     <PackageReference Include="StackExchange.Redis.Extensions.Newtonsoft" Version="8.0.4" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
+	<PackageReference Include="MySql.Data" Version="8.0.22" />
+	<PackageReference Include="System.Net.Primitives" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="jwt_secret.secret" CopyToOutputDirectory="Always" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\MySql.Common\MySql.Common.csproj" />
+    <None Update="MySql\mysql_secrets.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

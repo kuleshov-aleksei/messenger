@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 
-namespace MySql.Common
+namespace Messenger.Common.MySql
 {
     public class Database
     {
@@ -14,7 +14,7 @@ namespace MySql.Common
 
         public Database(DatabaseConnectionSettings databaseConnectionSettings)
         {
-            string connectionString = 
+            string connectionString =
                 $"server={databaseConnectionSettings.Host};" +
                 $"port={databaseConnectionSettings.Port};" +
                 $"database={databaseConnectionSettings.DatabaseName};" +

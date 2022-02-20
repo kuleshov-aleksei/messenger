@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.Common", "Messenger.Common\Messenger.Common.csproj", "{BBF2E7F0-83E3-4CFE-BACB-4111CD4B3D57}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MySql.Common", "MySql.Common\MySql.Common.csproj", "{B0EE5352-4D37-49D3-8A67-DB08D71E49EC}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common Tools", "Common Tools", "{C34F7731-953A-44D6-A266-2CCB58669D41}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.ChatInfoServer", "Messenger.ChatInfoServer\Messenger.ChatInfoServer.csproj", "{694F629D-7D31-4481-B39F-F60F14F87079}"
@@ -43,10 +41,6 @@ Global
 		{BBF2E7F0-83E3-4CFE-BACB-4111CD4B3D57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBF2E7F0-83E3-4CFE-BACB-4111CD4B3D57}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBF2E7F0-83E3-4CFE-BACB-4111CD4B3D57}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B0EE5352-4D37-49D3-8A67-DB08D71E49EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0EE5352-4D37-49D3-8A67-DB08D71E49EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0EE5352-4D37-49D3-8A67-DB08D71E49EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B0EE5352-4D37-49D3-8A67-DB08D71E49EC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{694F629D-7D31-4481-B39F-F60F14F87079}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{694F629D-7D31-4481-B39F-F60F14F87079}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{694F629D-7D31-4481-B39F-F60F14F87079}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -101,7 +95,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BBF2E7F0-83E3-4CFE-BACB-4111CD4B3D57} = {C34F7731-953A-44D6-A266-2CCB58669D41}
-		{B0EE5352-4D37-49D3-8A67-DB08D71E49EC} = {C34F7731-953A-44D6-A266-2CCB58669D41}
 		{687FA8DD-2F83-4238-9FAD-A9BA78B65DCA} = {C34F7731-953A-44D6-A266-2CCB58669D41}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

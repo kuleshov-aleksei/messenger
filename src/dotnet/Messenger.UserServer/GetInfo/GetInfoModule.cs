@@ -2,11 +2,11 @@
 using Messenger.Common.Http;
 using Messenger.Common.JWT;
 using System.Threading.Tasks;
-using MySql.Common;
 using Nest;
 using System.Net;
 using System.Collections.Generic;
 using Messenger.Common.Settings;
+using Messenger.Common.MySql;
 
 namespace Messenger.UserServer.GetInfo
 {

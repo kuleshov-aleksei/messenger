@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MySql.Common
+namespace Messenger.Common.MySql
 {
     public static class UserHelpersExtensions
     {

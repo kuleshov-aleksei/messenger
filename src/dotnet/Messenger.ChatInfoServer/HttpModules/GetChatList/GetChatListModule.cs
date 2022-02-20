@@ -5,9 +5,9 @@ using NLog;
 using System.Data;
 using System.Net;
 using System.Threading.Tasks;
-using MySql.Common;
 using Messenger.Common.JWT;
 using Messenger.Common.Settings;
+using Messenger.Common.MySql;
 
 namespace Messenger.ChatInfoServer.HttpModules.GetChatList
 {

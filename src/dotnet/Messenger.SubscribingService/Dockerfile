@@ -6,7 +6,6 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src/dotnet
-COPY ["MySql.Common/MySql.Common.csproj", "MySql.Common/"]
 COPY ["Messenger.Common/Messenger.Common.csproj", "Messenger.Common/"]
 COPY ["Messenger.SubscribingService/Messenger.SubscribingService.csproj", "Messenger.SubscribingService/"]
 RUN dotnet restore "Messenger.SubscribingService/Messenger.SubscribingService.csproj"

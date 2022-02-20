@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace MySql.Common
+namespace Messenger.Common.MySql
 {
     public class DatabaseConnectionSettings
     {

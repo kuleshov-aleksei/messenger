@@ -1,12 +1,12 @@
 ﻿using MassTransit;
 using Messenger.Common.JWT;
 using Messenger.Common.MassTransit.Models;
+using Messenger.Common.MySql;
 using Messenger.Common.Settings;
 using Messenger.Common.Tools;
 using Messenger.InstantMessagingService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MySql.Common;
 using NLog;
 using StackExchange.Redis.Extensions.Core.Abstractions;
 using System;
