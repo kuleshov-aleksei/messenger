@@ -1,15 +1,25 @@
 ﻿using System.Collections.Generic;
 using Messenger.Common.Settings;
 using Messenger.Common.MySql;
+using Newtonsoft.Json;
 
 namespace Messenger.Common.Models
 {
     public class User
     {
+        [JsonProperty("name")]
         public string Name { get; set; }
+
+        [JsonProperty("surname")]
         public string Surname { get; set; }
+
+        [JsonProperty("image_small")]
         public string ImageSmall { get; set; }
+
+        [JsonProperty("image_medium")]
         public string ImageMedium { get; set; }
+
+        [JsonProperty("image_large")]
         public string ImageLarge { get; set; }
 
         public static Dictionary<int, User> GetUsersForChat(int chatId)

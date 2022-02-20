@@ -30,9 +30,7 @@
 
   <ItemGroup>
     <None Update="jwt_secret.secret" CopyToOutputDirectory="Always" />
-    <None Update="MySql\mysql_secrets.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Update="mysql_secrets.json" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
 </Project>

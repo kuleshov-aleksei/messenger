@@ -1,4 +1,5 @@
 ﻿using Messenger.Common.MassTransit.Models;
+using Messenger.Common.Models;
 using Messenger.Common.MySql;
 using Messenger.Common.Settings;
 using Messenger.SubscribingService.Models;
@@ -28,7 +29,7 @@ namespace Messenger.SubscribingService
 
         internal async Task HandleMessage(int chatId, NewMessage message)
         {
-            //User user = GlobalSettings.Instance.Database.GetUser(m_redisDatabase, message.UserId);
+            User user = await GlobalSettings.Instance.Database.GetUser(m_redisDatabase, message.UserId);
 
             foreach (KeyValuePair<int, ConcurrentDictionary<Guid, WebsocketConnectionHandler>> userConnections in m_connectedUsers)
             {
@@ -41,11 +42,14 @@ namespace Messenger.SubscribingService
                         {
                             MessageContainter = new MessageContainter
                             {
-                                Message = new Common.Models.Message
+                                Message = new Message
                                 {
                                     AuthorId = message.UserId,
                                     Text = message.Message,
                                     UnixTime = message.MessageTime,
+                                    AuthorName = user.Name,
+                                    AuthorSurname = user.Surname,
+                                    AuthorImageLinkSmall = user.ImageSmall,
                                 }
                             }
                         });
