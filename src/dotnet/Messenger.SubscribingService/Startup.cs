@@ -1,7 +1,9 @@
 using Invio.Extensions.Authentication.JwtBearer;
+using MassTransit;
 using Messenger.Common.JWT;
 using Messenger.Common.MassTransit;
 using Messenger.Common.Redis;
+using Messenger.SubscribingService.Consumers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,7 +32,21 @@ namespace Messenger.SubscribingService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRedisConnection();
-            services.AddMassTransitConnection();
+            services.AddMassTransitConnection(
+                additionConfiguration: (x) =>
+                {
+                    x.AddConsumer<IMConsumer>();
+                },
+                additionalRabbitConfiguration: (context, cfg) =>
+                {
+                    cfg.ReceiveEndpoint(new TemporaryEndpointDefinition(), e =>
+                    {
+                        e.Durable = false;
+                        e.ConfigureConsumeTopology = false;
+                        e.ConfigureConsumer<IMConsumer>(context);
+                        e.Bind("incoming-messages");
+                    });
+                });
             services.AddScoped<WebsocketConnectionHandler>();
             services.AddSingleton<MessageHub>();
 

@@ -10,7 +10,9 @@ namespace Messenger.Common.MassTransit
 {
     public static class MassTransitExtensions
     {
-        public static IServiceCollection AddMassTransitConnection(this IServiceCollection services, Action<IServiceCollectionBusConfigurator> additionConfiguration = null)
+        public static IServiceCollection AddMassTransitConnection(this IServiceCollection services,
+            Action<IServiceCollectionBusConfigurator> additionConfiguration = null,
+            Action<IBusRegistrationContext, IRabbitMqBusFactoryConfigurator> additionalRabbitConfiguration = null)
         {
             string rabbitAddress = DBSettings.ReadSettings("rabbit_mq_address");
             string rabbitUser = DBSettings.ReadSettings("rabbit_mq_user");
@@ -22,6 +24,8 @@ namespace Messenger.Common.MassTransit
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
+                    additionalRabbitConfiguration?.Invoke(context, cfg);
+
                     cfg.Host(rabbitAddress, "/", h =>
                     {
                         h.Username(rabbitUser);

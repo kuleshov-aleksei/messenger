@@ -1,5 +1,9 @@
-﻿using Messenger.SubscribingService.Models;
+﻿using Messenger.Common.MassTransit.Models;
+using Messenger.Common.Settings;
+using Messenger.SubscribingService.Models;
+using MySql.Common;
 using NLog;
+using StackExchange.Redis.Extensions.Core.Abstractions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -14,10 +18,37 @@ namespace Messenger.SubscribingService
         private readonly ConcurrentDictionary<int, ConcurrentDictionary<Guid, WebsocketConnectionHandler>> m_connectedUsers;
         private const int MAX_CONNECTIONS = 10;
         private readonly Logger m_logger = LogManager.GetCurrentClassLogger();
+        private readonly IRedisDatabase m_redisDatabase;
 
-        public MessageHub()
+        public MessageHub(IRedisDatabase redisDatabase)
         {
             m_connectedUsers = new ConcurrentDictionary<int, ConcurrentDictionary<Guid, WebsocketConnectionHandler>>();
+            m_redisDatabase = redisDatabase;
+        }
+
+        internal async Task HandleMessage(int chatId, NewMessage message)
+        {
+            foreach (KeyValuePair<int, ConcurrentDictionary<Guid, WebsocketConnectionHandler>> userConnections in m_connectedUsers)
+            {
+                List<int> userChats = await GlobalSettings.Instance.Database.GetUserChatListAsync(m_redisDatabase, userConnections.Key);
+                if (userChats.Contains(chatId))
+                {
+                    foreach (WebsocketConnectionHandler connection in userConnections.Value.Select(x => x.Value))
+                    {
+                        await connection.SendServerMessage(new MessageFromServer
+                        {
+                            MessageContainter = new MessageContainter
+                            {
+                                Message = new Common.Models.Message
+                                {
+                                    AuthorId = message.UserId,
+                                    Text = message.Message,
+                                }
+                            }
+                        });
+                    }
+                }
+            }
         }
 
         public async Task Register(WebsocketConnectionHandler websocketConnectionHandler, int userId, Guid guid)

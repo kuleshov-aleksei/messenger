@@ -6,7 +6,7 @@ namespace Messenger.SubscribingService.Models
 {
     public class MessageContainter
     {
-        [JsonProperty("messages")]
-        public List<Message> Messages { get; set; }
+        [JsonProperty("message")]
+        public Message Message { get; set; }
     }
 }
