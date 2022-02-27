@@ -132,10 +132,12 @@ services:
       context: ./src/dotnet
       dockerfile: Messenger.InstantMessagingService/Dockerfile
     command: dotnet Messenger.InstantMessagingService.dll
-    container_name: instant-messages-service
+    #container_name: instant-messages-service
     restart: unless-stopped
-    ports:
-      - 23585:80
+    #ports:
+    #  - 23585:80
+    deploy:
+      replicas: 1
     environment:
       TZ: "Europe/Moscow"
     volumes:
@@ -150,10 +152,12 @@ services:
       context: ./src/dotnet
       dockerfile: Messenger.MessageService/Dockerfile
     command: dotnet Messenger.MessageService.dll
-    container_name: message-service
+    #container_name: message-service
     restart: unless-stopped
     environment:
       TZ: "Europe/Moscow"
+    deploy:
+      replicas: 1
     volumes:
       - ./docker-data/logs/message-service:/app/logs/
       - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
