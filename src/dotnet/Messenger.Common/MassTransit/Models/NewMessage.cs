@@ -14,6 +14,6 @@ namespace Messenger.Common.MassTransit.Models
         public string Message { get; set; }
 
         [JsonProperty("message_time")]
-        public int MessageTime { get; set; }
+        public long MessageTime { get; set; }
     }
 }

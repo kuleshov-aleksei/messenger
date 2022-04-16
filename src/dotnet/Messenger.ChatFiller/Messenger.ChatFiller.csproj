@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\NLog\NLog.config" Link="NLog.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fare" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Messenger.AuthServer\Messenger.AuthServer.csproj" />
+    <ProjectReference Include="..\Messenger.ChatInfoServer\Messenger.ChatInfoServer.csproj" />
+    <ProjectReference Include="..\Messenger.InstantMessagingService\Messenger.InstantMessagingService.csproj" />
+    <ProjectReference Include="..\Messenger.RegistrationServer\Messenger.RegistrationServer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="scripts\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -31,6 +31,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.MessageService", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.SubscribingService", "Messenger.SubscribingService\Messenger.SubscribingService.csproj", "{811D887E-5E5A-40F8-A08C-DE869F82C394}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Obsolete", "Obsolete", "{2E6546FB-E2D6-4937-B6C0-3FAB0265252E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{7E721602-0035-47B3-9C92-42AF780FFBF4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.ChatFiller", "Messenger.ChatFiller\Messenger.ChatFiller.csproj", "{2A307D64-4986-4F2E-AE72-E50993C5865B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,13 +95,19 @@ Global
 		{811D887E-5E5A-40F8-A08C-DE869F82C394}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{811D887E-5E5A-40F8-A08C-DE869F82C394}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{811D887E-5E5A-40F8-A08C-DE869F82C394}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A307D64-4986-4F2E-AE72-E50993C5865B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A307D64-4986-4F2E-AE72-E50993C5865B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A307D64-4986-4F2E-AE72-E50993C5865B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A307D64-4986-4F2E-AE72-E50993C5865B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BBF2E7F0-83E3-4CFE-BACB-4111CD4B3D57} = {C34F7731-953A-44D6-A266-2CCB58669D41}
+		{794A5458-2570-45A7-852C-7FFAF9C85F9B} = {2E6546FB-E2D6-4937-B6C0-3FAB0265252E}
 		{687FA8DD-2F83-4238-9FAD-A9BA78B65DCA} = {C34F7731-953A-44D6-A266-2CCB58669D41}
+		{2A307D64-4986-4F2E-AE72-E50993C5865B} = {7E721602-0035-47B3-9C92-42AF780FFBF4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EDA22F40-0A48-4581-B45C-CE6432FB5A99}

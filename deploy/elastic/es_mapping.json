@@ -39,12 +39,12 @@
 	  "message_id": { "type": "keyword" },
       "user_id": { "type": "integer" },
       "chat_id": { "type": "integer" },
-      "message_time": { "format": "epoch_second", "type": "date" },
+      "message_time": { "format": "epoch_millis", "type": "date" },
 	  "image_url_original": { "type": "keyword" },
 	  "image_url_large": { "type": "keyword" },
 	  "image_url_medium": { "type": "keyword" },
 	  "image_url_small": { "type": "keyword" },
-	  "image_processing_time": { "format": "epoch_second", "type": "date" },
+	  "image_processing_time": { "format": "epoch_millis", "type": "date" },
       "text": { 
 		"type": "text",
 		"fields": {

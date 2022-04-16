@@ -6,9 +6,9 @@ namespace Messenger.Common.Tools
 {
     public static class UnixEpochTools
     {
-        public static int ToEpoch(DateTime time)
+        public static long ToEpoch(DateTime time)
         {
-            return (int)time.Subtract(DateTime.UnixEpoch).TotalSeconds;
+            return (long)time.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
         }
     }
 }
