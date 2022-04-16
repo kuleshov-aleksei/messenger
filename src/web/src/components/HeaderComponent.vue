@@ -21,12 +21,9 @@
         </el-menu-item>
         <el-submenu index="/profile">
           <template slot="title" class="dropdown">Профиль</template>
-          <el-menu-item index="/profile"
-            ><i class="el-icon-user-solid" />Аккаунт</el-menu-item
-          >
-          <el-menu-item index="/settings"
-            ><i class="el-icon-setting" />Настройки</el-menu-item
-          >
+          <el-menu-item index="/profile"><font-awesome-icon class="fa-wrapper" icon="fa-solid fa-user" />Аккаунт</el-menu-item>
+          <el-menu-item index="/settings"><font-awesome-icon class="fa-wrapper" icon="fa-solid fa-cog" />Настройки</el-menu-item>
+          <el-menu-item index="/logout"><font-awesome-icon class="fa-wrapper" icon="fa-solid fa-sign-out-alt" />Выйти</el-menu-item>
         </el-submenu>
         <el-menu-item v-if="showAdmin" class="el-menu-item" index="/admin">
           <i class="el-icon-user-solid" />Администрирование
@@ -115,5 +112,10 @@ export default {
 
 .logo-img {
   padding-right: 20px;
+}
+
+.fa-wrapper {
+  padding-right: 17px;
+  padding-left: 3px;
 }
 </style>
