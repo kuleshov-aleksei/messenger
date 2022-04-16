@@ -170,7 +170,6 @@
 import axios from "axios";
 import { api_url } from "../store";
 import { detect } from "detect-browser";
-import crypto from "crypto";
 
 export default {
   data() {
@@ -265,17 +264,12 @@ export default {
       );
     },
     register: function () {
-      let hash = crypto
-        .createHash("sha")
-        .update(this.m_registerForm.inputPassword.text)
-        .digest("hex");
-
       axios
         .post(api_url + "/register/register", {
           username: this.m_registerForm.inputLogin.text,
           name: this.m_registerForm.inputName.text,
           surname: this.m_registerForm.inputSurname.text,
-          password: hash,
+          password: this.m_registerForm.inputPassword.text,
           email: this.m_registerForm.inputEmail.text,
         })
         .then(() => {
@@ -305,12 +299,10 @@ export default {
       this.auth("i_gor@example.com", "my_password");
     },
     auth: function (login, password) {
-      let hash = crypto.createHash("sha").update(password).digest("hex");
-
       axios
         .post(api_url + "/auth/auth", {
           login: login,
-          password: hash,
+          password: password,
           device_name: this.getDeviceDescription(),
         })
         .then((response) => {

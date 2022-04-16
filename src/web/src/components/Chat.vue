@@ -182,11 +182,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          if (error.response.status === 403 || error.response.status === 401) {
-            this.current_chat = null;
-            store.commit("save_current_route", "/auth");
-            this.$router.push("/auth");
-          }
+          this.chat_id = 0;
         });
     },
     add_historical_messages: function (messages, initial) {
@@ -371,11 +367,6 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          if (error.response.status === 403 || error.response.status === 401) {
-            this.current_chat = null;
-            store.commit("save_current_route", "/auth");
-            this.$router.push("/auth");
-          }
         });
     },
   },
