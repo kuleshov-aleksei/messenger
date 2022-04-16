@@ -19,7 +19,8 @@
                                 <td rowspan="5" class="picture-td">
                                     <div class="profile-picture">
                                         <el-avatar size="large" :src="getImgUrl(userData.image_large)">
-                                            <img src="../assets/notfound.png" />
+                                            <!--<img src="../assets/notfound.png" />-->
+                                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlP4HLuTjGwgPOJO2j85GEOgq__zHHJttpwA&usqp=CAU" />
                                         </el-avatar>
                                     </div>
                                 </td>
