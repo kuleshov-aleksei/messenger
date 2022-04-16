@@ -50,6 +50,7 @@ namespace Messenger.SubscribingService
                                     AuthorName = user.Name,
                                     AuthorSurname = user.Surname,
                                     AuthorImageLinkSmall = user.ImageSmall,
+                                    ChatId = chatId,
                                 }
                             }
                         });

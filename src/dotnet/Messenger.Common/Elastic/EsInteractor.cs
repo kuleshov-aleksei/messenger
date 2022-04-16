@@ -183,6 +183,7 @@ namespace Messenger.Common.Elastic
                     AuthorSurname = users[document.user_id].Surname,
                     AuthorImageLinkSmall = users[document.user_id].ImageSmall,
                     AuthorId = document.user_id,
+                    ChatId = chatId,
                 };
 
                 response.Messages.Add(message);

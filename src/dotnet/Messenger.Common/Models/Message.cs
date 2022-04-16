@@ -21,5 +21,8 @@ namespace Messenger.Common.Models
 
         [JsonProperty("author_id")]
         public int AuthorId { get; set; }
+
+        [JsonProperty("chat_id")]
+        public int ChatId { get; set; }
     }
 }

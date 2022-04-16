@@ -5,16 +5,14 @@ services:
         context: ./src/dotnet
         dockerfile: Messenger.RegistrationServer/Dockerfile
     command: dotnet Messenger.RegistrationServer.dll
-    container_name: mes-registration
     restart: unless-stopped
     environment:
       TZ: "Europe/Moscow"
-    ports:
-      - 23580:23580
     volumes:
       - ./docker-data/logs/registration-service:/app/logs/
       - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
       - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
+      - ./docker-config/NLog.config:/app/NLog.config:ro
     networks:
       - messenger_network
         
@@ -23,16 +21,14 @@ services:
         context: ./src/dotnet
         dockerfile: Messenger.AuthServer/Dockerfile
     command: dotnet Messenger.AuthServer.dll
-    container_name: mes-auth
     restart: unless-stopped
     environment:
       TZ: "Europe/Moscow"
-    ports:
-      - 23581:23581
     volumes:
       - ./docker-data/logs/auth-service:/app/logs/
       - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
       - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
+      - ./docker-config/NLog.config:/app/NLog.config:ro
     networks:
       - messenger_network
         
@@ -41,16 +37,14 @@ services:
         context: ./src/dotnet
         dockerfile: Messenger.UserServer/Dockerfile
     command: dotnet Messenger.UserServer.dll
-    container_name: mes-user
     restart: unless-stopped
     environment:
       TZ: "Europe/Moscow"
-    ports:
-      - 23582:23582
     volumes:
       - ./docker-data/logs/user-service:/app/logs/
       - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
       - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
+      - ./docker-config/NLog.config:/app/NLog.config:ro
     networks:
       - messenger_network
         
@@ -59,53 +53,30 @@ services:
         context: ./src/dotnet
         dockerfile: Messenger.ChatInfoServer/Dockerfile
     command: dotnet Messenger.ChatInfoServer.dll
-    container_name: mes-chat-info
     restart: unless-stopped
     environment:
       TZ: "Europe/Moscow"
-    ports:
-      - 23578:23578
     volumes:
       - ./docker-data/logs/chat-info-service:/app/logs/
       - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
       - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
+      - ./docker-config/NLog.config:/app/NLog.config:ro
     networks:
       - messenger_network
-        
-  mes-messenger-service:
-    build:
-        context: ./src
-        dockerfile: dotnet/Messenger.MessengerServer/Dockerfile
-    command: dotnet Messenger.MessengerServer.dll
-    container_name: mes-messenger-info
-    restart: unless-stopped
-    environment:
-      TZ: "Europe/Moscow"
-    ports:
-      - 23579:23579
-      - 7813:7813
-    volumes:
-      - ./docker-data/logs/messenger-service:/app/logs/
-      - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
-      - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
-    networks:
-      - messenger_network
-        
+
   mes-orchestrator-service:
     build:
         context: ./src/dotnet
         dockerfile: Messenger.Orchestrator/Dockerfile
     command: dotnet Messenger.Orchestrator.dll
-    container_name: mes-orchestrator
     restart: unless-stopped
     environment:
       TZ: "Europe/Moscow"
-    ports:
-      - 23583:23583
     volumes:
       - ./docker-data/logs/orchestrator-service:/app/logs/
       - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
       - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
+      - ./docker-config/NLog.config:/app/NLog.config:ro
     networks:
       - messenger_network
       
@@ -114,16 +85,14 @@ services:
       context: ./src/dotnet
       dockerfile: Messenger.HistoricalMessagesService/Dockerfile
     command: dotnet Messenger.HistoricalMessagesService.dll
-    container_name: historical-messages-service
     restart: unless-stopped
-    ports:
-      - 23584:80
     environment:
       TZ: "Europe/Moscow"
     volumes:
       - ./docker-data/logs/historical-messages-service:/app/logs/
       - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
       - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
+      - ./docker-config/NLog.config:/app/NLog.config:ro
     networks:
       - messenger_network
 
@@ -132,10 +101,7 @@ services:
       context: ./src/dotnet
       dockerfile: Messenger.InstantMessagingService/Dockerfile
     command: dotnet Messenger.InstantMessagingService.dll
-    #container_name: instant-messages-service
     restart: unless-stopped
-    #ports:
-    #  - 23585:80
     deploy:
       replicas: 1
     environment:
@@ -144,6 +110,7 @@ services:
       - ./docker-data/logs/instant-messages-service:/app/logs/
       - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
       - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
+      - ./docker-config/NLog.config:/app/NLog.config:ro
     networks:
       - messenger_network
 
@@ -152,7 +119,6 @@ services:
       context: ./src/dotnet
       dockerfile: Messenger.MessageService/Dockerfile
     command: dotnet Messenger.MessageService.dll
-    #container_name: message-service
     restart: unless-stopped
     environment:
       TZ: "Europe/Moscow"
@@ -162,6 +128,25 @@ services:
       - ./docker-data/logs/message-service:/app/logs/
       - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
       - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
+      - ./docker-config/NLog.config:/app/NLog.config:ro
+    networks:
+      - messenger_network
+      
+  subcribing-service:
+    build:
+      context: ./src/dotnet
+      dockerfile: Messenger.SubscribingService/Dockerfile
+    command: dotnet Messenger.SubscribingService.dll
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    deploy:
+      replicas: 1
+    volumes:
+      - ./docker-data/logs/subcribing-service:/app/logs/
+      - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
+      - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
+      - ./docker-config/NLog.config:/app/NLog.config:ro
     networks:
       - messenger_network
 

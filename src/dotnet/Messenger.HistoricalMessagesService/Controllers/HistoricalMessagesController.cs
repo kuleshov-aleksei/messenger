@@ -47,5 +47,23 @@ namespace Messenger.HistoricalMessagesService.Controllers
             ChatMessages messagesResponse = await m_esInteractor.GetLastMessagesOfChatAsync(request.ChatId);
             return messagesResponse;
         }
+
+        [HttpPost("get_messages_from")]
+        [Produces("application/json")]
+        public async Task<ChatMessages> GetMessagesFrom(GetMessagesFromRequest request)
+        {
+            int userId = JwtHelper.GetUserId(User.Claims);
+            m_logger.Trace($"User {userId} requested messages of chat {request.ChatId} from {request.TimeFrom}");
+
+            List<int> userChats = await GlobalSettings.Instance.Database.GetUserChatListAsync(m_redis, userId);
+            if (!userChats.Contains(request.ChatId))
+            {
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return null;
+            }
+
+            ChatMessages messagesResponse = await m_esInteractor.GetMessagesFromAsync(request.TimeFrom, request.ChatId);
+            return messagesResponse;
+        }
     }
 }
