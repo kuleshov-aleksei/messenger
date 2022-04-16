@@ -6,14 +6,12 @@
 </template>
 
 <script>
-import store from "../store"
+import store from "../store";
 
 export default {
-    methods: {
-        
-    },
-    mounted() {
-        store.commit('save_current_route', '/settings');
-    }
+  methods: {},
+  mounted() {
+    store.commit("save_current_route", "/settings");
+  },
 };
 </script>

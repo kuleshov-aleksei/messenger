@@ -13,30 +13,27 @@ export const api_url = 'https://messenger.local.encamy.com';
 export const API_HOSTNAME = 'messenger.local.encamy.com';
 
 export default new Vuex.Store({
-  plugins: [createPersistedState({ 
-    getState: (key) => Cookies.getJSON(key), 
-    setState: (key, state) => Cookies.set(key, state, { expires: 60, secure: false }) 
+  plugins: [createPersistedState({
+    getState: (key) => Cookies.getJSON(key),
+    setState: (key, state) => Cookies.set(key, state, { expires: 60, secure: false })
   })],
   modules: {
   },
   strict: debug,
-  middlewares: debug ? [createLogger()] : [],  
+  middlewares: debug ? [createLogger()] : [],
   state: {
     selected_chat_id: '',
     current_route: '',
     ws_connected: false,
   },
   mutations: {
-    set_chat_id(state, chat_id)
-    {
+    set_chat_id(state, chat_id) {
       state.selected_chat_id = chat_id;
     },
-    save_current_route(state, route)
-    {
+    save_current_route(state, route) {
       state.current_route = route;
     },
-    save_ws_state(state, wsState)
-    {
+    save_ws_state(state, wsState) {
       state.ws_connected = wsState;
     }
   }
