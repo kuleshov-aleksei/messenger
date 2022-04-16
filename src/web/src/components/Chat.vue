@@ -17,19 +17,17 @@
         >
           <div class="message">
             <div class="user_photo">
-              <el-avatar
-                v-if="message.authorImage != undefined"
-                size="large"
-                :src="getImgUrl(message.authorImage)"
-              >
-                <img src="../assets/notfound.png" />
-              </el-avatar>
-              <el-avatar
-                v-if="message.authorImage == undefined"
-                size="large"
-                src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
-              >
-              </el-avatar>
+              <div v-if="message.authorImage != undefined">
+                <el-avatar class="chat-medium-avatar" :src="message.authorImage">
+                </el-avatar>
+              </div>
+              <div v-if="message.authorImage == undefined">
+                <el-avatar
+                  size="large"
+                  src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
+                >
+                </el-avatar>
+              </div>
             </div>
             <div class="user_name">
               <b>{{ message.authorName }} {{ message.authorSurname }}</b>
@@ -186,12 +184,13 @@ export default {
         });
     },
     add_historical_messages: function (messages, initial) {
+      console.log(messages);
       messages.forEach((apiMessage) => {
         var message = new Object();
         message.unixTime = apiMessage.unix_time;
         message.authorName = apiMessage.author_name;
         message.authorSurname = apiMessage.author_surname;
-        message.authorImage = apiMessage.author_image;
+        message.authorImage = apiMessage.author_image_link_small;
         message.text = apiMessage.text;
         message.isAuthor = false;
 
@@ -218,8 +217,8 @@ export default {
       this.$root.$on("incoming_message", this.message_received);
     },
     message_received: function (message) {
-      console.log("message received in local chat");
-      console.log(message);
+      //console.log("message received in local chat");
+      //console.log(message);
       if (message.chat_id != this.chat_id) {
         this.$notify({
           title: message.author_name + " " + message.author_surname,
@@ -305,7 +304,7 @@ export default {
       }
     },
     unixTimeToHumanReadable(unixTime) {
-      var date = new Date(unixTime * 1000);
+      var date = new Date(unixTime);
       var hours = date.getHours();
       var minutes = "0" + date.getMinutes();
 

@@ -108,7 +108,7 @@
       <div class="chat-members-list">
         <ul>
           <li v-for="member in current_chat_members" :key="member.id">
-            <el-avatar size="large" :src="getImgUrl(member.image_medium)">
+            <el-avatar size="large" :src="member.image_medium">
               <img src="../assets/notfound.png" />
             </el-avatar>
             <el-button slot="reference" type="text"

@@ -72,7 +72,7 @@ export default {
       }
     },
     wsMessageReceived: function (event) {
-      console.log("WS Server: " + event.data);
+      //console.log("WS Server: " + event.data);
       var jsObject = JSON.parse(event.data);
       if (jsObject.error_code > 0) {
         this.handleError(jsObject.error_code, jsObject.error_message);
