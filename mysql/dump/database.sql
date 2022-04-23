@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `chat` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table dcsm.chat: ~5 rows (approximately)
+-- Dumping data for table dcsm.chat: ~11 rows (approximately)
 DELETE FROM `chat`;
 INSERT INTO `chat` (`id`, `title`, `image_medium`, `image_small`) VALUES
 	(1, 'test_caht', NULL, NULL),
@@ -39,9 +39,9 @@ INSERT INTO `chat` (`id`, `title`, `image_medium`, `image_small`) VALUES
 	(6, 'Чат о важном', 'https://upload.wikimedia.org/wikipedia/commons/f/f7/Nuvola_apps_important.svg', 'https://upload.wikimedia.org/wikipedia/commons/f/f7/Nuvola_apps_important.svg'),
 	(7, '16.04.2022', NULL, NULL),
 	(8, 'another_chat', NULL, NULL),
-	(17, 'Back To The Future (1985)', 'https://davidocchino.com/portfolio/logos/back-to-the-future-part-4-logo-by-david-occhino-design.jpg', NULL),
-	(18, 'Blade Runner (1982)', 'https://render.fineartamerica.com/images/images-profile-flow/400/images/artworkimages/mediumlarge/2/rachel-blade-runner-1982-kultur-arts-studios.jpg', NULL),
-	(19, 'Matrix (1999)', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkX7OldzSMH1u2Si1BNpCtMwyG-jOeAES4ZA&usqp=CAU', NULL);
+	(17, 'Back To The Future (1985)', 'https://messenger.local.encamy.com/fileserver/sharable_url?objectname=20220423/82315e77-a4ec-4200-87d6-cca7dce28893.jpeg', NULL),
+	(18, 'Blade Runner (1982)', 'https://messenger.local.encamy.com/fileserver/sharable_url?objectname=20220423/46e3fc5e-a1c8-4fda-a2c4-eb57fa1b4fb7.jpeg', NULL),
+	(19, 'Matrix (1999)', 'https://messenger.local.encamy.com/fileserver/sharable_url?objectname=20220423/21e2372b-aa3a-44a8-85aa-5214be51b4d0.jpeg', NULL);
 
 -- Dumping structure for table dcsm.chat_members
 CREATE TABLE IF NOT EXISTS `chat_members` (
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `chat_members` (
   CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table dcsm.chat_members: ~9 rows (approximately)
+-- Dumping data for table dcsm.chat_members: ~116 rows (approximately)
 DELETE FROM `chat_members`;
 INSERT INTO `chat_members` (`chat_id`, `user_id`, `joined_at`, `added_by`) VALUES
 	(1, 7, '2022-02-17 20:49:17', 2),
@@ -415,9 +415,9 @@ CREATE TABLE IF NOT EXISTS `services` (
   PRIMARY KEY (`id`),
   KEY `settings_port_fk_idx` (`settings_port_id`),
   CONSTRAINT `settings_port_fk` FOREIGN KEY (`settings_port_id`) REFERENCES `settings` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table dcsm.services: ~6 rows (approximately)
+-- Dumping data for table dcsm.services: ~9 rows (approximately)
 DELETE FROM `services`;
 INSERT INTO `services` (`id`, `title`, `description`, `address`, `settings_port_id`) VALUES
 	(1, 'Registration serivce', 'Сервис регистрации', 'mes-registration-service', 4),
@@ -429,7 +429,8 @@ INSERT INTO `services` (`id`, `title`, `description`, `address`, `settings_port_
 	(7, 'Historical message service', 'Сервис исторических сообщений', 'historical-messages-service', 15),
 	(8, 'Instant Messages Service', 'Сервис мгновенных сообщений', 'instant-messages-service', 16),
 	(9, 'Message Service', 'Сервис сохранения сообщений в ES', 'message-service', 17),
-	(10, 'Subcribing service', 'Сервис нотификаций', 'subcribing-service', 18);
+	(10, 'Subcribing service', 'Сервис нотификаций', 'subcribing-service', 18),
+	(11, 'Fileserver service', 'Сервис доступа к S3', 'fileserver-service', 22);
 
 -- Dumping structure for table dcsm.session
 CREATE TABLE IF NOT EXISTS `session` (
@@ -441,9 +442,9 @@ CREATE TABLE IF NOT EXISTS `session` (
   PRIMARY KEY (`session_id`),
   KEY `id_idx` (`user_id`),
   CONSTRAINT `user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=396 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=425 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table dcsm.session: ~4 rows (approximately)
+-- Dumping data for table dcsm.session: ~118 rows (approximately)
 DELETE FROM `session`;
 INSERT INTO `session` (`session_id`, `user_id`, `device_name`, `token`, `sign_out`) VALUES
 	(1, 5, 'insomnia', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1Iiwicm9sZSI6InJlZ3VsYXIiLCJuYmYiOjE2MjY2MjI0NTAsImV4cCI6MTYyOTIxNDQ1MCwiaWF0IjoxNjI2NjIyNDUwLCJpc3MiOiJBdXRoU2VydmVyIiwiYXVkIjoiV2ViQ2xpZW50In0.j5zWtHm2NsmS7MccLkbwpKwR3OLtlWOmgrL_B7WbNjQ', 0),
@@ -561,7 +562,36 @@ INSERT INTO `session` (`session_id`, `user_id`, `device_name`, `token`, `sign_ou
 	(392, 389, 'ChatFiller', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoicmVndWxhciIsInVzZXJfaWQiOiIzODkiLCJuYmYiOjE2NTAxMjU2NDcsImV4cCI6MTY1MjcxNzY0NywiaWF0IjoxNjUwMTI1NjQ3LCJpc3MiOiJBdXRoU2VydmVyIiwiYXVkIjoiV2ViQ2xpZW50In0.AGeo4HKQfdBHYYxaINDlWnQwi33yeV3nYC5WWaDEeUg', 0),
 	(393, 390, 'ChatFiller', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoicmVndWxhciIsInVzZXJfaWQiOiIzOTAiLCJuYmYiOjE2NTAxMjU2NDcsImV4cCI6MTY1MjcxNzY0NywiaWF0IjoxNjUwMTI1NjQ3LCJpc3MiOiJBdXRoU2VydmVyIiwiYXVkIjoiV2ViQ2xpZW50In0.e0h2hRtlRpg_Lhli-If9-KtDnMcBD0BjHqBE05KJyCQ', 0),
 	(394, 391, 'ChatFiller', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoicmVndWxhciIsInVzZXJfaWQiOiIzOTEiLCJuYmYiOjE2NTAxMjU2NDcsImV4cCI6MTY1MjcxNzY0NywiaWF0IjoxNjUwMTI1NjQ3LCJpc3MiOiJBdXRoU2VydmVyIiwiYXVkIjoiV2ViQ2xpZW50In0.YMTo5H9t7LKsv750Pc9wdk8RWfIwj5q00Ztgyuv9CD0', 0),
-	(395, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDEyNzMwOSwiZXhwIjoxNjUyNzE5MzA5LCJpYXQiOjE2NTAxMjczMDksImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.0Glk711_SyOPs11T59MR58NgCFg6enkZg80FCn2UgSo', 0);
+	(395, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczMzI3MSwiZXhwIjoxNjUzMzI1MjcxLCJpYXQiOjE2NTA3MzMyNzEsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.nsT2hBVluq8QVNTtc9rjKHtYh9M5Irwa_5tgL8JjsVg', 0),
+	(396, 5, 'postman', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDcyMDg2MSwiZXhwIjoxNjUzMzEyODYxLCJpYXQiOjE2NTA3MjA4NjEsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.YLK7EcoEIhV5tHwoYYIy710CfMu0fsGdhLjxZUYYs6s', 0),
+	(397, 5, 'postman', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDcyMTEwNiwiZXhwIjoxNjUzMzEzMTA2LCJpYXQiOjE2NTA3MjExMDYsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.xU-Q3Vtgo41IHQ40otSUdvF_pyCZH54UnZVCcOPwv7E', 0),
+	(398, 5, 'postman', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDcyMzMxNCwiZXhwIjoxNjUzMzE1MzE0LCJpYXQiOjE2NTA3MjMzMTQsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.q16wIuYMowEZ1zGn3x0iTk3c_WPaxQbG6bdpSs2lje4', 0),
+	(399, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczMjg2NSwiZXhwIjoxNjUzMzI0ODY1LCJpYXQiOjE2NTA3MzI4NjUsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.bwMYxx80I2LGBqvU7Mc4qjADH7ueMNZqIGVXC80MoGQ', 0),
+	(400, 5, 'postman', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczMTIyMywiZXhwIjoxNjUzMzIzMjIzLCJpYXQiOjE2NTA3MzEyMjMsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.pQgQsuQkyY2HNArG3tFTv5ejy_0bfTzzcwrU8GF2C8Y', 0),
+	(401, 6, 'insomnia', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoicmVndWxhciIsInVzZXJfaWQiOiI2IiwibmJmIjoxNjUwNzMyMzI4LCJleHAiOjE2NTMzMjQzMjgsImlhdCI6MTY1MDczMjMyOCwiaXNzIjoiQXV0aFNlcnZlciIsImF1ZCI6IldlYkNsaWVudCJ9.d1308fl5jdyWFrgvgEWW_Ol1QHWNrDA_VGssblQyvZc', 0),
+	(402, 5, 'postman', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczMjczNywiZXhwIjoxNjUzMzI0NzM3LCJpYXQiOjE2NTA3MzI3MzcsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.HCb8pOVghffkSthnv1gyVhEEkJd_HfniFKRySP-L10c', 0),
+	(403, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczMzMxMiwiZXhwIjoxNjUzMzI1MzEyLCJpYXQiOjE2NTA3MzMzMTIsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.sMvUpeJD6kc7XALFVgHh4AxVD849i0J1cr2tBa-vKac', 0),
+	(404, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczMzM5OSwiZXhwIjoxNjUzMzI1Mzk5LCJpYXQiOjE2NTA3MzMzOTksImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.zIZjoaeyfVmCujhAAgwxRMMWlpnmtN5sBwCn2uQEMT0', 0),
+	(405, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczMzQ4NSwiZXhwIjoxNjUzMzI1NDg1LCJpYXQiOjE2NTA3MzM0ODUsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.d7VLsRLwYeeYOJdAK-d5S7hNGewmQZYZYTTEYUlGcf0', 0),
+	(406, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczMzUwMSwiZXhwIjoxNjUzMzI1NTAxLCJpYXQiOjE2NTA3MzM1MDEsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.MA3ctqLevfB0okhP1RcW27yp9PWop2xRMujyXM-r8Gg', 0),
+	(407, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczMzY3NiwiZXhwIjoxNjUzMzI1Njc2LCJpYXQiOjE2NTA3MzM2NzYsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.5RtOzzc6coCI7-Ynp28TRnA2P8JkRZbLO0ULImL06Zg', 0),
+	(408, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczMzczNywiZXhwIjoxNjUzMzI1NzM3LCJpYXQiOjE2NTA3MzM3MzcsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.HUj2GtvpXnud7cbTyQuLPmM-CJ1f-DMlFhkWuh1e3uo', 0),
+	(409, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczMzc0NCwiZXhwIjoxNjUzMzI1NzQ0LCJpYXQiOjE2NTA3MzM3NDQsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.9ZqWekZRtZQVLIQ7sd3rnooPfc5itDjelrGZddS9dMw', 0),
+	(410, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNDAyMSwiZXhwIjoxNjUzMzI2MDIxLCJpYXQiOjE2NTA3MzQwMjEsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.y7T6QYpJ8jFeh--1f5zvc6hbuQ-h8fA-1WXBEDM0m7M', 0),
+	(411, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNDE1NiwiZXhwIjoxNjUzMzI2MTU2LCJpYXQiOjE2NTA3MzQxNTYsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.My4QhldN--hqq8eNuEzG3Y0eX-_ur2j3_4xysJIWOzU', 0),
+	(412, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNDIzMiwiZXhwIjoxNjUzMzI2MjMyLCJpYXQiOjE2NTA3MzQyMzIsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.BIuc2K5gP3QDZKKBxDZKrosKXcLThCWimZd3t5Q8tws', 0),
+	(413, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNDI5NSwiZXhwIjoxNjUzMzI2Mjk1LCJpYXQiOjE2NTA3MzQyOTUsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.1BEdfH6GhjAvxP2Ru7V9TP4iHfTyuza8F1l5m67gFj4', 0),
+	(414, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNDMxOCwiZXhwIjoxNjUzMzI2MzE4LCJpYXQiOjE2NTA3MzQzMTgsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.TI4_6KOOruI12FRRYUo6GrYLBxvu_9q35bA_PmVvhW8', 0),
+	(415, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNDM5OSwiZXhwIjoxNjUzMzI2Mzk5LCJpYXQiOjE2NTA3MzQzOTksImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.T9me5-D6xCg7vSVm9nFbGhpvjO939LIj7TRiNDdqvaA', 0),
+	(416, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNDQxMSwiZXhwIjoxNjUzMzI2NDExLCJpYXQiOjE2NTA3MzQ0MTEsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.y4sCtZnV1HsGUKrj2pP1WZSruRaQQyoYB88maWwJBac', 0),
+	(417, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNDQ2NCwiZXhwIjoxNjUzMzI2NDY0LCJpYXQiOjE2NTA3MzQ0NjQsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.Ld3cndMsPBgbXBEu98JX_E3lnrd4AlK4L8JVjRluT8M', 0),
+	(418, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNDc3MCwiZXhwIjoxNjUzMzI2NzcwLCJpYXQiOjE2NTA3MzQ3NzAsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.rur-m-5vJ8WdNQ9cyDvkv4-4AjiT5COSkOm1bps0WGw', 0),
+	(419, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNDk2OSwiZXhwIjoxNjUzMzI2OTY5LCJpYXQiOjE2NTA3MzQ5NjksImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.iDtcd7T3JqmcHVDCy2hc9EKdwfOggKfFy14vxrr-oXQ', 0),
+	(420, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNTAzNywiZXhwIjoxNjUzMzI3MDM3LCJpYXQiOjE2NTA3MzUwMzcsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.L6Q8gkbTeNjGhWYfBdJWfmMUYP-svDjUhv5-6sDQK5w', 0),
+	(421, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNTE4MywiZXhwIjoxNjUzMzI3MTgzLCJpYXQiOjE2NTA3MzUxODMsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.UA7iXnpErUnYbhVJ2G998o0sMa8uCVKtkIOT7l_hvoo', 0),
+	(422, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNTIxOCwiZXhwIjoxNjUzMzI3MjE4LCJpYXQiOjE2NTA3MzUyMTgsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.RVYAtAOeX5mlRhwoiz9qeHJ9T7JxkfCxQU8rmDL4SqM', 0),
+	(423, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNTUzNSwiZXhwIjoxNjUzMzI3NTM1LCJpYXQiOjE2NTA3MzU1MzUsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.RlsegDCMphJyBGPRa6Sc06xBu2wWPsYtnDfZhaxkzdU', 0),
+	(424, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNTU3NCwiZXhwIjoxNjUzMzI3NTc0LCJpYXQiOjE2NTA3MzU1NzQsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.NSUh5Y80mDMX8A6FdWf_eMGYevGsvkI6sKE7F8U3bQw', 0);
 
 -- Dumping structure for table dcsm.settings
 CREATE TABLE IF NOT EXISTS `settings` (
@@ -570,9 +600,9 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `value` varchar(512) NOT NULL,
   `description` varchar(512) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table dcsm.settings: ~10 rows (approximately)
+-- Dumping data for table dcsm.settings: ~15 rows (approximately)
 DELETE FROM `settings`;
 INSERT INTO `settings` (`id`, `name`, `value`, `description`) VALUES
 	(1, 'es_address', 'http://192.168.40.43:9200', 'Elasic search address'),
@@ -590,7 +620,11 @@ INSERT INTO `settings` (`id`, `name`, `value`, `description`) VALUES
 	(15, 'service_historical_messages_port', '80', 'Port for historical messages service (Orchestrator only)'),
 	(16, 'instant-messages-service-port', '80', 'Port for Instant messages service (Orchestrator only)'),
 	(17, 'message-service-port', '80', 'Port for message service (Orchestrator only)'),
-	(18, 'subcribing-service-port', '80', 'Port for subcribing service (Orchestrator only)');
+	(18, 'subcribing-service-port', '80', 'Port for subcribing service (Orchestrator only)'),
+	(19, 's3_endpoint', 'calamity-s3.local.encamy.com', 'S3 Endpoint'),
+	(20, 's3_access_key', 'KDO0FK4OV3H4C134Y4XC', 'S3 Access Key'),
+	(21, 's3_secret_key', 'zyNJpLjTAJ0pvjgLWPLVaAx7t1YZX3ORfWOYbB68', 'S3 Secret Key'),
+	(22, 'fileserver-service-port', '80', 'Port for Fileserver (Orchestrator only)');
 
 -- Dumping structure for table dcsm.user
 CREATE TABLE IF NOT EXISTS `user` (
@@ -607,7 +641,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=392 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table dcsm.user: ~5 rows (approximately)
+-- Dumping data for table dcsm.user: ~111 rows (approximately)
 DELETE FROM `user`;
 INSERT INTO `user` (`id`, `username`, `name`, `surname`, `email`, `password_hash`, `image_large`, `image_medium`, `image_small`, `salt`) VALUES
 	(2, 'SYSTEM', 'SYSTEM', 'SYSTEM', NULL, 'SYSTEM', NULL, NULL, NULL, ''),
@@ -751,7 +785,7 @@ CREATE TABLE IF NOT EXISTS `user_roles` (
   CONSTRAINT `user_id_fk2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table dcsm.user_roles: ~5 rows (approximately)
+-- Dumping data for table dcsm.user_roles: ~107 rows (approximately)
 DELETE FROM `user_roles`;
 INSERT INTO `user_roles` (`user_id`, `role_id`, `assigned_by`, `date_assigned`) VALUES
 	(4, 3, 2, '2021-07-18 17:19:32'),
