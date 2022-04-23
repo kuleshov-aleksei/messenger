@@ -35,7 +35,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Obsolete", "Obsolete", "{2E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{7E721602-0035-47B3-9C92-42AF780FFBF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.ChatFiller", "Messenger.ChatFiller\Messenger.ChatFiller.csproj", "{2A307D64-4986-4F2E-AE72-E50993C5865B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.ChatFiller", "Messenger.ChatFiller\Messenger.ChatFiller.csproj", "{2A307D64-4986-4F2E-AE72-E50993C5865B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.Fileserver", "Messenger.Fileserver\Messenger.Fileserver.csproj", "{7B0985A2-DDF0-433B-8695-A43C9E9980E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +101,10 @@ Global
 		{2A307D64-4986-4F2E-AE72-E50993C5865B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A307D64-4986-4F2E-AE72-E50993C5865B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A307D64-4986-4F2E-AE72-E50993C5865B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B0985A2-DDF0-433B-8695-A43C9E9980E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B0985A2-DDF0-433B-8695-A43C9E9980E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B0985A2-DDF0-433B-8695-A43C9E9980E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B0985A2-DDF0-433B-8695-A43C9E9980E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
