@@ -48,7 +48,14 @@ namespace Messenger.AuthServer.HttpModules.Auth
             string tempRefreshToken = m_jwtHelper.CreateSession(request.DeviceName, userId);
             string accessToken = m_jwtHelper.CreateAccessJWT(tempRefreshToken, out string refreshToken);
 
-            context.Response.SetCookie(new Cookie("jwt_token", accessToken));
+            Cookie cookie = new Cookie("jwt_token", accessToken)
+            {
+                Secure = true,
+                HttpOnly = true,
+                Path = "/",
+                Expires = DateTime.UtcNow.AddDays(1),
+            };
+            context.Response.SetCookie(cookie);
 
             AuthResponse authResponse = new AuthResponse
             {
