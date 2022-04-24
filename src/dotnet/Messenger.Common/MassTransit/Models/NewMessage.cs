@@ -15,5 +15,11 @@ namespace Messenger.Common.MassTransit.Models
 
         [JsonProperty("message_time")]
         public long MessageTime { get; set; }
+
+        [JsonProperty("message_attachment_url")]
+        public string MessageAttachmentUrl { get; set; }
+
+        [JsonProperty("message_image_url")]
+        public string MessageImageUrl { get; set; }
     }
 }

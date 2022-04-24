@@ -51,6 +51,8 @@ namespace Messenger.SubscribingService
                                     AuthorSurname = user.Surname,
                                     AuthorImageLinkSmall = user.ImageSmall,
                                     ChatId = chatId,
+                                    AttachmentUrl = message.MessageAttachmentUrl,
+                                    ImageUrl = message.MessageImageUrl,
                                 }
                             }
                         });

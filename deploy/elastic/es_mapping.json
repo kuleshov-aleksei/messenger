@@ -36,14 +36,15 @@
   "mappings": {
     "dynamic": "strict",
     "properties": {
-	  "message_id": { "type": "keyword" },
+	  "message_id": { "type": "text" },
       "user_id": { "type": "integer" },
       "chat_id": { "type": "integer" },
       "message_time": { "format": "epoch_millis", "type": "date" },
-	  "image_url_original": { "type": "keyword" },
-	  "image_url_large": { "type": "keyword" },
-	  "image_url_medium": { "type": "keyword" },
-	  "image_url_small": { "type": "keyword" },
+	  "image_url_original": { "type": "text" },
+	  "image_url_large": { "type": "text" },
+	  "image_url_medium": { "type": "text" },
+	  "image_url_small": { "type": "text" },
+	  "attachment_url": { "type": "text" },
 	  "image_processing_time": { "format": "epoch_millis", "type": "date" },
       "text": { 
 		"type": "text",

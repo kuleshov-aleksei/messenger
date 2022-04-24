@@ -24,5 +24,11 @@ namespace Messenger.Common.Models
 
         [JsonProperty("chat_id")]
         public int ChatId { get; set; }
+
+        [JsonProperty("attachment_url")]
+        public string AttachmentUrl { get; set; }
+
+        [JsonProperty("image_url")]
+        public string ImageUrl { get; set; }
     }
 }

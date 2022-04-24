@@ -27,6 +27,8 @@ namespace Messenger.MessageService.Consumers
                 ChatId = context.Message.ChatId,
                 UserId = context.Message.UserId,
                 MessageTime = context.Message.MessageTime,
+                ImageUrlOriginal = context.Message.MessageImageUrl,
+                AttachmentUrl = context.Message.MessageAttachmentUrl,
             });
         }
     }

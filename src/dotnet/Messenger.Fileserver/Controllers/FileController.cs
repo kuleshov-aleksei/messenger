@@ -1,5 +1,6 @@
 ﻿using HeyRed.Mime;
 using Messenger.Common.JWT;
+using Messenger.Common.Models.Fileserver;
 using Messenger.Fileserver.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -58,7 +59,10 @@ namespace Messenger.Fileserver.Controllers
         [HttpPost("send")]
         public async Task<IActionResult> Send(List<IFormFile> file)
         {
-            // add validation
+            int userId = JwtHelper.GetUserId(User.Claims);
+            m_logger.Info("User {UserId} send {FileCount} file(s)", userId, file.Count);
+
+            //TODO: add validation
             long size = file.Sum(f => f.Length);
 
             DateOnly dateOnly = DateOnly.FromDateTime(DateTime.UtcNow);
@@ -84,6 +88,7 @@ namespace Messenger.Fileserver.Controllers
                         string generatedFilepath = currentBucket + "/" + Guid.NewGuid().ToString() + "." + extension;
                         uploadedFiles.Add(generatedFilepath);
 
+                        m_logger.Info("Uploading file {OriginalFilename} to {Destination}", formFile.FileName, generatedFilepath);
                         await m_minioClient.PutObjectAsync(new PutObjectArgs()
                             .WithBucket(ROOT_BUCKET_NAME)
                             .WithContentType(formFile.ContentType)
@@ -95,7 +100,10 @@ namespace Messenger.Fileserver.Controllers
                 }
             }
 
-            return Ok(new { files = uploadedFiles });
+            return Ok(new UploadFileResponseModel
+            {
+                Files = uploadedFiles,
+            });
         }
 
         private async Task CreateBucketIfNotExists(string bucketName)

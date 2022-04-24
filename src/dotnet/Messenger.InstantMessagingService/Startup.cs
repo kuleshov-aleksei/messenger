@@ -33,6 +33,8 @@ namespace Messenger.InstantMessagingService
             services.AddRedisConnection();
             services.AddMassTransitConnection();
 
+            services.AddHttpClient();
+
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

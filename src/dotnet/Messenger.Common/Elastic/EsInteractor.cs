@@ -203,6 +203,8 @@ namespace Messenger.Common.Elastic
                 { GlobalSettings.EsFieldText, message.Message },
                 { GlobalSettings.EsFieldUserId, message.UserId },
                 { GlobalSettings.EsFieldMessageTime, message.MessageTime },
+                { GlobalSettings.EsFieldMessageImageUrlOriginal, message.ImageUrlOriginal },
+                { GlobalSettings.EsFieldMessageAttachmentUrl, message.AttachmentUrl },
             };
 
             IUpdateRequest<object, object> updateRequest = new UpdateRequest<object, object>(GlobalSettings.EsIndexName, messageId)

@@ -19,6 +19,8 @@ namespace Messenger.Common.Settings
         public const string EsFieldText = "text";
         public const string EsFieldUserId = "user_id";
         public const string EsFieldMessageTime = "message_time";
+        public const string EsFieldMessageImageUrlOriginal = "image_url_original";
+        public const string EsFieldMessageAttachmentUrl = "attachment_url";
 
         private GlobalSettings()
         {

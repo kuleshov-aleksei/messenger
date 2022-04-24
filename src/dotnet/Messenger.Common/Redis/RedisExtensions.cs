@@ -12,6 +12,10 @@ namespace Messenger.Common.Redis
             string host = DBSettings.ReadSettings("redis_address");
             int port = DBSettings.ReadSettings<int>("redis_port");
 
+#if DEBUG
+            host = "192.168.40.43";
+#endif
+
             RedisConfiguration redisConfiguration = new RedisConfiguration()
             {
                 AbortOnConnectFail = true,
