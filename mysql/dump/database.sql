@@ -442,7 +442,7 @@ CREATE TABLE IF NOT EXISTS `session` (
   PRIMARY KEY (`session_id`),
   KEY `id_idx` (`user_id`),
   CONSTRAINT `user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=425 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=427 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table dcsm.session: ~118 rows (approximately)
 DELETE FROM `session`;
@@ -591,7 +591,9 @@ INSERT INTO `session` (`session_id`, `user_id`, `device_name`, `token`, `sign_ou
 	(421, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNTE4MywiZXhwIjoxNjUzMzI3MTgzLCJpYXQiOjE2NTA3MzUxODMsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.UA7iXnpErUnYbhVJ2G998o0sMa8uCVKtkIOT7l_hvoo', 0),
 	(422, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNTIxOCwiZXhwIjoxNjUzMzI3MjE4LCJpYXQiOjE2NTA3MzUyMTgsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.RVYAtAOeX5mlRhwoiz9qeHJ9T7JxkfCxQU8rmDL4SqM', 0),
 	(423, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNTUzNSwiZXhwIjoxNjUzMzI3NTM1LCJpYXQiOjE2NTA3MzU1MzUsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.RlsegDCMphJyBGPRa6Sc06xBu2wWPsYtnDfZhaxkzdU', 0),
-	(424, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNTU3NCwiZXhwIjoxNjUzMzI3NTc0LCJpYXQiOjE2NTA3MzU1NzQsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.NSUh5Y80mDMX8A6FdWf_eMGYevGsvkI6sKE7F8U3bQw', 0);
+	(424, 5, 'chrome 100.0.4896 Windows 10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDczNTU3NCwiZXhwIjoxNjUzMzI3NTc0LCJpYXQiOjE2NTA3MzU1NzQsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.NSUh5Y80mDMX8A6FdWf_eMGYevGsvkI6sKE7F8U3bQw', 0),
+	(425, 5, 'postman', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDc5MTMxOCwiZXhwIjoxNjUzMzgzMzE4LCJpYXQiOjE2NTA3OTEzMTgsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.KNH94pTg611j_c-tIhbpxtQ8P7Bh4kNNcCyWGXb8Yjc', 0),
+	(426, 5, 'postman', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiNSIsIm5iZiI6MTY1MDc5NzAxOCwiZXhwIjoxNjUzMzg5MDE4LCJpYXQiOjE2NTA3OTcwMTgsImlzcyI6IkF1dGhTZXJ2ZXIiLCJhdWQiOiJXZWJDbGllbnQifQ.rTokgMZEn9eC9bFMjmKspdgK-B_EoXRdLiiekgZfLDQ', 0);
 
 -- Dumping structure for table dcsm.settings
 CREATE TABLE IF NOT EXISTS `settings` (
@@ -600,7 +602,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `value` varchar(512) NOT NULL,
   `description` varchar(512) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table dcsm.settings: ~15 rows (approximately)
 DELETE FROM `settings`;
@@ -624,7 +626,8 @@ INSERT INTO `settings` (`id`, `name`, `value`, `description`) VALUES
 	(19, 's3_endpoint', 'calamity-s3.local.encamy.com', 'S3 Endpoint'),
 	(20, 's3_access_key', 'KDO0FK4OV3H4C134Y4XC', 'S3 Access Key'),
 	(21, 's3_secret_key', 'zyNJpLjTAJ0pvjgLWPLVaAx7t1YZX3ORfWOYbB68', 'S3 Secret Key'),
-	(22, 'fileserver-service-port', '80', 'Port for Fileserver (Orchestrator only)');
+	(22, 'fileserver-service-port', '80', 'Port for Fileserver (Orchestrator only)'),
+	(23, 'main_endpoint', 'https://messenger.local.encamy.com', 'Main endpoint for internal requests');
 
 -- Dumping structure for table dcsm.user
 CREATE TABLE IF NOT EXISTS `user` (
