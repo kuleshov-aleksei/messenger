@@ -94,7 +94,7 @@ namespace Messenger.InstantMessagingService.Controllers
                 multipartContent.Headers.ContentType.MediaType = "multipart/form-data";
                 multipartContent.Add(file, "file");
                 string extension = MimeTypesMap.GetExtension(file.ContentType);
-                if (extension == "png" || extension == "jpg" || extension == "jpeg" || extension == "gif")
+                if (extension == "png" || extension == "jpg" || extension == "jpeg" || extension == "gif" || extension == "webp")
                 {
                     isImage = true;
                 }

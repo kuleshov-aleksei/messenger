@@ -21,6 +21,8 @@ namespace Messenger.Common.Elastic
             GlobalSettings.EsFieldText,
             GlobalSettings.EsFieldUserId,
             GlobalSettings.EsFieldMessageTime,
+            GlobalSettings.EsFieldMessageImageUrlOriginal,
+            GlobalSettings.EsFieldMessageAttachmentUrl,
         };
 
         public EsInteractor(ElasticClient elasticClient, IdGenerator idGenerator)
@@ -184,6 +186,8 @@ namespace Messenger.Common.Elastic
                     AuthorImageLinkSmall = users[document.user_id].ImageSmall,
                     AuthorId = document.user_id,
                     ChatId = chatId,
+                    AttachmentUrl = document.attachment_url,
+                    ImageUrl = document.image_url_original,
                 };
 
                 response.Messages.Add(message);
