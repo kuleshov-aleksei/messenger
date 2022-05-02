@@ -35,6 +35,14 @@
             <div class="message_text">
               {{ message.text }}
             </div>
+            <div class="message_attachment" v-if="message.image_url != null">
+              <img v-bind:src="'https://messenger.local.encamy.com/fileserver/sharable_url?objectname=' + message.image_url" />
+            </div>
+            <div class="message_attachment" v-if="message.attachment_url != null">
+              <a v-bind:href="'https://messenger.local.encamy.com/fileserver/sharable_url?objectname=' + message.attachment_url" download>
+                <font-awesome-icon class="fa-wrapper" icon="fa-solid fa-link" />Вложение
+              </a>
+            </div>
             <div class="message_date">
               {{ unixTimeToHumanReadable(message.unixTime) }}
             </div>
@@ -192,6 +200,8 @@ export default {
         message.authorSurname = apiMessage.author_surname;
         message.authorImage = apiMessage.author_image_link_small;
         message.text = apiMessage.text;
+        message.attachment_url = apiMessage.attachment_url;
+        message.image_url = apiMessage.image_url;
         message.isAuthor = false;
 
         this.display_message(message, initial);
@@ -414,7 +424,8 @@ export default {
       gap: 0px 0px;
       grid-template-areas:
         "user_photo user_name message_date"
-        "user_photo message_text message_text";
+        "user_photo message_text message_text"
+        "user_photo message_attachment message_attachment";
 
       .user_photo {
         grid-area: user_photo;
@@ -439,6 +450,30 @@ export default {
         grid-area: message_date;
         text-align: right;
         margin-right: 10px;
+      }
+
+      .message_attachment {
+        grid-area: message_attachment;
+        text-align: left;
+        margin-right: 10px;
+
+        img {
+          max-width: 100%;
+          height: auto;
+        }
+
+        a {
+          color: #000000;
+          text-decoration: none;
+        }
+
+        a:hover {
+          text-decoration: underline;
+        }
+
+        a:active {
+          text-decoration: underline;
+        }
       }
     }
   }

@@ -157,7 +157,7 @@
         <span>DEV</span>
       </div>
       <el-button type="primary" v-on:click="simpleAuth"
-        >Авторизация как "Тестовый пользователь"</el-button
+        >Авторизация как "Тестовый пользователь"<br>(кнопка не работает)</el-button
       >
       <el-button class="dev" type="primary" v-on:click="simpleAuthIgor"
         >Авторизация как "И Горь"</el-button
