@@ -61,21 +61,7 @@ export default {
           if (this.templateVariables === undefined || Object.keys(this.templateVariables).length == 0) {
               return this.currentTemplate;
           }
-
-          //var resultPreview = [];
-          //var words = this.currentTemplate.split(/[\s,]+/);
-          //for (var i = 0; i < words.length; i++) {
-          //  var word = words[i];
-          //  if (word in this.templateVariables) {
-          //      var replacement = this.templateVariables[word];
-          //      resultPreview.push(replacement);
-          //  } else {
-          //      resultPreview.push(word);
-          //  }
-          //}
-//
-          //return resultPreview.join(" ");
-
+          
           var resultPreview = this.currentTemplate;
           for (const [key, value] of Object.entries(this.templateVariables)) {
             resultPreview = resultPreview.replaceAll(key, value);
