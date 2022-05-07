@@ -39,6 +39,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.ChatFiller", "Mes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messenger.Fileserver", "Messenger.Fileserver\Messenger.Fileserver.csproj", "{7B0985A2-DDF0-433B-8695-A43C9E9980E5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.EmailService", "Messenger.EmailService\Messenger.EmailService.csproj", "{53FC001D-EE10-4DAD-8F47-1CBD57535AC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,10 @@ Global
 		{7B0985A2-DDF0-433B-8695-A43C9E9980E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B0985A2-DDF0-433B-8695-A43C9E9980E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B0985A2-DDF0-433B-8695-A43C9E9980E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53FC001D-EE10-4DAD-8F47-1CBD57535AC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53FC001D-EE10-4DAD-8F47-1CBD57535AC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53FC001D-EE10-4DAD-8F47-1CBD57535AC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53FC001D-EE10-4DAD-8F47-1CBD57535AC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

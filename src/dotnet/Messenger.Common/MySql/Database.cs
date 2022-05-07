@@ -58,7 +58,34 @@ namespace Messenger.Common.MySql
 
         public void ExecuteSql(string sql, Action<IDataReader> onRow = null, Dictionary<string, object> parameters = null)
         {
-            ExecuteSqlAsync(sql, onRow, parameters).Wait();
+            using (DatabaseConnection dbConnection = new DatabaseConnection(m_connectionString))
+            {
+                MySqlCommand command = dbConnection.CreateCommand();
+                command.CommandText = sql;
+
+                if (parameters != null)
+                {
+                    foreach (KeyValuePair<string, object> keyValuePair in parameters)
+                    {
+                        command.Parameters.AddWithValue($"@{keyValuePair.Key}", keyValuePair.Value);
+                    }
+                }
+
+                if (onRow == null)
+                {
+                    command.ExecuteNonQuery();
+                }
+                else
+                {
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            onRow(reader);
+                        }
+                    }
+                }
+            }
         }
 
         public void ExecuteProcedure(string procedureName, List<Tuple<string, object, ParameterDirection, MySqlDbType>> parameters, out Dictionary<string, object> returnValues)

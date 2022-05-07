@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "classifications": [ "Common", "Console" ],
+  "identity": "Template.WebAPI",
+  "name": "Template for Messenger WebAPI",
+  "description": "Template for Messenger WebAPI",
+  "shortName": "messenger-webapi",
+  "sourceName": "Template.WebAPI",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "preferNameDirectory": true,
+  "symbols": {
+    "DataFetcherTemplateRenamer": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Project name",
+      "defaultValue": "Template.WebAPI",
+      "replaces": "Template.WebAPI",
+      "displayName": "Project name",
+      "isRequired": true
+    }
+  },
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "exclude": [
+            "**/[Bb]in/**",
+            "**/[Oo]bj/**",
+            ".template.config/**/*",
+            "img/**",
+            "README.md"
+          ]
+        }
+      ]
+    }
+  ]
+}

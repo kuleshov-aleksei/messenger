@@ -167,6 +167,24 @@ services:
       - ./docker-config/NLog.config:/app/NLog.config:ro
     networks:
       - messenger_network
+      
+  email-service:
+    build:
+      context: ./src/dotnet
+      dockerfile: Messenger.EmailService/Dockerfile
+    command: dotnet Messenger.EmailService.dll
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    deploy:
+      replicas: 1
+    volumes:
+      - ./docker-data/logs/email-service:/app/logs/
+      - ./docker-data/secrets/jwt_secret.secret:/app/jwt_secret.secret:ro
+      - ./docker-data/secrets/mysql_secrets.json:/app/mysql_secrets.json:ro
+      - ./docker-config/NLog.config:/app/NLog.config:ro
+    networks:
+      - messenger_network
 
 networks:
   messenger_network:
