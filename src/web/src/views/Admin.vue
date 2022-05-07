@@ -6,6 +6,9 @@
       </el-tab-pane>
       <el-tab-pane label="Пользователи" name="users">Пользователи</el-tab-pane>
       <el-tab-pane label="Чаты" name="chats">Чаты</el-tab-pane>
+      <el-tab-pane label="Шаблоны" name="templates">
+        <Templates />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -24,6 +27,7 @@ export default {
   },
   components: {
     ServiceStatus: () => import("../components/ServiceStatus.vue"),
+    Templates: () => import("../views/Templates.vue"),
   },
   methods: {},
   mounted() {
