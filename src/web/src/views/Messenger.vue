@@ -32,9 +32,15 @@
             >{{ current_chat_members.length }}
             {{ get_declination(current_chat_members.length) }}</el-button
           >
+          <VideoConference
+            v-if="current_chat != null"
+            class="center-vertically first-right-flex-item"
+            :chatId="current_chat.id"
+            :chatTitle="current_chat.title"
+            />
           <InviteUserToChat
             v-if="current_chat != null"
-            class="center-vertically invite-component"
+            class="center-vertically"
             :chatId="current_chat.id"
             :onSuccess="onSuccessfullInvitation"
           />
@@ -136,11 +142,13 @@ import { api_url } from "../store";
 import store from "../store";
 import Chat from "../components/Chat.vue";
 import InviteUserToChat from "../components/InviteUserToChat.vue";
+import VideoConference from "../components/VideoConference.vue";
 
 export default {
   components: {
     Chat,
     InviteUserToChat,
+    VideoConference,
   },
   data() {
     return {
@@ -228,6 +236,7 @@ export default {
     },
     on_chat_selected: function (chat) {
       this.current_chat = chat;
+      this.forceRerender();
       this.get_chat_members(chat.id);
       store.commit("set_chat_id", chat.id);
     },
@@ -272,6 +281,15 @@ export default {
 
       return require("../assets/" + pic);
     },
+    forceRerender() {
+      var temp = this.current_chat;
+      this.current_chat = null;
+
+      this.$nextTick(() => {
+        this.current_chat = temp;
+      });
+    }
+
   },
   mounted() {
     store.commit("save_current_route", "/");
@@ -459,7 +477,7 @@ ul {
   text-align: center;
 }
 
-.invite-component {
+.first-right-flex-item {
   margin-left: auto;
 }
 </style>
