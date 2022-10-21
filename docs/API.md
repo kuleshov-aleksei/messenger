@@ -1,65 +1,65 @@
-## Содержание:
+## Table of contents:
 
-**Работа с чатами:**
+**Chats:**
 
-[Получить список чатов](#получить-список-чатов)
+[Get chat list](#get-chat-list)
 
-[Получить список пользователей в чате](#получить-список-пользователей-в-чате)
+[Get list of users in chat](#get-chat-members)
 
-[Создать чат](#создать-чат)
+[Create a chat](#create-a-chat)
 
-[Пригласить пользователя в чат](#пригласить-пользователя-в-чат)
+[Invite user in chat](#Invite-user-to-chat)
 
-[Пригласить пользователя в чат используя никнейм](#пригласить-пользователя-в-чат-используя-никнейм)
+[Invite user in chat by nickname](#Invite-user-to-chat-by-nickname)
 
-**Работа с сообщениями:**
+**Messages:**
 
-[Отправить сообщение пользователя](#отправить-сообщение-пользователя)
+[Send message to user](#send-message)
 
-[Получить последние сообщения в чате](#получить-последние-сообщения-в-чате)
+[Get last messages](#get-last-messages)
 
-[Получить сообщения с определенной временной отметки](#получить-сообщения-с-определенной-временной-отметки)
+[Get last messages by timestamp](#get-last-messages-by-timestamp)
 
-**Авторизация + регистрация:**
+**Authorize + register:**
 
-[Зарегистрировать пользователя](#зарегистрировать-пользователя)
+[Register a user](#register-a-user)
 
-[Авторизация](#авторизация)
+[Authorize](#authorize)
 
-[Обновление Access token](#обновление-access-token)
+[Refresh Access token](#refresh-access-token)
 
-**Информация о пользователе**
+**Information about user**
 
-[Получить информацию о пользователе](#получить-информацию-о-пользователе)
+[Get information about user](#get-information-about-user)
 
-[Изменить имя](#изменить-имя])
+[Change name](#change-name)
 
-[Изменить фамилию](изменить-фамилию)
+[Change surname](#change-surname)
 
-[Изменить почту](#изменить-почту)
+[Change email](#change-email)
 
-[Изменить пароль](#изменить-пароль)
+[Change password](#change-password)
 
-Все запросы имеют префикс:
+Base url:
 
-http://api.encamy.keenetic.pro
+https://messenger.encamy.com
 
-## Работа с чатами
+## Chats:
 
-### Получить список чатов
+### Get chat list
 
 URL: /chat/get_chat_list
 
 POST, content-type = "application/json"
 
-Запрос:
+Request:
 ```json
 {
 	"acces_token": "value"
 }
 ```
 
-Ответ:
+Response:
 ```json
 {
     "chats": [
@@ -70,13 +70,13 @@ POST, content-type = "application/json"
             "last_message": null
         },
         {
-            "title": "Тестовый чат",
+            "title": "Test chat 2",
             "image_medium": null,
             "image_small": null,
             "last_message": null
         },
         {
-            "title": "Проба пера",
+            "title": "Test chat 3",
             "image_medium": null,
             "image_small": null,
             "last_message": null
@@ -85,13 +85,13 @@ POST, content-type = "application/json"
 }
 ```
 
-### Получить список пользователей в чате
+### Get chat members
 
 URL: /chat/get_chat_members
 
 POST, content-type = "application/json"
 
-Запрос:
+Request:
 ```json
 {
 	"chat_id": 1,
@@ -99,7 +99,7 @@ POST, content-type = "application/json"
 }
 ```
 
-Ответ:
+Response:
 ```json
 {
     "chat_members": [
@@ -121,13 +121,13 @@ POST, content-type = "application/json"
 }
 ```
 
-### Создать чат
+### Create a chat
 
 URL: /chat/create_chat
 
 POST, content-type = "application/json"
 
-Запрос:
+Request:
 ```json
 {
 	"user_id": 3,
@@ -135,70 +135,68 @@ POST, content-type = "application/json"
 }
 ```
 
-При успехе будет возвращен код 200, при ошибке 400 или 500
+In case of success, 200 will be returned, otherwise 400 or 500
 
-### Пригласить пользователя в чат
+### Invite user to chat
 
 URL: /chat/invite_to_chat
 
 POST, content-type = "application/json"
 
-Запрос:
+Request:
 ```json
 {
 	"invited_user_id": 1,
-	"acces_token": "value"
+	"acces_token": "value",
 	"chat_id": 5
 }
 ```
 
-### Пригласить пользователя в чат используя никнейм
+### Invite user to chat by nickname
 
 URL: /chat/invite_to_chat_username
 
 POST, content-type = "application/json"
 
-Запрос:
+Request:
 ```json
 {
 	"invited_username": "someuser",
-	"acces_token": "value"
+	"acces_token": "value",
 	"chat_id": 5
 }
 ```
 
-## Работа с сообщениями
+## Messages:
 
-### Отправить сообщение пользователя
+### Send message
 
 URL: /messenger/put_message
 
 POST, content-type = "application/json"
 
-Запрос:
+Request:
 ```json
 {
-	"acces_token": "value"
+	"acces_token": "value",
 	"message": "Hello world!",
 	"chat_id": 1
 }
 ```
 
-При успехе будет возвращен код 200, при ошибке 400+ или 500
+In case of success, 200 will be returned, otherwise 400 or 500
 
-### Получить последние сообщения в чате
+### Get last messages
 
-Данный запрос должен выполняться при первоначальной загрузке чата  
-Загружаются только последние 30 сообщений  
-**Для получения остальных сообщений необходимо использовать метод `TODO`**
-
-Обязательно при отрисовке сообщений нужно проверять id чата возращенного от сервера и id который сейчас отрисован у пользователя!
+This method should be executed at chat load  
+Loaded only last 30 messages  
+**If you want to get older messages, use [Get last messages by timestamp](#get-last-messages-by-timestamp)**
 
 URL: /messenger/get_last_messages
 
 POST, content-type = "application/json"
 
-Запрос:
+Request:
 ```json
 {
 	"chat_id": 1,
@@ -206,41 +204,41 @@ POST, content-type = "application/json"
 }
 ```
 
-Ответ (количество сообщений в примере урезано):
+Response (trimmed version):
 ```json
 {
     "messages": [
         {
             "unix_time": 1602339798,
-            "text": "Ехал грека через реку видит грека в реке рак",
+            "text": "Roads? Where we're going we don't need roads.",
             "author_name": "Michael",
             "author_surname": "Bobrov",
             "author_image_link_small": null
         },
         {
             "unix_time": 1602337282,
-            "text": "Сообщение 35",
+            "text": "Message 35",
             "author_name": "Ivan",
             "author_surname": "Popov",
             "author_image_link_small": null
         },
         {
             "unix_time": 1602337281,
-            "text": "Сообщение 34",
+            "text": "Message 34",
             "author_name": "Ivan",
             "author_surname": "Popov",
             "author_image_link_small": null
         },
         {
             "unix_time": 1602337280,
-            "text": "Сообщение 33",
+            "text": "Message 33",
             "author_name": "Ivan",
             "author_surname": "Popov",
             "author_image_link_small": null
         },
         {
             "unix_time": 1602337278,
-            "text": "Сообщение 32",
+            "text": "Message 32",
             "author_name": "Ivan",
             "author_surname": "Popov",
             "author_image_link_small": null
@@ -250,13 +248,13 @@ POST, content-type = "application/json"
 }
 ```
 
-### Получить сообщения с определенной временной отметки
+### Get last messages by timestamp
 
 URL: /messenger/get_messages_from_time
 
 POST, content-type = "application/json"
 
-Запрос:
+Request:
 ```json
 {
 	"chat_id": 1,
@@ -265,20 +263,18 @@ POST, content-type = "application/json"
 }
 ```
 
-Ответ в таком же формате как в [Получить последние сообщения в чате](#получить-последние-сообщения-в-чате)
+Reponse is the same as in [Get last messages](#get-last-messages)
 
 
-## Авторизация + регистрация
+## Authorize + register
 
-### Зарегистрировать пользователя:
-
-**Перед использованием обязательно прочитать [вот это](Скрипты-mysql#создать-пользователя)**
+### Register a user:
 
 URL: /register/register
 
 POST, content-type = "application/json"
 
-Запрос:
+Request:
 ```json
 {
 	"username": "username_api",
@@ -289,24 +285,24 @@ POST, content-type = "application/json"
 }
 ```
 
-При успехе ответ `200 OK`, или `400 Bad request` на неправильный запрос или `409 Conflict` если пользователь с таким логином или почтой уже существует.
+In case of success `200 OK` will be returned, otherwise `400 Bad request` or `409 Conflict`.
 
-Также, при 409 будет отправлено это сообщение:
+If result is 409, you can expect this respose:
 ```json
 {
     "error_message": "User with this username or email already exists"
 }
 ```
 
-### Авторизация 
+### Authorize 
 
 URL: /auth/auth
 
 POST, content-type = "application/json"
 
-Поле login может принимать как username так и почту
+Both username and email can be used as `login` field.
 
-Запрос:
+Request:
 ```json
 {
 	"login": "example_api@example.com",
@@ -315,11 +311,11 @@ POST, content-type = "application/json"
 }
 ```
 
-При успехе будет возвращен 200 ОК, а также установлены соответствующие куки
+In case of success, 200 ОК will be returned. As well as login cookies.
 
-### Обновление Access token
+### Refresh Access token
 
-Когда Access token протухает необходимо выполнить данный запрос
+When access token expires, token need to be refreshed:
 
 URL: /auth/refresh
 POST, content-type = "application/json"
@@ -330,21 +326,21 @@ POST, content-type = "application/json"
 }
 ```
 
-## Информация о пользователе
+## Information about user
 
-### Получить информацию о пользователе
+### Get information about user
 
 URL: /user/get_info
 POST, content-type = "application/json"
 
-Запрос:
+Request:
 ```json
 {
     "access_token": "123"
 }
 ```
 
-Ответ:
+Response:  
 ```json
 {
   "name": "postman",
@@ -354,7 +350,7 @@ POST, content-type = "application/json"
   "roles": [
     {
       "title": "admin",
-      "description": "Администратор",
+      "description": "Administrator",
       "date_assigned": "2020-11-01T16:18:25",
       "assigned_by_name": "SYSTEM",
       "assigned_by_surname": "SYSTEM",
@@ -362,7 +358,7 @@ POST, content-type = "application/json"
     },
     {
       "title": "regular",
-      "description": "Пользователь",
+      "description": "User",
       "date_assigned": "2020-11-01T17:03:31",
       "assigned_by_name": "SYSTEM",
       "assigned_by_surname": "SYSTEM",
@@ -375,12 +371,12 @@ POST, content-type = "application/json"
 }
 ```
 
-### Изменить имя
+### Change name
 
 URL: /user/change_name
 POST, content-type = "application/json"
 
-Запрос:
+Request:
 ```json
 {
     "access_token": "123",
@@ -388,15 +384,15 @@ POST, content-type = "application/json"
 }
 ```
 
-Ответ:
-200 OK или ошибка в обычном формате
+Response:  
+In case of success, 200 OK will be returned, 400 or 500 otherwise
 
-### Изменить фамилию
+### Chage surname
 
 URL: /user/change_surname
 POST, content-type = "application/json"
 
-Запрос:
+Request:
 ```json
 {
     "access_token": "123",
@@ -404,15 +400,15 @@ POST, content-type = "application/json"
 }
 ```
 
-Ответ:
-200 OK или ошибка в обычном формате
+Response:  
+In case of success, 200 OK will be returned, 400 or 500 otherwise
 
-### Изменить почту
+### Change email
 
 URL: /user/change_email
 POST, content-type = "application/json"
 
-Запрос:
+Request:
 ```json
 {
     "access_token": "123",
@@ -420,15 +416,15 @@ POST, content-type = "application/json"
 }
 ```
 
-Ответ:
-200 OK или ошибка в обычном формате
+Response:  
+In case of success, 200 OK will be returned, 400 or 500 otherwise
 
-### Изменить пароль
+### Change password
 
 URL: /user/change_password
 POST, content-type = "application/json"
 
-Запрос:
+Request:
 ```json
 {
     "access_token": "123",
@@ -437,5 +433,5 @@ POST, content-type = "application/json"
 }
 ```
 
-Ответ:
-200 OK или ошибка в обычном формате
+Response:  
+In case of success, 200 OK will be returned, 400 or 500 otherwise
